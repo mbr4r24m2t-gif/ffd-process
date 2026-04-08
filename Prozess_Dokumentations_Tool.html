@@ -4,211 +4,194 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>farbflut · Prozessdokumentation</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f5f4f0;
-  --white: #ffffff;
-  --black: #111111;
-  --gray1: #444;
-  --gray2: #888;
-  --gray3: #bbb;
-  --gray4: #e0ddd8;
-  --gray5: #f0eee9;
-  --green: #2d6a45;
-  --green-bg: #edf5f0;
-  --red: #b83232;
-  --red-bg: #fdf0f0;
-  --blue: #2556a0;
-  --border: #e0ddd8;
-  --r: 6px; --r-lg: 10px;
-  --shadow: 0 1px 4px rgba(0,0,0,.07);
-  --shadow-md: 0 3px 12px rgba(0,0,0,.09);
-  --font: 'Inter', system-ui, sans-serif;
+  --bg:#f5f4f0; --white:#fff; --black:#111;
+  --g1:#444; --g2:#888; --g3:#bbb; --g4:#e0ddd8; --g5:#f0eee9;
+  --green:#2d6a45; --green-bg:#edf5f0;
+  --red:#b83232; --red-bg:#fdf0f0;
+  --border:#e0ddd8; --r:6px; --r-lg:10px;
+  --shadow:0 1px 4px rgba(0,0,0,.07);
+  --shadow-md:0 3px 12px rgba(0,0,0,.09);
+  --font:'Inter',system-ui,sans-serif;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: var(--font); background: var(--bg); color: var(--black); min-height: 100vh; font-size: 14px; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--font);background:var(--bg);color:var(--black);min-height:100vh;font-size:14px}
 
 /* HEADER */
-.hdr { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 18px; height: 50px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 100; }
-.logo { font-size: 15px; font-weight: 700; letter-spacing: -.02em; }
-.logo span { color: var(--gray3); font-weight: 400; margin: 0 3px; }
-.back { display: none; align-items: center; gap: 4px; background: none; border: none; color: var(--gray2); font-family: var(--font); font-size: 13px; cursor: pointer; }
-.back.show { display: flex; }
-.hdr-r { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-.ver { font-size: 10px; color: var(--gray3); font-weight: 600; letter-spacing: .04em; }
-.hdr-user { font-size: 12px; color: var(--gray2); }
+.hdr{background:var(--white);border-bottom:1px solid var(--border);padding:0 16px;height:50px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
+.logo{font-size:15px;font-weight:700;letter-spacing:-.02em}
+.logo-dot{color:var(--g3);margin:0 3px;font-weight:400}
+.back{display:none;align-items:center;gap:4px;background:none;border:none;color:var(--g2);font-family:var(--font);font-size:13px;cursor:pointer;padding:4px 0}
+.back.show{display:flex}
+.hdr-r{margin-left:auto;display:flex;align-items:center;gap:8px}
+.ver{font-size:10px;color:var(--g3);font-weight:600;letter-spacing:.04em}
+.hdr-user{font-size:12px;color:var(--g2)}
 
 /* PROGRESS */
-.prog { height: 2px; background: var(--gray4); position: sticky; top: 50px; z-index: 99; display: none; }
-.prog-fill { height: 100%; background: var(--black); transition: width .3s; }
+.prog{height:2px;background:var(--g4);position:sticky;top:50px;z-index:99;display:none}
+.prog-fill{height:100%;background:var(--black);transition:width .3s}
 
 /* SCREENS */
-.scr { display: none; }
-.scr.on { display: block; }
+.scr{display:none}.scr.on{display:block}
+
+/* CENTER WRAP */
+.cwrap{min-height:calc(100vh - 50px);display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:32px 24px;max-width:360px;width:100%;box-shadow:var(--shadow-md)}
+.card.center{text-align:center}
 
 /* PIN */
-.center-wrap { min-height: calc(100vh - 50px); display: flex; align-items: center; justify-content: center; padding: 24px 20px; }
-.card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 36px 28px; max-width: 360px; width: 100%; box-shadow: var(--shadow-md); }
-.card.center { text-align: center; }
-.pin-logo { font-size: 20px; font-weight: 700; letter-spacing: -.02em; margin-bottom: 28px; }
-.pin-hint { font-size: 12px; color: var(--gray2); margin-bottom: 18px; }
-.pin-dots { display: flex; justify-content: center; gap: 14px; margin-bottom: 28px; }
-.pin-dot { width: 13px; height: 13px; border-radius: 50%; border: 2px solid var(--gray4); transition: all .15s; }
-.pin-dot.fill { background: var(--black); border-color: var(--black); }
-.pin-dot.err { background: var(--red); border-color: var(--red); }
-.pin-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
-.pin-key { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--r); padding: 16px; font-size: 20px; font-weight: 600; cursor: pointer; font-family: var(--font); transition: background .1s; }
-.pin-key:active { background: var(--gray5); }
-.pin-key.del { font-size: 15px; color: var(--gray2); }
-.pin-key.empty { background: transparent; border-color: transparent; cursor: default; }
+.pin-logo{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:24px}
+.pin-hint{font-size:12px;color:var(--g2);margin-bottom:16px}
+.pin-dots{display:flex;justify-content:center;gap:14px;margin-bottom:24px}
+.pd{width:13px;height:13px;border-radius:50%;border:2px solid var(--g4);transition:all .15s}
+.pd.fill{background:var(--black);border-color:var(--black)}
+.pd.err{background:var(--red);border-color:var(--red)}
+.pin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pk{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:16px;font-size:20px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .1s}
+.pk:active{background:var(--g5)}
+.pk.del{font-size:15px;color:var(--g2)}
+.pk.empty{background:transparent;border-color:transparent;cursor:default}
 
-/* NAME + WELCOME */
-.eyebrow { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--gray2); margin-bottom: 6px; }
-.card-title { font-size: 22px; font-weight: 700; letter-spacing: -.02em; margin-bottom: 18px; }
-.field-label { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--black); margin-bottom: 6px; }
-.input { width: 100%; padding: 12px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); color: var(--black); font-size: 16px; font-family: var(--font); outline: none; transition: border-color .15s; }
-.input:focus { border-color: var(--black); background: var(--white); }
-textarea.input { min-height: 70px; resize: vertical; line-height: 1.5; font-size: 14px; }
-.btn { width: 100%; padding: 13px; border: none; border-radius: var(--r); font-size: 13px; font-weight: 600; font-family: var(--font); cursor: pointer; letter-spacing: .02em; transition: opacity .15s; margin-top: 12px; }
-.btn-b { background: var(--black); color: var(--white); }
-.btn-b:hover { opacity: .85; }
-.btn-b:disabled { opacity: .3; cursor: not-allowed; }
-.btn-ghost { background: var(--white); border: 1.5px dashed var(--gray2); color: var(--gray1); font-weight: 600; }
-.btn-ghost:hover { border-color: var(--black); color: var(--black); }
+/* WELCOME */
+.ey{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g2);margin-bottom:6px}
+.ct{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
+.hints{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.hint{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--g1);line-height:1.5}
+.hint-ic{font-size:16px;flex-shrink:0;margin-top:1px}
 
-/* WELCOME HINTS */
-.hints { display: flex; flex-direction: column; gap: 11px; margin-bottom: 22px; }
-.hint { display: flex; align-items: flex-start; gap: 11px; font-size: 13px; color: var(--gray1); line-height: 1.5; }
-.hint-ic { font-size: 17px; flex-shrink: 0; }
+/* INPUTS & BUTTONS */
+.fl{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--black);margin-bottom:5px}
+.inp{width:100%;padding:11px 13px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);color:var(--black);font-size:16px;font-family:var(--font);outline:none;transition:border-color .15s}
+.inp:focus{border-color:var(--black);background:var(--white)}
+textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
+.btn{width:100%;padding:13px;border:none;border-radius:var(--r);font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;letter-spacing:.02em;transition:opacity .15s;margin-top:10px}
+.btn-b{background:var(--black);color:var(--white)}
+.btn-b:hover{opacity:.85}
+.btn-b:disabled{opacity:.3;cursor:not-allowed}
+.btn-g{background:var(--white);border:1.5px dashed var(--g2);color:var(--g1)}
+.btn-g:hover{border-color:var(--black);color:var(--black)}
 
 /* PAGE HEADER */
-.ph { background: var(--white); border-bottom: 1px solid var(--border); padding: 18px 18px 14px; }
-.ph-ey { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--gray2); margin-bottom: 3px; }
-.ph-title { font-size: 22px; font-weight: 700; letter-spacing: -.02em; }
-.ph-sub { font-size: 12px; color: var(--gray2); margin-top: 3px; }
-.lw { padding: 12px 16px; }
+.ph{background:var(--white);border-bottom:1px solid var(--border);padding:16px 16px 12px}
+.ph-ey{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g2);margin-bottom:3px}
+.ph-title{font-size:21px;font-weight:700;letter-spacing:-.02em}
+.ph-sub{font-size:12px;color:var(--g2);margin-top:3px}
+.lw{padding:12px 14px}
 
-/* STATION CARDS */
-.sc { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 14px 16px; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; gap: 13px; box-shadow: var(--shadow); transition: border-color .15s; }
-.sc:hover { border-color: var(--black); }
-.sc-ic { width: 36px; height: 36px; border-radius: var(--r); background: var(--gray5); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-.sc-name { font-size: 14px; font-weight: 700; }
-.sc-meta { font-size: 11px; color: var(--gray2); margin-top: 2px; }
-.pill { margin-left: auto; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; background: var(--gray5); color: var(--gray2); white-space: nowrap; flex-shrink: 0; }
-.pill.done { background: var(--green-bg); color: var(--green); }
-
-/* PROZESS LIST */
-.pi { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 14px; margin-bottom: 6px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: border-color .15s; }
-.pi:hover { border-color: var(--black); }
-.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gray3); flex-shrink: 0; }
-.dot.done { background: var(--green); }
-.dot.ip { background: var(--black); }
-.pi-name { font-size: 13px; font-weight: 600; flex: 1; line-height: 1.3; }
-.pi-meta { font-size: 11px; color: var(--gray2); margin-top: 1px; }
+/* STATION + PROZESS LIST */
+.sc{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 15px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);transition:border-color .15s}
+.sc:hover{border-color:var(--black)}
+.sc-ic{width:36px;height:36px;border-radius:var(--r);background:var(--g5);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.sc-name{font-size:14px;font-weight:700}
+.sc-meta{font-size:11px;color:var(--g2);margin-top:2px}
+.pill{margin-left:auto;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--g5);color:var(--g2);white-space:nowrap;flex-shrink:0}
+.pill.done{background:var(--green-bg);color:var(--green)}
+.pi{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color .15s}
+.pi:hover{border-color:var(--black)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--g3);flex-shrink:0}
+.dot.done{background:var(--green)}.dot.ip{background:var(--black)}
+.pi-name{font-size:13px;font-weight:600;flex:1;line-height:1.3}
+.pi-meta{font-size:11px;color:var(--g2);margin-top:1px}
 
 /* DETAIL */
-.dw { padding: 12px 16px 80px; }
-.sec { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 15px; margin-bottom: 10px; }
-.sec-lbl { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--black); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-.badge { display: inline-flex; align-items: center; gap: 5px; border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 600; margin-bottom: 10px; }
-.badge.open { background: var(--gray5); color: var(--gray2); }
-.badge.done { background: var(--green-bg); color: var(--green); }
-.badge.ip { background: var(--gray5); color: var(--gray1); }
+.dw{padding:12px 14px 90px}
+.sec{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:15px;margin-bottom:10px}
+.sec-lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--black);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.badge{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;margin-bottom:10px}
+.badge.open{background:var(--g5);color:var(--g2)}
+.badge.done{background:var(--green-bg);color:var(--green)}
+.badge.ip{background:var(--g5);color:var(--g1)}
 
 /* ZEIT */
-.time-row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
-.time-btn { flex: 1; padding: 12px; border: none; border-radius: var(--r); font-size: 12px; font-weight: 600; cursor: pointer; font-family: var(--font); }
-.time-btn.start { background: var(--black); color: #fff; }
-.time-btn.stop { background: var(--white); border: 1.5px solid var(--gray2); color: var(--gray1); font-weight: 600; }
-.time-d { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); padding: 10px 14px; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 80px; text-align: center; }
+.time-row{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.tbtn{flex:1;padding:12px;border:none;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)}
+.tbtn.start{background:var(--black);color:#fff}
+.tbtn.stop{background:var(--white);border:1.5px solid var(--g2);color:var(--g1)}
+.tdisp{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;min-width:80px;text-align:center}
 
 /* SCHRITTE */
-.sch { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); padding: 12px; margin-bottom: 8px; position: relative; }
-.sch-nr { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--black); margin-bottom: 8px; }
-.sch-del { position: absolute; top: 10px; right: 10px; background: none; border: none; color: var(--gray3); font-size: 16px; cursor: pointer; padding: 4px; }
+.sch{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:8px;position:relative}
+.sch-nr{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--black);margin-bottom:10px}
+.sch-del{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--g3);font-size:16px;cursor:pointer;padding:4px;line-height:1}
+
+/* WERKZEUGE PRO SCHRITT */
+.wk-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px;min-height:2px}
+.wk-tag{background:var(--white);border:1px solid var(--g4);border-radius:20px;padding:4px 10px;font-size:12px;display:flex;align-items:center;gap:5px}
+.wk-x{color:var(--g3);cursor:pointer;font-size:13px;line-height:1}
 
 /* FOTOS */
-.foto-row { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 8px; min-height: 4px; }
-.foto-wrap { position: relative; }
-.foto-img { width: 72px; height: 72px; object-fit: cover; border-radius: var(--r); border: 1px solid var(--border); display: block; }
-.foto-del { position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; background: var(--black); color: #fff; border-radius: 50%; font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; line-height: 1; }
-.foto-uploading { width: 72px; height: 72px; border-radius: var(--r); border: 1px dashed var(--border); background: var(--gray5); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--gray2); flex-direction: column; gap: 4px; }
-.foto-btns { display: flex; gap: 6px; margin-top: 8px; }
-.foto-btn { flex: 1; padding: 12px 6px; border: 1.5px solid var(--black); border-radius: var(--r); background: var(--white); color: var(--black); font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font); display: flex; align-items: center; justify-content: center; gap: 5px; transition: background .15s; }
-.foto-btn:hover { background: var(--gray5); }
-.file-in { display: none; }
-
-/* WERKZEUGE */
-.tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; min-height: 2px; }
-.tag { background: var(--gray5); border: 1px solid var(--gray4); border-radius: 20px; padding: 4px 10px; font-size: 12px; display: flex; align-items: center; gap: 5px; }
-.tag-x { color: var(--gray3); cursor: pointer; font-size: 13px; line-height: 1; }
+.foto-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px;min-height:2px}
+.fwrap{position:relative}
+.fimg{width:72px;height:72px;object-fit:cover;border-radius:var(--r);border:1px solid var(--border);display:block}
+.fdel{position:absolute;top:-5px;right:-5px;width:18px;height:18px;background:var(--black);color:#fff;border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;line-height:1}
+.foto-btns{display:flex;gap:7px;margin-top:8px}
+.fbtn{flex:1;padding:11px 6px;border:1.5px solid var(--black);border-radius:var(--r);background:var(--white);color:var(--black);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:4px;transition:background .15s}
+.fbtn:active{background:var(--g5)}
+.file-in{display:none}
 
 /* BOM */
-.bom-hdr { display: flex; align-items: center; gap: 6px; padding-bottom: 8px; border-bottom: 1px solid var(--border); font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--gray2); margin-bottom: 4px; }
-.bom-row { display: flex; align-items: center; gap: 8px; padding: 9px 0; border-bottom: 1px solid var(--gray5); }
-.bom-row:last-child { border: none; }
-.bom-info { flex: 1; min-width: 0; }
-.bom-name { font-size: 13px; font-weight: 500; line-height: 1.3; }
-.bom-nr { font-size: 10px; color: var(--gray2); margin-top: 1px; }
-.bom-soll { width: 44px; text-align: center; font-size: 12px; color: var(--gray2); flex-shrink: 0; }
-.bom-inp { width: 60px; padding: 6px 6px; text-align: center; font-size: 13px; border: 1px solid var(--border); border-radius: var(--r); background: var(--bg); font-family: var(--font); outline: none; flex-shrink: 0; }
-.bom-inp:focus { border-color: var(--black); background: var(--white); }
-.bom-btns { display: flex; gap: 4px; flex-shrink: 0; }
-.bom-btn { width: 34px; height: 34px; border: 1.5px solid var(--gray2); border-radius: var(--r); font-size: 13px; font-weight: 700; cursor: pointer; background: var(--white); color: var(--gray1); font-family: var(--font); transition: all .12s; }
-.bom-btn.ok.on { background: var(--green); border-color: var(--green); color: #fff; }
-.bom-btn.fehl.on { background: var(--red); border-color: var(--red); color: #fff; }
+.bom-hdr-row{display:flex;align-items:center;gap:6px;padding-bottom:7px;border-bottom:1.5px solid var(--border);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g2)}
+.bom-row{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid var(--g5)}
+.bom-row:last-child{border:none}
+.bom-info{flex:1;min-width:0}
+.bom-name{font-size:13px;font-weight:500;line-height:1.3}
+.bom-nr{font-size:10px;color:var(--g2);margin-top:1px}
+.bom-soll{width:44px;text-align:center;font-size:12px;color:var(--g2);flex-shrink:0}
+.bom-inp{width:58px;padding:6px;text-align:center;font-size:14px;border:1px solid var(--border);border-radius:var(--r);background:var(--bg);font-family:var(--font);outline:none;flex-shrink:0}
+.bom-inp:focus{border-color:var(--black);background:var(--white)}
+.bom-btns{display:flex;gap:4px;flex-shrink:0}
+.bbtn{width:34px;height:34px;border:1.5px solid var(--g2);border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;background:var(--white);color:var(--g1);font-family:var(--font);transition:all .12s}
+.bbtn.ok.on{background:var(--green);border-color:var(--green);color:#fff}
+.bbtn.fehl.on{background:var(--red);border-color:var(--red);color:#fff}
 
-/* SAVE */
-.btn-save { width: 100%; padding: 16px; background: var(--black); border: none; border-radius: var(--r); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font); letter-spacing: .02em; transition: opacity .15s; }
-.btn-save:hover { opacity: .85; }
+/* SAVE BTN */
+.save-btn{width:100%;padding:16px;background:var(--black);border:none;border-radius:var(--r);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);letter-spacing:.02em;position:sticky;bottom:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);transition:opacity .15s}
+.save-btn:hover{opacity:.85}
 
-/* OVERLAY */
-.overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,.92); z-index: 200; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
-.overlay.on { display: flex; }
-.spinner { width: 26px; height: 26px; border: 2px solid var(--gray4); border-top-color: var(--black); border-radius: 50%; animation: spin .7s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.ov-txt { font-size: 13px; color: var(--gray2); }
+/* VORSCHAU */
+.a4{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px 22px;box-shadow:var(--shadow-md);max-width:600px;margin:0 auto}
+.a4-hdr{display:flex;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:2px solid var(--black)}
+.a4-logo{font-size:17px;font-weight:800;letter-spacing:-.02em}
+.a4-logo span{font-weight:300;color:#888}
+.a4-meta{font-size:11px;color:#666;text-align:right;line-height:1.6}
+.a4-title{font-size:19px;font-weight:700;margin-bottom:3px;letter-spacing:-.02em}
+.a4-sub{font-size:12px;color:#888;margin-bottom:16px}
+.a4-info{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #eee}
+.a4-ii label{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#999;display:block;margin-bottom:2px}
+.a4-ii span{font-size:12px;font-weight:600;color:#111}
+.a4-slbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#999;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #eee}
+.a4-sch{display:flex;gap:10px;margin-bottom:13px;align-items:flex-start}
+.a4-snr{width:22px;height:22px;border-radius:50%;background:#111;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.a4-sbody{flex:1}
+.a4-stxt{font-size:13px;line-height:1.5;color:#111}
+.a4-swks{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.a4-swk{font-size:11px;background:#f5f5f5;border-radius:10px;padding:2px 8px;color:#555}
+.a4-simg{width:100px;height:75px;object-fit:cover;border-radius:4px;border:1px solid #eee;flex-shrink:0}
+.a4-brow{display:flex;font-size:12px;padding:4px 0;border-bottom:1px solid #f5f5f5;gap:6px;align-items:center}
+.a4-brow:last-child{border:none}
+.a4-bname{flex:1;color:#111}
+.a4-bnr{font-size:10px;color:#bbb}
+.a4-bmenge{width:55px;text-align:right;font-weight:600;color:#111}
+.a4-bst{width:36px;text-align:center;font-weight:700;font-size:13px}
+.a4-bst.ok{color:#2d6a45}.a4-bst.fehlt{color:#b83232}
+.a4-confirm{margin-top:18px;padding-top:14px;border-top:1px solid #eee;font-size:11px;color:#888;display:flex;align-items:flex-start;gap:8px}
+.a4-check{width:14px;height:14px;border:1.5px solid #ccc;border-radius:2px;flex-shrink:0;margin-top:1px}
 
-/* TOAST */
-.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--black); color: #fff; padding: 10px 22px; border-radius: 40px; font-size: 13px; font-weight: 500; z-index: 999; opacity: 0; transition: opacity .25s; pointer-events: none; white-space: nowrap; max-width: 88vw; text-align: center; }
-.toast.on { opacity: 1; }
-.toast.err { background: var(--red); }
+/* OVERLAY / TOAST */
+.overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,.92);z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.overlay.on{display:flex}
+.spinner{width:26px;height:26px;border:2px solid var(--g4);border-top-color:var(--black);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ov-txt{font-size:13px;color:var(--g2)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--black);color:#fff;padding:10px 22px;border-radius:40px;font-size:13px;font-weight:500;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;max-width:88vw;text-align:center}
+.toast.on{opacity:1}.toast.err{background:var(--red)}
 
-
-/* VORSCHAU A4 */
-.a4-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:24px; padding-bottom:16px; border-bottom:2px solid #111; }
-.a4-logo { font-size:18px; font-weight:800; letter-spacing:-.02em; }
-.a4-logo span { font-weight:300; color:#888; }
-.a4-meta { font-size:11px; color:#666; text-align:right; line-height:1.6; }
-.a4-title { font-size:20px; font-weight:700; margin-bottom:4px; letter-spacing:-.02em; }
-.a4-station { font-size:12px; color:#888; margin-bottom:20px; }
-.a4-section { margin-bottom:20px; }
-.a4-sec-label { font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#888; margin-bottom:8px; padding-bottom:4px; border-bottom:1px solid #eee; }
-.a4-schritt { margin-bottom:16px; display:flex; gap:12px; align-items:flex-start; }
-.a4-schritt-nr { width:24px; height:24px; border-radius:50%; background:#111; color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
-.a4-schritt-body { flex:1; }
-.a4-schritt-text { font-size:13px; line-height:1.5; color:#111; }
-.a4-schritt-img { width:120px; height:90px; object-fit:cover; border-radius:4px; border:1px solid #eee; flex-shrink:0; }
-.a4-bom-row { display:flex; font-size:12px; padding:4px 0; border-bottom:1px solid #f5f5f5; gap:8px; }
-.a4-bom-name { flex:1; color:#111; }
-.a4-bom-menge { color:#444; font-weight:500; width:60px; text-align:right; }
-.a4-bom-status { width:50px; text-align:center; font-weight:600; }
-.a4-bom-status.ok { color:#2d6a45; }
-.a4-bom-status.fehlt { color:#b83232; }
-.a4-info-row { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:16px; }
-.a4-info-item { font-size:12px; }
-.a4-info-label { color:#888; font-size:10px; text-transform:uppercase; letter-spacing:.06em; }
-.a4-info-value { font-weight:600; color:#111; margin-top:1px; }
-.a4-confirm { margin-top:20px; padding-top:16px; border-top:1px solid #eee; font-size:11px; color:#888; display:flex; align-items:center; gap:8px; }
-
-/* MOBILE */
-@media (max-width: 480px) {
-  .pin-key { padding: 18px; font-size: 22px; }
-  .btn-save { position: sticky; bottom: 14px; box-shadow: 0 4px 16px rgba(0,0,0,.15); }
-  .input { font-size: 16px; }
-  .foto-img { width: 80px; height: 80px; }
-  .bom-inp { font-size: 16px; }
+@media(max-width:480px){
+  .pk{padding:18px;font-size:22px}
+  .inp{font-size:16px}
+  .bom-inp{font-size:16px}
 }
 </style>
 </head>
@@ -216,11 +199,8 @@ textarea.input { min-height: 70px; resize: vertical; line-height: 1.5; font-size
 
 <div class="hdr">
   <button class="back" id="backBtn" onclick="goBack()">← Zurück</button>
-  <div class="logo">farbflut <span>·</span> Prozessdok</div>
-  <div class="hdr-r">
-    <span class="ver">V1.7</span>
-    <span class="hdr-user" id="hdrUser"></span>
-  </div>
+  <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
+  <div class="hdr-r"><span class="ver">V1.8</span><span class="hdr-user" id="hdrUser"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
 <div class="overlay" id="overlay"><div class="spinner"></div><div class="ov-txt" id="ovTxt"></div></div>
@@ -228,27 +208,19 @@ textarea.input { min-height: 70px; resize: vertical; line-height: 1.5; font-size
 
 <!-- PIN -->
 <div class="scr on" id="scrPin">
-  <div class="center-wrap">
+  <div class="cwrap">
     <div class="card center">
       <div class="pin-logo">farbflut Design</div>
       <div class="pin-hint">PIN eingeben</div>
-      <div class="pin-dots" id="pinDots">
-        <div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div>
-        <div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
+      <div class="pin-dots">
+        <div class="pd" id="pd0"></div><div class="pd" id="pd1"></div>
+        <div class="pd" id="pd2"></div><div class="pd" id="pd3"></div>
       </div>
       <div class="pin-grid">
-        <button class="pin-key" onclick="pk('1')">1</button>
-        <button class="pin-key" onclick="pk('2')">2</button>
-        <button class="pin-key" onclick="pk('3')">3</button>
-        <button class="pin-key" onclick="pk('4')">4</button>
-        <button class="pin-key" onclick="pk('5')">5</button>
-        <button class="pin-key" onclick="pk('6')">6</button>
-        <button class="pin-key" onclick="pk('7')">7</button>
-        <button class="pin-key" onclick="pk('8')">8</button>
-        <button class="pin-key" onclick="pk('9')">9</button>
-        <button class="pin-key empty"></button>
-        <button class="pin-key" onclick="pk('0')">0</button>
-        <button class="pin-key del" onclick="pdel()">⌫</button>
+        <button class="pk" onclick="pk('1')">1</button><button class="pk" onclick="pk('2')">2</button><button class="pk" onclick="pk('3')">3</button>
+        <button class="pk" onclick="pk('4')">4</button><button class="pk" onclick="pk('5')">5</button><button class="pk" onclick="pk('6')">6</button>
+        <button class="pk" onclick="pk('7')">7</button><button class="pk" onclick="pk('8')">8</button><button class="pk" onclick="pk('9')">9</button>
+        <button class="pk empty"></button><button class="pk" onclick="pk('0')">0</button><button class="pk del" onclick="pdel()">⌫</button>
       </div>
     </div>
   </div>
@@ -256,12 +228,12 @@ textarea.input { min-height: 70px; resize: vertical; line-height: 1.5; font-size
 
 <!-- NAME -->
 <div class="scr" id="scrName">
-  <div class="center-wrap">
+  <div class="cwrap">
     <div class="card">
-      <div class="eyebrow">farbflut Design</div>
-      <div class="card-title">Prozess­dokumentation</div>
-      <div class="field-label">Dein Name</div>
-      <input class="input" id="nameIn" type="text" placeholder="Name eingeben" oninput="chkName()">
+      <div class="ey">farbflut Design</div>
+      <div class="ct">Prozessdokumentation</div>
+      <div class="fl" style="margin-top:16px">Name</div>
+      <input class="inp" id="nameIn" type="text" placeholder="Name eingeben" oninput="chkName()">
       <button class="btn btn-b" id="nameBtn" onclick="goWelcome()" disabled>Weiter →</button>
     </div>
   </div>
@@ -269,14 +241,14 @@ textarea.input { min-height: 70px; resize: vertical; line-height: 1.5; font-size
 
 <!-- WELCOME -->
 <div class="scr" id="scrWelcome">
-  <div class="center-wrap">
+  <div class="cwrap">
     <div class="card" style="max-width:400px">
-      <div class="eyebrow">Hallo,</div>
-      <div class="card-title" id="welcomeName"></div>
-      <div class="field-label" style="margin-bottom:14px">Bitte beim Dokumentieren beachten</div>
+      <div class="ey">Hallo,</div>
+      <div class="ct" id="welcomeName" style="margin-bottom:18px"></div>
+      <div class="fl" style="margin-bottom:12px">Bitte beim Dokumentieren beachten</div>
       <div class="hints">
-        <div class="hint"><div class="hint-ic">📐</div><div>Präzise Maße & Mengen angeben — wie lang, wie viel, wie oft</div></div>
-        <div class="hint"><div class="hint-ic">🔩</div><div>Kraft & Festigkeit beschreiben — wie fest verschraubt, wie stark verklebt</div></div>
+        <div class="hint"><div class="hint-ic">📐</div><div>Präzise Maße &amp; Mengen angeben — wie lang, wie viel, wie oft</div></div>
+        <div class="hint"><div class="hint-ic">🔩</div><div>Kraft &amp; Festigkeit beschreiben — wie fest verschraubt, wie stark verklebt</div></div>
         <div class="hint"><div class="hint-ic">👁</div><div>Sichtbarkeit klären — wo dürfen Klebestellen sichtbar sein, wo nicht</div></div>
         <div class="hint"><div class="hint-ic">✅</div><div>Qualität festhalten — was ist in Ordnung, was ist ein Fehler</div></div>
         <div class="hint"><div class="hint-ic">🆕</div><div>So dokumentieren, dass ein neuer Mitarbeiter ohne Rückfragen versteht</div></div>
@@ -288,50 +260,32 @@ textarea.input { min-height: 70px; resize: vertical; line-height: 1.5; font-size
 
 <!-- STATIONEN -->
 <div class="scr" id="scrStat">
-  <div class="ph">
-    <div class="ph-ey">Übersicht</div>
-    <div class="ph-title">Produktionsstationen</div>
-    <div class="ph-sub" id="subStat"></div>
-  </div>
+  <div class="ph"><div class="ph-ey">Übersicht</div><div class="ph-title">Produktionsstationen</div><div class="ph-sub" id="subStat"></div></div>
   <div class="lw" id="statGrid"></div>
 </div>
 
 <!-- PROZESSE -->
 <div class="scr" id="scrProz">
-  <div class="ph">
-    <div class="ph-ey" id="prozEy"></div>
-    <div class="ph-title">Prozesse</div>
-    <div class="ph-sub" id="prozSub"></div>
-  </div>
+  <div class="ph"><div class="ph-ey" id="prozEy"></div><div class="ph-title">Prozesse</div><div class="ph-sub" id="prozSub"></div></div>
   <div class="lw" id="prozList"></div>
 </div>
 
-
-<!-- VORSCHAU -->
-<div class="scr" id="scrVorschau">
-  <div class="ph" style="display:flex;align-items:center;gap:12px">
-    <div style="flex:1">
-      <div class="ph-ey">Vorschau</div>
-      <div class="ph-title">Alles korrekt?</div>
-      <div class="ph-sub">Bitte prüfen und dann bestätigen</div>
-    </div>
-  </div>
-  <div style="padding:12px 16px 100px">
-    <!-- A4 Vorschau -->
-    <div id="a4preview" style="background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:32px 28px;box-shadow:var(--shadow-md);max-width:640px;margin:0 auto">
-      <!-- Inhalt wird dynamisch befüllt -->
-    </div>
-    <!-- Buttons -->
-    <div style="max-width:640px;margin:16px auto 0;display:flex;flex-direction:column;gap:8px">
-      <button class="btn-save" onclick="bestaetigenUndSpeichern()">✓ Bestätigen &amp; in Google Sheet speichern</button>
-      <button class="btn btn-ghost" onclick="goBack()">← Zurück zum Bearbeiten</button>
-    </div>
-  </div>
-</div>
 <!-- DETAIL -->
 <div class="scr" id="scrDetail">
   <div class="ph" id="dHdr"></div>
   <div class="dw" id="dContent"></div>
+</div>
+
+<!-- VORSCHAU -->
+<div class="scr" id="scrVorschau">
+  <div class="ph"><div class="ph-ey">Schritt 2 von 2</div><div class="ph-title">Vorschau &amp; Bestätigen</div><div class="ph-sub">Bitte alles prüfen bevor gespeichert wird</div></div>
+  <div style="padding:12px 14px 100px">
+    <div class="a4" id="a4"></div>
+    <div style="max-width:600px;margin:14px auto 0;display:flex;flex-direction:column;gap:8px">
+      <button class="save-btn" style="position:static" onclick="bestaetigen()">✓ Bestätigen &amp; Speichern</button>
+      <button class="btn btn-g" onclick="goBack()">← Zurück zum Bearbeiten</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -345,45 +299,39 @@ let timerIv=null, timerStart=null, timerSec=0;
 let local={};
 let pinStr='';
 
-// ── INIT ────────────────────────────────────────────────
 window.addEventListener('load', () => {
-  local = JSON.parse(localStorage.getItem('ffd-v12')||'{}');
+  local = JSON.parse(localStorage.getItem('ffd-v18')||'{}');
 });
-function saveLocal() { localStorage.setItem('ffd-v12', JSON.stringify(local)); }
+function saveLocal(){ localStorage.setItem('ffd-v18', JSON.stringify(local)); }
 
 // ── PIN ─────────────────────────────────────────────────
-function pk(k) {
-  if (pinStr.length >= 4) return;
-  pinStr += k;
-  updDots();
-  if (pinStr.length === 4) {
-    setTimeout(() => {
-      if (pinStr === PIN) { go('scrName'); }
-      else {
-        [0,1,2,3].forEach(i => document.getElementById('pd'+i).className='pin-dot err');
-        setTimeout(() => { pinStr=''; updDots(); }, 700);
+function pk(k){
+  if(pinStr.length>=4) return;
+  pinStr+=k; updDots();
+  if(pinStr.length===4){
+    setTimeout(()=>{
+      if(pinStr===PIN){ go('scrName'); }
+      else{
+        [0,1,2,3].forEach(i=>document.getElementById('pd'+i).className='pd err');
+        setTimeout(()=>{ pinStr=''; updDots(); },700);
       }
-    }, 150);
+    },150);
   }
 }
-function pdel() { pinStr=pinStr.slice(0,-1); updDots(); }
-function updDots() {
-  [0,1,2,3].forEach(i => {
-    document.getElementById('pd'+i).className='pin-dot'+(i<pinStr.length?' fill':'');
-  });
-}
+function pdel(){ pinStr=pinStr.slice(0,-1); updDots(); }
+function updDots(){ [0,1,2,3].forEach(i=>{ document.getElementById('pd'+i).className='pd'+(i<pinStr.length?' fill':''); }); }
 
-// ── NAME ────────────────────────────────────────────────
-function chkName() { document.getElementById('nameBtn').disabled = document.getElementById('nameIn').value.trim().length < 2; }
-function goWelcome() {
-  user = document.getElementById('nameIn').value.trim();
-  document.getElementById('hdrUser').textContent = user;
-  document.getElementById('welcomeName').textContent = user;
+// ── NAME / WELCOME ───────────────────────────────────────
+function chkName(){ document.getElementById('nameBtn').disabled=document.getElementById('nameIn').value.trim().length<2; }
+function goWelcome(){
+  user=document.getElementById('nameIn').value.trim();
+  document.getElementById('hdrUser').textContent=user;
+  document.getElementById('welcomeName').textContent=user;
   go('scrWelcome');
 }
 
-// ── STATIONEN ───────────────────────────────────────────
-function showStationen() {
+// ── STATIONEN ────────────────────────────────────────────
+function showStationen(){
   nav=['stat'];
   document.getElementById('backBtn').classList.remove('show');
   document.getElementById('prog').style.display='none';
@@ -404,8 +352,8 @@ function showStationen() {
   });
 }
 
-// ── PROZESSE ────────────────────────────────────────────
-function showProz(station) {
+// ── PROZESSE ─────────────────────────────────────────────
+function showProz(station){
   curStation=station; nav=['stat','proz'];
   document.getElementById('backBtn').classList.add('show');
   go('scrProz');
@@ -417,25 +365,23 @@ function showProz(station) {
   ps.forEach(p=>{
     const ld=local[p.id]; const st=ld?.s||'open';
     const item=document.createElement('div'); item.className='pi'; item.onclick=()=>showDetail(p);
-    item.innerHTML=`<div class="dot ${st==='done'?'done':st==='ip'?'ip':''}"></div><div style="flex:1"><div class="pi-name">${p.name}</div><div class="pi-meta">${p.varianten} Variante${p.varianten>1?'n':''} · ${p.id}${ld?.datum?' · '+ld.datum:''}</div></div><span style="color:var(--gray3)">›</span>`;
+    item.innerHTML=`<div class="dot ${st==='done'?'done':st==='ip'?'ip':''}"></div><div style="flex:1"><div class="pi-name">${p.name}</div><div class="pi-meta">${p.varianten} Variante${p.varianten>1?'n':''} · ${p.id}${ld?.datum?' · '+ld.datum:''}</div></div><span style="color:var(--g3)">›</span>`;
     l.appendChild(item);
   });
 }
 
-// ── DETAIL ──────────────────────────────────────────────
-function showDetail(p) {
+// ── DETAIL ───────────────────────────────────────────────
+function showDetail(p){
   curProz=p; nav=['stat','proz','detail'];
   document.getElementById('backBtn').classList.add('show');
   document.getElementById('prog').style.display='block';
   timerSec=0; clearInterval(timerIv); timerIv=null;
-  go('scrDetail');
-  renderDetail(p);
+  go('scrDetail'); renderDetail(p);
 }
 
-function renderDetail(p) {
+function renderDetail(p){
   const d=local[p.id]||{};
   const schs=d.schs||[{}];
-  const wks=d.wks||[];
   const boms=d.boms||{};
   const bomM=d.bomM||{};
   const st=d.s||'open';
@@ -445,19 +391,17 @@ function renderDetail(p) {
     <div class="ph-title">${p.name}</div>
     <div style="margin-top:8px">
       <span class="badge ${st==='done'?'done':st==='ip'?'ip':'open'}">${st==='done'?'✓ Abgeschlossen':st==='ip'?'In Bearbeitung':'Offen'}</span>
-      ${d.mitarbeiter?`<span style="font-size:11px;color:var(--gray2)"> · ${d.mitarbeiter}${d.datum?', '+d.datum:''}</span>`:''}
+      ${d.mitarbeiter?`<span style="font-size:11px;color:var(--g2)"> · ${d.mitarbeiter}${d.datum?', '+d.datum:''}</span>`:''}
     </div>`;
 
-  // Schritte
-  const schHTML=schs.map((s,i)=>mkSchritt(s,i)).join('');
+  const schHTML=schs.map((s,i)=>mkSch(s,i)).join('');
 
-  // BOM
   const bomHTML=p.bom.length?`
-    <div class="bom-hdr">
+    <div class="bom-hdr-row">
       <div style="flex:1">Artikel</div>
       <div style="width:44px;text-align:center">Soll</div>
-      <div style="width:60px;text-align:center">Verw.</div>
-      <div style="width:72px;text-align:center">Status</div>
+      <div style="width:58px;text-align:center">Verw.</div>
+      <div style="width:74px;text-align:center">Status</div>
     </div>
     ${p.bom.map(b=>{
       const bs=boms[b.nr]||'';
@@ -467,274 +411,337 @@ function renderDetail(p) {
         <div class="bom-soll">${b.menge}×</div>
         <input class="bom-inp" type="number" step="0.01" min="0" value="${mv}" oninput="setBomM('${b.nr}',this.value)">
         <div class="bom-btns">
-          <button class="bom-btn ok ${bs==='ok'?'on':''}" onclick="setBom('${b.nr}','ok')">✓</button>
-          <button class="bom-btn fehl ${bs==='fehlt'?'on':''}" onclick="setBom('${b.nr}','fehlt')">!</button>
+          <button class="bbtn ok ${bs==='ok'?'on':''}" onclick="setBom('${b.nr}','ok')">✓</button>
+          <button class="bbtn fehl ${bs==='fehlt'?'on':''}" onclick="setBom('${b.nr}','fehlt')">!</button>
         </div>
       </div>`;
-    }).join('')}`:'<div style="font-size:12px;color:var(--gray2)">Keine Positionen hinterlegt</div>';
+    }).join('')}`:'<div style="font-size:12px;color:var(--g2)">Keine Positionen hinterlegt</div>';
 
   document.getElementById('dContent').innerHTML=`
     <div class="sec">
       <div class="sec-lbl">⏱ Zeiterfassung</div>
       <div class="time-row">
-        <button class="time-btn start" onclick="startT()">▶ Start</button>
-        <div class="time-d" id="tDisp">00:00</div>
-        <button class="time-btn stop" onclick="stopT()">■ Stop</button>
+        <button class="tbtn start" onclick="startT()">▶ Start</button>
+        <div class="tdisp" id="tDisp">00:00</div>
+        <button class="tbtn stop" onclick="stopT()">■ Stop</button>
       </div>
-      <div class="field-label">Oder manuell (Minuten)</div>
-      <input class="input" id="zeitIn" type="number" min="0" placeholder="z. B. 30" value="${d.zeit||''}" oninput="autoSave('zeit',this.value)">
+      <div class="fl">Oder manuell (Minuten)</div>
+      <input class="inp" id="zeitIn" type="number" min="0" placeholder="z. B. 30" value="${d.zeit||''}" oninput="autoSave('zeit',this.value)">
     </div>
 
     <div class="sec">
-      <div class="sec-lbl">🔧 Werkzeuge & Maschinen</div>
-      <div class="tags" id="tags">${wks.map((w,i)=>`<div class="tag">${w}<span class="tag-x" onclick="delWk(${i})">×</span></div>`).join('')}</div>
-      <input class="input" id="wkIn" placeholder="Werkzeug eingeben + Enter" onkeydown="addWk(event)">
-    </div>
-
-    <div class="sec">
-      <div class="sec-lbl">📋 Arbeitsschritte & Fotos</div>
+      <div class="sec-lbl">📋 Arbeitsschritte</div>
       <div id="schs">${schHTML}</div>
-      <button class="btn btn-ghost" onclick="addSch()">+ Schritt hinzufügen</button>
+      <button class="btn btn-g" style="margin-top:4px" onclick="addSch()">+ Schritt hinzufügen</button>
     </div>
 
     <div class="sec">
       <div class="sec-lbl">📦 Stückliste prüfen</div>
-      <div style="font-size:11px;color:var(--gray2);margin-bottom:10px">Soll-Menge anpassen falls nötig · ✓ ok · ! fehlt</div>
+      <div style="font-size:11px;color:var(--g2);margin-bottom:10px">Menge anpassen falls nötig · ✓ ok · ! fehlt</div>
       ${bomHTML}
     </div>
 
     <div class="sec">
       <div class="sec-lbl">💬 Hinweise</div>
-      <textarea class="input" placeholder="Besonderheiten, Verbesserungsvorschläge…" oninput="autoSave('hinweise',this.value)">${d.hinweise||''}</textarea>
+      <textarea class="inp" placeholder="Besonderheiten, Verbesserungsvorschläge…" oninput="autoSave('hinweise',this.value)">${d.hinweise||''}</textarea>
     </div>
 
-    <button class="btn-save" onclick="zeigeVorschau()">Vorschau &amp; Abschließen →</button>`;
+    <button class="save-btn" onclick="zeigeVorschau()">Vorschau &amp; Abschließen →</button>`;
 
   updProg();
 }
 
-// ── SCHRITT HELPER ──────────────────────────────────────
-function mkSchritt(s, i) {
-  const imgs = s.bilder || [];
-  const fotosHTML = imgs.map((b, fi) => {
-    const src = b.url || b;
-    return `<div class="foto-wrap" id="fw-${i}-${fi}">
-      <img class="foto-img" src="${src}" style="opacity:${b.driveUrl?1:.75}">
-      <button class="foto-del" onclick="delFoto(${i},${fi})">×</button>
+// ── SCHRITT RENDERN ──────────────────────────────────────
+function mkSch(s, i){
+  const bilder=s.bilder||[];
+  const wks=s.wks||[];
+
+  const fotosHTML=bilder.map((b,fi)=>{
+    const src=b.url||b;
+    const uploading=b.uploading;
+    return `<div class="fwrap" id="fw-${i}-${fi}">
+      <img class="fimg" src="${src}" style="opacity:${b.driveUrl?1:.7}">
+      ${uploading?'<div style="position:absolute;inset:0;background:rgba(255,255,255,.5);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px">↑</div>':''}
+      <button class="fdel" onclick="delFoto(${i},${fi})">×</button>
     </div>`;
   }).join('');
+
+  const wkTagsHTML=wks.map((w,wi)=>`<div class="wk-tag">${w}<span class="wk-x" onclick="delSchWk(${i},${wi})">×</span></div>`).join('');
 
   return `<div class="sch" id="sch-${i}">
     <div class="sch-nr">Schritt ${i+1}</div>
     <button class="sch-del" onclick="delSch(${i})">×</button>
-    <div class="field-label">Beschreibung</div>
-    <textarea class="input" style="min-height:60px" placeholder="Was wird gemacht?" oninput="updSch(${i},'beschreibung',this.value)">${s.beschreibung||''}</textarea>
+    <div class="fl">Beschreibung</div>
+    <textarea class="inp" style="min-height:60px;margin-bottom:10px" placeholder="Was wird gemacht?" oninput="updSch(${i},'beschreibung',this.value)">${s.beschreibung||''}</textarea>
+    <div class="fl">Werkzeuge & Maschinen</div>
+    <div class="wk-tags" id="wkt-${i}">${wkTagsHTML}</div>
+    <input class="inp" style="margin-bottom:8px" placeholder="Werkzeug eingeben + Enter" onkeydown="addSchWk(event,${i})">
+    <div class="fl">Fotos</div>
     <div class="foto-row" id="fr-${i}">${fotosHTML}</div>
-    <div class="foto-btns">
-      <label class="foto-btn" for="cam-${i}">📷 Foto<input class="file-in" type="file" id="cam-${i}" accept="image/*" capture="environment" onchange="handleFoto(${i},this)"></label>
-      <label class="foto-btn" for="gal-${i}">🖼 Galerie<input class="file-in" type="file" id="gal-${i}" accept="image/*" onchange="handleFoto(${i},this)"></label>
+    <div class="foto-btns" style="margin-top:8px">
+      <label class="fbtn" for="cam-${i}">📷 Foto<input class="file-in" type="file" id="cam-${i}" accept="image/*" capture="environment" onchange="handleFoto(${i},this)"></label>
+      <label class="fbtn" for="gal-${i}">🖼 Galerie<input class="file-in" type="file" id="gal-${i}" accept="image/*" onchange="handleFoto(${i},this)"></label>
     </div>
   </div>`;
 }
 
-// ── SCHRITT ACTIONS ─────────────────────────────────────
-function ensure() {
-  if (!local[curProz.id]) local[curProz.id]={};
-  if (!local[curProz.id].schs) local[curProz.id].schs=[{}];
-  if (local[curProz.id].s !== 'done') local[curProz.id].s='ip';
+// ── SCHRITT ACTIONS ──────────────────────────────────────
+function ensure(){
+  if(!local[curProz.id]) local[curProz.id]={};
+  if(!local[curProz.id].schs) local[curProz.id].schs=[{}];
+  if(local[curProz.id].s!=='done') local[curProz.id].s='ip';
 }
 function autoSave(f,v){ ensure(); local[curProz.id][f]=v; saveLocal(); }
 function updSch(i,f,v){ ensure(); if(!local[curProz.id].schs[i]) local[curProz.id].schs[i]={}; local[curProz.id].schs[i][f]=v; saveLocal(); }
+function addSch(){ ensure(); local[curProz.id].schs.push({}); saveLocal(); const idx=local[curProz.id].schs.length-1; const c=document.getElementById('schs'); const d=document.createElement('div'); d.innerHTML=mkSch({},idx); c.appendChild(d.firstChild); }
+function delSch(i){ ensure(); local[curProz.id].schs.splice(i,1); saveLocal(); renderDetail(curProz); }
 
-function addSch() {
-  ensure();
-  local[curProz.id].schs.push({});
-  saveLocal();
-  const idx = local[curProz.id].schs.length - 1;
-  const container = document.getElementById('schs');
-  const div = document.createElement('div');
-  div.innerHTML = mkSchritt({}, idx);
-  container.appendChild(div.firstChild);
-}
-
-function delSch(i) {
-  ensure();
-  local[curProz.id].schs.splice(i,1);
-  saveLocal();
-  renderDetail(curProz);
-}
-
-// ── FOTOS ───────────────────────────────────────────────
-function compressImg(base64, maxPx, quality) {
-  return new Promise(res => {
-    const img = new Image();
-    img.onload = () => {
-      let w=img.width, h=img.height;
-      if (w>maxPx||h>maxPx) {
-        if (w>h) { h=Math.round(h*maxPx/w); w=maxPx; }
-        else { w=Math.round(w*maxPx/h); h=maxPx; }
-      }
-      const c=document.createElement('canvas');
-      c.width=w; c.height=h;
-      c.getContext('2d').drawImage(img,0,0,w,h);
-      res(c.toDataURL('image/jpeg', quality));
-    };
-    img.src = base64;
-  });
-}
-
-async function uploadChunked(base64, fileName) {
-  const data = base64.includes(',') ? base64.split(',')[1] : base64;
-  const CHUNK = 380000; // ~380KB
-  const total = Math.ceil(data.length / CHUNK);
-  const uid = Date.now().toString(36);
-
-  for (let i=0; i<total; i++) {
-    const chunk = data.slice(i*CHUNK, (i+1)*CHUNK);
-    const r = await fetch(WEBHOOK, {method:'POST', body:JSON.stringify({action:'upload_chunk', uploadId:uid, chunkIndex:i, chunk})});
-    const res = await r.json();
-    if (!res.success) throw new Error(`Chunk ${i} fehlgeschlagen`);
-  }
-  const r = await fetch(WEBHOOK, {method:'POST', body:JSON.stringify({action:'finalize_image', uploadId:uid, totalChunks:total, fileName})});
-  const res = await r.json();
-  if (!res.success) throw new Error(res.error||'Finalize fehlgeschlagen');
-  return res;
-}
-
-async function handleFoto(idx, input) {
-  const file = input.files[0];
-  if (!file) return;
-  input.value = ''; // reset damit gleiches Foto nochmal wählbar
-
-  ensure();
-  if (!local[curProz.id].schs[idx]) local[curProz.id].schs[idx]={};
-  if (!local[curProz.id].schs[idx].bilder) local[curProz.id].schs[idx].bilder=[];
-
-  const reader = new FileReader();
-  reader.onload = async e => {
-    // Komprimieren auf 1600px
-    const compressed = await compressImg(e.target.result, 1600, 0.82);
-
-    // Lokal speichern & sofort anzeigen
-    const fIdx = local[curProz.id].schs[idx].bilder.length;
-    local[curProz.id].schs[idx].bilder.push({url: compressed, driveUrl: null});
-    saveLocal();
-
-    // Foto sofort ins DOM
-    const fr = document.getElementById(`fr-${idx}`);
-    if (fr) {
-      const wrap = document.createElement('div');
-      wrap.className = 'foto-wrap';
-      wrap.id = `fw-${idx}-${fIdx}`;
-      wrap.innerHTML = `<img class="foto-img" src="${compressed}" style="opacity:.6"><button class="foto-del" onclick="delFoto(${idx},${fIdx})">×</button>`;
-      fr.appendChild(wrap);
-    }
-
-    // Upload zu Drive
-    try {
-      // Dateiname: P-002_S1_Prozessname.jpg
-        const safeName = curProz.name.replace(/[^a-zA-Z0-9äöüÄÖÜß]/g, '_').replace(/_+/g, '_').slice(0, 40);
-        const fn = `${curProz.id}_S${idx+1}_${safeName}.jpg`;
-      showToast('↑ Foto wird hochgeladen…');
-      const res = await uploadChunked(compressed, fn);
-      if (res.success) {
-        local[curProz.id].schs[idx].bilder[fIdx].driveUrl = res.url;
-        saveLocal();
-        // Opacity auf 1 setzen
-        const el = document.getElementById(`fw-${idx}-${fIdx}`);
-        if (el) el.querySelector('img').style.opacity='1';
-        showToast('✓ Foto in Drive gespeichert');
-      }
-    } catch(err) {
-      console.error(err);
-      showToast('Foto lokal gespeichert — Drive-Upload fehlgeschlagen', true);
-    }
-  };
-  reader.readAsDataURL(file);
-}
-
-function delFoto(si, fi) {
-  ensure();
-  local[curProz.id].schs?.[si]?.bilder?.splice(fi,1);
-  saveLocal();
-  // Nur den Schritt neu rendern
-  const sch = document.getElementById(`sch-${si}`);
-  if (sch) {
-    const newDiv = document.createElement('div');
-    newDiv.innerHTML = mkSchritt(local[curProz.id].schs[si]||{}, si);
-    sch.replaceWith(newDiv.firstChild);
-  }
-}
-
-// ── WERKZEUGE ───────────────────────────────────────────
-function addWk(e) {
-  if (e.key!=='Enter') return;
+// Werkzeuge pro Schritt
+function addSchWk(e,si){
+  if(e.key!=='Enter') return;
   const v=e.target.value.trim(); if(!v) return;
   ensure();
-  if(!local[curProz.id].wks) local[curProz.id].wks=[];
-  local[curProz.id].wks.push(v);
+  if(!local[curProz.id].schs[si]) local[curProz.id].schs[si]={};
+  if(!local[curProz.id].schs[si].wks) local[curProz.id].schs[si].wks=[];
+  local[curProz.id].schs[si].wks.push(v);
   saveLocal(); e.target.value='';
-  const i=local[curProz.id].wks.length-1;
-  const t=document.createElement('div'); t.className='tag';
-  t.innerHTML=`${v}<span class="tag-x" onclick="delWk(${i})">×</span>`;
-  document.getElementById('tags').appendChild(t);
+  const tagList=document.getElementById(`wkt-${si}`);
+  const idx=local[curProz.id].schs[si].wks.length-1;
+  const t=document.createElement('div'); t.className='wk-tag';
+  t.innerHTML=`${v}<span class="wk-x" onclick="delSchWk(${si},${idx})">×</span>`;
+  tagList.appendChild(t);
 }
-function delWk(i){ ensure(); local[curProz.id].wks?.splice(i,1); saveLocal(); renderDetail(curProz); }
+function delSchWk(si,wi){ ensure(); local[curProz.id].schs[si]?.wks?.splice(wi,1); saveLocal(); renderDetail(curProz); }
 
-// ── BOM ─────────────────────────────────────────────────
+// BOM
 function setBom(nr,st){ ensure(); if(!local[curProz.id].boms) local[curProz.id].boms={}; const c=local[curProz.id].boms[nr]; local[curProz.id].boms[nr]=c===st?'':st; saveLocal(); renderDetail(curProz); }
 function setBomM(nr,v){ ensure(); if(!local[curProz.id].bomM) local[curProz.id].bomM={}; local[curProz.id].bomM[nr]=v; saveLocal(); }
 
-// ── TIMER ───────────────────────────────────────────────
+// ── FOTOS ────────────────────────────────────────────────
+function compressImg(base64, maxPx, quality){
+  return new Promise((res,rej)=>{
+    const img=new Image();
+    img.onload=()=>{
+      let w=img.width,h=img.height;
+      if(w>maxPx||h>maxPx){ if(w>h){h=Math.round(h*maxPx/w);w=maxPx;}else{w=Math.round(w*maxPx/h);h=maxPx;} }
+      const c=document.createElement('canvas'); c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      res(c.toDataURL('image/jpeg',quality));
+    };
+    img.onerror=rej; img.src=base64;
+  });
+}
+
+function postJSON(payload){
+  return new Promise((resolve,reject)=>{
+    const xhr=new XMLHttpRequest();
+    xhr.open('POST',WEBHOOK,true);
+    xhr.setRequestHeader('Content-Type','text/plain');
+    xhr.timeout=30000;
+    xhr.onload=()=>{ try{ resolve(JSON.parse(xhr.responseText)); }catch(e){ reject(new Error('Ungültige Antwort')); } };
+    xhr.onerror=()=>reject(new Error('Netzwerkfehler'));
+    xhr.ontimeout=()=>reject(new Error('Timeout'));
+    xhr.send(JSON.stringify(payload));
+  });
+}
+
+async function uploadChunked(base64,fileName){
+  const data=base64.includes(',')?base64.split(',')[1]:base64;
+  const CHUNK=250000;
+  const total=Math.ceil(data.length/CHUNK);
+  const uid=Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  for(let i=0;i<total;i++){
+    const chunk=data.slice(i*CHUNK,(i+1)*CHUNK);
+    let ok=false;
+    for(let a=0;a<3;a++){
+      try{ const r=await postJSON({action:'upload_chunk',uploadId:uid,chunkIndex:i,chunk}); if(r.success){ok=true;break;} }
+      catch(e){ if(a<2) await new Promise(r=>setTimeout(r,1200)); }
+    }
+    if(!ok) throw new Error(`Chunk ${i} fehlgeschlagen`);
+  }
+  for(let a=0;a<3;a++){
+    try{ const r=await postJSON({action:'finalize_image',uploadId:uid,totalChunks:total,fileName}); if(r.success) return r; throw new Error(r.error); }
+    catch(e){ if(a<2) await new Promise(r=>setTimeout(r,1500)); else throw e; }
+  }
+}
+
+async function handleFoto(idx,input){
+  const file=input.files[0]; if(!file) return;
+  input.value='';
+  ensure();
+  if(!local[curProz.id].schs[idx]) local[curProz.id].schs[idx]={};
+  if(!local[curProz.id].schs[idx].bilder) local[curProz.id].schs[idx].bilder=[];
+
+  // Datei lesen
+  const b64raw=await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=e=>res(e.target.result); r.onerror=rej; r.readAsDataURL(file); });
+
+  // Komprimieren
+  let compressed;
+  try{ compressed=await compressImg(b64raw,1600,0.82); }catch(e){ compressed=b64raw; }
+
+  // Lokal speichern
+  const fIdx=local[curProz.id].schs[idx].bilder.length;
+  local[curProz.id].schs[idx].bilder.push({url:compressed,driveUrl:null,uploading:true});
+  saveLocal();
+
+  // Schritt neu rendern → Foto sichtbar
+  const schEl=document.getElementById(`sch-${idx}`);
+  if(schEl){ const d=document.createElement('div'); d.innerHTML=mkSch(local[curProz.id].schs[idx],idx); schEl.replaceWith(d.firstChild); }
+
+  // Upload
+  try{
+    const safeName=curProz.name.replace(/[^a-zA-Z0-9äöüÄÖÜß]/g,'_').replace(/_+/g,'_').slice(0,40);
+    const fn=`${curProz.id}_S${idx+1}_${safeName}.jpg`;
+    const res=await uploadChunked(compressed,fn);
+    if(res.success){
+      local[curProz.id].schs[idx].bilder[fIdx].driveUrl=res.url;
+      local[curProz.id].schs[idx].bilder[fIdx].uploading=false;
+      saveLocal();
+      const el=document.getElementById(`sch-${idx}`);
+      if(el){ const d=document.createElement('div'); d.innerHTML=mkSch(local[curProz.id].schs[idx],idx); el.replaceWith(d.firstChild); }
+      showToast('✓ Foto gespeichert');
+    }
+  }catch(err){
+    local[curProz.id].schs[idx].bilder[fIdx].uploading=false;
+    saveLocal();
+    showToast('Foto lokal gespeichert — Upload fehlgeschlagen',true);
+  }
+}
+
+function delFoto(si,fi){ ensure(); local[curProz.id].schs?.[si]?.bilder?.splice(fi,1); saveLocal(); const el=document.getElementById(`sch-${si}`); if(el){ const d=document.createElement('div'); d.innerHTML=mkSch(local[curProz.id].schs[si]||{},si); el.replaceWith(d.firstChild); } }
+
+// ── TIMER ────────────────────────────────────────────────
 function startT(){ if(timerIv) return; timerStart=Date.now()-timerSec*1000; timerIv=setInterval(()=>{ timerSec=Math.floor((Date.now()-timerStart)/1000); const el=document.getElementById('tDisp'); if(el) el.textContent=fmt(timerSec); const zi=document.getElementById('zeitIn'); if(zi) zi.value=Math.ceil(timerSec/60); },1000); }
 function stopT(){ clearInterval(timerIv); timerIv=null; if(timerSec>0) autoSave('zeit',Math.ceil(timerSec/60)); }
 function fmt(s){ return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`; }
 
-// ── SPEICHERN ───────────────────────────────────────────
-async function saveProzess() {
+// ── VORSCHAU ─────────────────────────────────────────────
+function zeigeVorschau(){
+  // Timer stoppen falls läuft
+  if(timerIv&&timerSec>0){ ensure(); local[curProz.id].zeit=Math.ceil(timerSec/60); saveLocal(); stopT(); }
+  nav=['stat','proz','detail','vorschau'];
+  document.getElementById('backBtn').classList.add('show');
+  go('scrVorschau');
+  renderVorschau();
+}
+
+function renderVorschau(){
+  const p=curProz;
+  const d=local[p.id]||{};
+  const schs=d.schs||[];
+  const boms=d.boms||{};
+  const bomM=d.bomM||{};
+  const heute=new Date().toLocaleDateString('de-DE');
+
+  const schHTML=schs.map((s,i)=>{
+    const img=s.bilder?.find(b=>b.url);
+    const wks=s.wks||[];
+    return `<div class="a4-sch">
+      <div class="a4-snr">${i+1}</div>
+      <div class="a4-sbody">
+        <div class="a4-stxt">${s.beschreibung||'<em style="color:#bbb">Keine Beschreibung</em>'}</div>
+        ${wks.length?`<div class="a4-swks">${wks.map(w=>`<span class="a4-swk">🔧 ${w}</span>`).join('')}</div>`:''}
+      </div>
+      ${img?`<img class="a4-simg" src="${img.url||img}">`:''}
+    </div>`;
+  }).join('');
+
+  const bomHTML=p.bom.map(b=>{
+    const st=boms[b.nr]||'';
+    const mv=bomM[b.nr]!==undefined?bomM[b.nr]:b.menge;
+    return `<div class="a4-brow">
+      <div style="flex:1"><div class="a4-bname">${b.name}</div><div class="a4-bnr">${b.nr}</div></div>
+      <div class="a4-bmenge">${mv}×</div>
+      <div class="a4-bst ${st}">${st==='ok'?'✓':st==='fehlt'?'!':'—'}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('a4').innerHTML=`
+    <div class="a4-hdr">
+      <div><div class="a4-logo">farbflut <span>Design</span></div><div style="font-size:11px;color:#888;margin-top:2px">Prozessdokumentation</div></div>
+      <div class="a4-meta">${user}<br>${heute}${d.zeit?'<br>'+d.zeit+' Min':''}</div>
+    </div>
+    <div class="a4-title">${p.name}</div>
+    <div class="a4-sub">${p.station.replace(/Station \d+[a-z]? — /,'')}</div>
+    ${schs.length?`<div style="margin-bottom:18px"><div class="a4-slbl">Arbeitsschritte</div>${schHTML}</div>`:''}
+    ${p.bom.length?`<div style="margin-bottom:16px"><div class="a4-slbl">Stückliste</div>${bomHTML}</div>`:''}
+    ${d.hinweise?`<div style="margin-bottom:14px"><div class="a4-slbl">Hinweise</div><div style="font-size:13px;color:#111;line-height:1.5">${d.hinweise}</div></div>`:''}
+    <div class="a4-confirm">
+      <div class="a4-check"></div>
+      <div>Hiermit bestätige ich, <strong>${user}</strong>, dass alle Angaben korrekt und vollständig sind (${heute}).</div>
+    </div>`;
+}
+
+// ── BESTÄTIGEN & SPEICHERN ───────────────────────────────
+async function bestaetigen(){
   showOv('Wird gespeichert…');
   ensure();
-  // Timer-Wert übernehmen falls noch läuft
-  if (timerIv && timerSec > 0) {
-    ensure();
-    local[curProz.id].zeit = Math.ceil(timerSec / 60);
-    saveLocal();
-  }
   const d=local[curProz.id];
+
+  // PDF als HTML in Drive
+  try{
+    const safeName=curProz.name.replace(/[^a-zA-Z0-9äöüÄÖÜß]/g,'_').slice(0,40);
+    const fn=`${curProz.id}_${safeName}_${new Date().toLocaleDateString('de-DE').replace(/\./g,'-')}.html`;
+    const content=document.getElementById('a4').innerHTML;
+    const fullHTML=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${curProz.name}</title>
+    <style>body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:0 20px;color:#111}
+    .a4-hdr{display:flex;justify-content:space-between;padding-bottom:14px;border-bottom:2px solid #111;margin-bottom:18px}
+    .a4-logo{font-size:18px;font-weight:800}.a4-meta{font-size:11px;color:#666;text-align:right;line-height:1.7}
+    .a4-title{font-size:20px;font-weight:700;margin-bottom:3px}.a4-sub{font-size:12px;color:#888;margin-bottom:16px}
+    .a4-slbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#999;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #eee}
+    .a4-sch{display:flex;gap:10px;margin-bottom:14px;align-items:flex-start}
+    .a4-snr{width:22px;height:22px;border-radius:50%;background:#111;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .a4-sbody{flex:1}.a4-stxt{font-size:13px;line-height:1.5}
+    .a4-swks{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+    .a4-swk{font-size:11px;background:#f5f5f5;border-radius:10px;padding:2px 8px}
+    .a4-simg{width:100px;height:75px;object-fit:cover;border-radius:4px;border:1px solid #eee;flex-shrink:0}
+    .a4-brow{display:flex;font-size:12px;padding:4px 0;border-bottom:1px solid #f5f5f5;gap:6px}
+    .a4-bname{flex:1}.a4-bmenge{width:55px;text-align:right;font-weight:600}
+    .a4-bst{width:36px;text-align:center;font-weight:700}.ok{color:#2d6a45}.fehlt{color:#b83232}
+    .a4-confirm{margin-top:18px;padding-top:14px;border-top:1px solid #eee;font-size:11px;color:#888;display:flex;gap:8px}
+    .a4-check{width:14px;height:14px;border:1.5px solid #ccc;border-radius:2px;flex-shrink:0}
+    </style></head><body>${content}</body></html>`;
+    const b64=btoa(unescape(encodeURIComponent(fullHTML)));
+    await postJSON({action:'save_pdf',htmlContent:b64,fileName:fn,prozessId:curProz.id,prozessName:curProz.name});
+  }catch(e){ console.error('PDF fehlgeschlagen:',e); }
+
+  // Sheet speichern
   const payload={
     action:'save_prozess',
     prozessId:curProz.id, prozessName:curProz.name, station:curProz.station,
     mitarbeiter:user, datum:new Date().toLocaleDateString('de-DE'),
-    zeitMinuten:d.zeit||'', werkzeuge:d.wks||[], hinweise:d.hinweise||'',
+    zeitMinuten:d.zeit||'', werkzeuge:[], hinweise:d.hinweise||'',
     status:'done', bomMengen:d.bomM||{},
     schritte:(d.schs||[]).map(s=>({
       beschreibung:s.beschreibung||'',
+      werkzeuge:(s.wks||[]).join(', '),
       bildUrl:s.bilder?.find(b=>b.driveUrl)?.driveUrl||''
     }))
   };
-  try {
-    const r=await fetch(WEBHOOK,{method:'POST',body:JSON.stringify(payload)});
-    const res=await r.json();
+
+  try{
+    const r=await postJSON(payload);
     hideOv();
-    if(res.success){
+    if(r.success){
       local[curProz.id].s='done';
       local[curProz.id].mitarbeiter=user;
       local[curProz.id].datum=new Date().toLocaleDateString('de-DE');
       saveLocal();
       showToast('✓ Gespeichert');
-      setTimeout(()=>goBack(),1200);
-    } else showToast('Fehler: '+res.error,true);
-  } catch(err){ hideOv(); showToast('Verbindungsfehler',true); }
+      setTimeout(()=>{ nav=['stat','proz']; showProz(curStation); },1400);
+    } else showToast('Fehler: '+r.error,true);
+  }catch(err){ hideOv(); showToast('Verbindungsfehler',true); }
 }
 
-// ── PROGRESS ────────────────────────────────────────────
+// ── PROGRESS + NAV ───────────────────────────────────────
 function updProg(){ const ps=PROZESSE.filter(p=>p.station===curStation); const d=ps.filter(p=>local[p.id]?.s==='done').length; document.getElementById('progFill').style.width=(ps.length?d/ps.length*100:0)+'%'; }
-
-// ── NAV ─────────────────────────────────────────────────
 function go(id){ document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on')); document.getElementById(id).classList.add('on'); window.scrollTo(0,0); }
-function goBack(){ nav.pop(); stopT(); timerSec=0; const p=nav[nav.length-1]; if(p==='stat') showStationen(); else if(p==='proz') showProz(curStation); }
-
-// ── UI ──────────────────────────────────────────────────
+function goBack(){
+  const prev=nav[nav.length-2];
+  if(prev==='detail'){ nav=['stat','proz','detail']; go('scrDetail'); }
+  else if(prev==='proz'){ nav=['stat','proz']; showProz(curStation); }
+  else if(prev==='stat'){ showStationen(); }
+}
 function showOv(t){ document.getElementById('ovTxt').textContent=t; document.getElementById('overlay').classList.add('on'); }
 function hideOv(){ document.getElementById('overlay').classList.remove('on'); }
 function showToast(msg,err=false){ const t=document.getElementById('toast'); t.textContent=msg; t.className='toast on'+(err?' err':''); clearTimeout(t._to); t._to=setTimeout(()=>t.classList.remove('on'),err?4000:2500); }
