@@ -175,6 +175,33 @@ textarea.input { min-height: 70px; resize: vertical; line-height: 1.5; font-size
 .toast.on { opacity: 1; }
 .toast.err { background: var(--red); }
 
+
+/* VORSCHAU A4 */
+.a4-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:24px; padding-bottom:16px; border-bottom:2px solid #111; }
+.a4-logo { font-size:18px; font-weight:800; letter-spacing:-.02em; }
+.a4-logo span { font-weight:300; color:#888; }
+.a4-meta { font-size:11px; color:#666; text-align:right; line-height:1.6; }
+.a4-title { font-size:20px; font-weight:700; margin-bottom:4px; letter-spacing:-.02em; }
+.a4-station { font-size:12px; color:#888; margin-bottom:20px; }
+.a4-section { margin-bottom:20px; }
+.a4-sec-label { font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#888; margin-bottom:8px; padding-bottom:4px; border-bottom:1px solid #eee; }
+.a4-schritt { margin-bottom:16px; display:flex; gap:12px; align-items:flex-start; }
+.a4-schritt-nr { width:24px; height:24px; border-radius:50%; background:#111; color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+.a4-schritt-body { flex:1; }
+.a4-schritt-text { font-size:13px; line-height:1.5; color:#111; }
+.a4-schritt-img { width:120px; height:90px; object-fit:cover; border-radius:4px; border:1px solid #eee; flex-shrink:0; }
+.a4-bom-row { display:flex; font-size:12px; padding:4px 0; border-bottom:1px solid #f5f5f5; gap:8px; }
+.a4-bom-name { flex:1; color:#111; }
+.a4-bom-menge { color:#444; font-weight:500; width:60px; text-align:right; }
+.a4-bom-status { width:50px; text-align:center; font-weight:600; }
+.a4-bom-status.ok { color:#2d6a45; }
+.a4-bom-status.fehlt { color:#b83232; }
+.a4-info-row { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:16px; }
+.a4-info-item { font-size:12px; }
+.a4-info-label { color:#888; font-size:10px; text-transform:uppercase; letter-spacing:.06em; }
+.a4-info-value { font-weight:600; color:#111; margin-top:1px; }
+.a4-confirm { margin-top:20px; padding-top:16px; border-top:1px solid #eee; font-size:11px; color:#888; display:flex; align-items:center; gap:8px; }
+
 /* MOBILE */
 @media (max-width: 480px) {
   .pin-key { padding: 18px; font-size: 22px; }
@@ -191,7 +218,7 @@ textarea.input { min-height: 70px; resize: vertical; line-height: 1.5; font-size
   <button class="back" id="backBtn" onclick="goBack()">← Zurück</button>
   <div class="logo">farbflut <span>·</span> Prozessdok</div>
   <div class="hdr-r">
-    <span class="ver">V1.6</span>
+    <span class="ver">V1.7</span>
     <span class="hdr-user" id="hdrUser"></span>
   </div>
 </div>
@@ -279,6 +306,28 @@ textarea.input { min-height: 70px; resize: vertical; line-height: 1.5; font-size
   <div class="lw" id="prozList"></div>
 </div>
 
+
+<!-- VORSCHAU -->
+<div class="scr" id="scrVorschau">
+  <div class="ph" style="display:flex;align-items:center;gap:12px">
+    <div style="flex:1">
+      <div class="ph-ey">Vorschau</div>
+      <div class="ph-title">Alles korrekt?</div>
+      <div class="ph-sub">Bitte prüfen und dann bestätigen</div>
+    </div>
+  </div>
+  <div style="padding:12px 16px 100px">
+    <!-- A4 Vorschau -->
+    <div id="a4preview" style="background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:32px 28px;box-shadow:var(--shadow-md);max-width:640px;margin:0 auto">
+      <!-- Inhalt wird dynamisch befüllt -->
+    </div>
+    <!-- Buttons -->
+    <div style="max-width:640px;margin:16px auto 0;display:flex;flex-direction:column;gap:8px">
+      <button class="btn-save" onclick="bestaetigenUndSpeichern()">✓ Bestätigen &amp; in Google Sheet speichern</button>
+      <button class="btn btn-ghost" onclick="goBack()">← Zurück zum Bearbeiten</button>
+    </div>
+  </div>
+</div>
 <!-- DETAIL -->
 <div class="scr" id="scrDetail">
   <div class="ph" id="dHdr"></div>
@@ -459,7 +508,7 @@ function renderDetail(p) {
       <textarea class="input" placeholder="Besonderheiten, Verbesserungsvorschläge…" oninput="autoSave('hinweise',this.value)">${d.hinweise||''}</textarea>
     </div>
 
-    <button class="btn-save" onclick="saveProzess()">In Google Sheet speichern →</button>`;
+    <button class="btn-save" onclick="zeigeVorschau()">Vorschau &amp; Abschließen →</button>`;
 
   updProg();
 }
