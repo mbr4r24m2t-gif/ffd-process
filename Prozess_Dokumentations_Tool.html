@@ -200,7 +200,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="backBtn" onclick="goBack()">← Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V2.1</span><span class="hdr-user" id="hdrUser"></span></div>
+  <div class="hdr-r"><span class="ver">V2.2</span><span class="hdr-user" id="hdrUser"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
 <div class="overlay" id="overlay"><div class="spinner"></div><div class="ov-txt" id="ovTxt"></div></div>
@@ -521,16 +521,31 @@ function setBomM(nr,v){ ensure(); if(!local[curProz.id].bomM) local[curProz.id].
 
 // ── FOTOS ────────────────────────────────────────────────
 function compressImg(base64, maxPx, quality){
-  return new Promise((res,rej)=>{
+  return new Promise((res)=>{
     const img=new Image();
     img.onload=()=>{
-      let w=img.width,h=img.height;
-      if(w>maxPx||h>maxPx){ if(w>h){h=Math.round(h*maxPx/w);w=maxPx;}else{w=Math.round(w*maxPx/h);h=maxPx;} }
-      const c=document.createElement('canvas'); c.width=w; c.height=h;
-      c.getContext('2d').drawImage(img,0,0,w,h);
-      res(c.toDataURL('image/jpeg',quality));
+      try {
+        let w=img.width,h=img.height;
+        // Sicherheitscheck: zu große Bilder schrittweise reduzieren
+        if(w===0||h===0){ res(base64); return; }
+        if(w>maxPx||h>maxPx){ if(w>h){h=Math.round(h*maxPx/w);w=maxPx;}else{w=Math.round(w*maxPx/h);h=maxPx;} }
+        const c=document.createElement('canvas'); c.width=w; c.height=h;
+        const ctx=c.getContext('2d');
+        ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,w,h); // weißer Hintergrund
+        ctx.drawImage(img,0,0,w,h);
+        const result=c.toDataURL('image/jpeg',quality);
+        // Fallback falls Canvas leer zurückgibt
+        if(result==='data:,'||result.length<100){ res(base64); return; }
+        res(result);
+      } catch(e) {
+        console.warn('Komprimierung fehlgeschlagen, nutze Original:', e);
+        res(base64); // Fallback: Original verwenden
+      }
     };
-    img.onerror=rej; img.src=base64;
+    img.onerror=()=>res(base64); // Fallback bei Ladefehler
+    // CORS-Header für iOS Safari
+    img.crossOrigin='anonymous';
+    img.src=base64;
   });
 }
 
@@ -575,10 +590,23 @@ async function handleFoto(idx,input){
   if(!local[curProz.id].schs[idx]) local[curProz.id].schs[idx]={};
   if(!local[curProz.id].schs[idx].bilder) local[curProz.id].schs[idx].bilder=[];
 
-  // Datei lesen + komprimieren
+  // Datei lesen
   const b64raw=await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=e=>res(e.target.result); r.onerror=rej; r.readAsDataURL(file); });
+  
+  // Komprimieren mit Timeout-Schutz (5 Sekunden)
   let compressed;
-  try{ compressed=await compressImg(b64raw,1600,0.82); }catch(e){ compressed=b64raw; }
+  try{
+    const compressPromise = compressImg(b64raw, 1600, 0.82);
+    const timeoutPromise = new Promise(res => setTimeout(()=>res(b64raw), 5000));
+    compressed = await Promise.race([compressPromise, timeoutPromise]);
+  }catch(e){
+    console.warn('Komprimierung fehlgeschlagen:', e);
+    compressed=b64raw;
+  }
+  
+  // Größe loggen für Debugging
+  const sizeKB = Math.round(compressed.length * 0.75 / 1024);
+  console.log(`Foto Schritt ${idx}: ${sizeKB}KB`);
 
   // NUR lokal speichern — Upload passiert beim Bestätigen
   local[curProz.id].schs[idx].bilder.push({url:compressed, driveUrl:null});
@@ -650,7 +678,16 @@ function renderVorschau(){ confirmed=false; setTimeout(()=>{ const btn=document.
     ${d.hinweise?`<div style="margin-bottom:14px"><div class="a4-slbl">Hinweise</div><div style="font-size:13px;color:#111;line-height:1.5">${d.hinweise}</div></div>`:''}
     <div class="a4-confirm" onclick="toggleConfirm()" style="cursor:pointer">
       <div class="a4-check" id="confirmCheck"></div>
-      <div>Hiermit bestätige ich, <strong>${user}</strong>, dass alle Angaben korrekt und vollständig sind (${heute}).</div>
+      <div style="font-size:13px;color:#333;line-height:1.6">
+        <div style="font-weight:600;margin-bottom:8px">Bitte vor dem Bestätigen prüfen:</div>
+        <div style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#555;margin-bottom:10px">
+          <div>⏱ Zeitangabe ist korrekt und vollständig</div>
+          <div>📋 Alle Arbeitsschritte sind beschrieben</div>
+          <div>📦 Stückliste wurde geprüft und abgehakt</div>
+          <div>📷 Fotos zeigen den Prozess verständlich</div>
+        </div>
+        <div style="font-size:11px;color:#888">Hiermit bestätige ich, <strong style="color:#111">${user}</strong>, dass alle Angaben korrekt und vollständig sind (${heute}).</div>
+      </div>
     </div>`;
 }
 
