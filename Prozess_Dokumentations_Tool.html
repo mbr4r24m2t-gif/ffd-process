@@ -200,7 +200,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="backBtn" onclick="goBack()">← Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V1.9</span><span class="hdr-user" id="hdrUser"></span></div>
+  <div class="hdr-r"><span class="ver">V2.0</span><span class="hdr-user" id="hdrUser"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
 <div class="overlay" id="overlay"><div class="spinner"></div><div class="ov-txt" id="ovTxt"></div></div>
@@ -571,40 +571,19 @@ async function handleFoto(idx,input){
   if(!local[curProz.id].schs[idx]) local[curProz.id].schs[idx]={};
   if(!local[curProz.id].schs[idx].bilder) local[curProz.id].schs[idx].bilder=[];
 
-  // Datei lesen
+  // Datei lesen + komprimieren
   const b64raw=await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=e=>res(e.target.result); r.onerror=rej; r.readAsDataURL(file); });
-
-  // Komprimieren
   let compressed;
   try{ compressed=await compressImg(b64raw,1600,0.82); }catch(e){ compressed=b64raw; }
 
-  // Lokal speichern
-  const fIdx=local[curProz.id].schs[idx].bilder.length;
-  local[curProz.id].schs[idx].bilder.push({url:compressed,driveUrl:null,uploading:true});
+  // NUR lokal speichern — Upload passiert beim Bestätigen
+  local[curProz.id].schs[idx].bilder.push({url:compressed, driveUrl:null});
   saveLocal();
 
-  // Schritt neu rendern → Foto sichtbar
+  // Schritt neu rendern → Foto sofort sichtbar
   const schEl=document.getElementById(`sch-${idx}`);
   if(schEl){ const d=document.createElement('div'); d.innerHTML=mkSch(local[curProz.id].schs[idx],idx); schEl.replaceWith(d.firstChild); }
-
-  // Upload
-  try{
-    const safeName=curProz.name.replace(/[^a-zA-Z0-9äöüÄÖÜß]/g,'_').replace(/_+/g,'_').slice(0,40);
-    const fn=`${curProz.id}_S${idx+1}_${safeName}.jpg`;
-    const res=await uploadChunked(compressed,fn);
-    if(res.success){
-      local[curProz.id].schs[idx].bilder[fIdx].driveUrl=res.url;
-      local[curProz.id].schs[idx].bilder[fIdx].uploading=false;
-      saveLocal();
-      const el=document.getElementById(`sch-${idx}`);
-      if(el){ const d=document.createElement('div'); d.innerHTML=mkSch(local[curProz.id].schs[idx],idx); el.replaceWith(d.firstChild); }
-      showToast('✓ Foto gespeichert');
-    }
-  }catch(err){
-    local[curProz.id].schs[idx].bilder[fIdx].uploading=false;
-    saveLocal();
-    showToast('Foto lokal gespeichert — Upload fehlgeschlagen',true);
-  }
+  showToast('📷 Foto gespeichert — wird beim Bestätigen hochgeladen');
 }
 
 function delFoto(si,fi){ ensure(); local[curProz.id].schs?.[si]?.bilder?.splice(fi,1); saveLocal(); const el=document.getElementById(`sch-${si}`); if(el){ const d=document.createElement('div'); d.innerHTML=mkSch(local[curProz.id].schs[si]||{},si); el.replaceWith(d.firstChild); } }
@@ -624,7 +603,7 @@ function zeigeVorschau(){
   renderVorschau();
 }
 
-function renderVorschau(){ confirmed=false;
+function renderVorschau(){ confirmed=false; setTimeout(()=>{ const btn=document.getElementById("confirmBtn"); if(btn){btn.disabled=true;btn.style.opacity=".5";btn.textContent="Bitte zuerst bestätigen";} const box=document.getElementById("confirmCheck"); if(box){box.classList.remove("checked");box.textContent="";} },50);
   const p=curProz;
   const d=local[p.id]||{};
   const schs=d.schs||[];
@@ -672,10 +651,55 @@ function renderVorschau(){ confirmed=false;
 }
 
 // ── BESTÄTIGEN & SPEICHERN ───────────────────────────────
+
+let confirmed=false;
+function toggleConfirm(){
+  confirmed=!confirmed;
+  const box=document.getElementById('confirmCheck');
+  const btn=document.getElementById('confirmBtn');
+  if(!box||!btn) return;
+  if(confirmed){
+    box.classList.add('checked');
+    box.textContent='✓';
+    btn.disabled=false;
+    btn.style.opacity='1';
+    btn.textContent='✓ Bestätigen & Speichern';
+  } else {
+    box.classList.remove('checked');
+    box.textContent='';
+    btn.disabled=true;
+    btn.style.opacity='.5';
+    btn.textContent='Bitte zuerst bestätigen';
+  }
+}
+
 async function bestaetigen(){
-  showOv('Wird gespeichert…');
+  showOv('Bilder werden hochgeladen…');
   ensure();
   const d=local[curProz.id];
+
+  // 1. Alle Bilder die noch keine driveUrl haben hochladen
+  const schs=d.schs||[];
+  for(let si=0;si<schs.length;si++){
+    const bilder=schs[si].bilder||[];
+    for(let fi=0;fi<bilder.length;fi++){
+      if(!bilder[fi].driveUrl && bilder[fi].url){
+        try{
+          const safeName=curProz.name.replace(/[^a-zA-Z0-9äöüÄÖÜß]/g,'_').replace(/_+/g,'_').slice(0,40);
+          const fn=`${curProz.id}_S${si+1}_${safeName}_${fi+1}.jpg`;
+          showOv(`Bild ${si+1}.${fi+1} wird hochgeladen…`);
+          const res=await uploadChunked(bilder[fi].url, fn);
+          if(res.success){
+            local[curProz.id].schs[si].bilder[fi].driveUrl=res.url;
+            saveLocal();
+          }
+        }catch(err){
+          console.error('Bild-Upload fehlgeschlagen:',err);
+          // Weiter trotz Fehler
+        }
+      }
+    }
+  }
 
   // PDF als HTML in Drive
   try{
