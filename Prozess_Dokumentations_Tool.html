@@ -117,7 +117,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.3</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.4</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -933,6 +933,7 @@ async function bestaetigen() {
   ens();
   var d = loc[cProz.id];
   var schs = d.schs || [];
+  var fotoFehler = 0;
   for (var si = 0; si < schs.length; si++) {
     var bilder = schs[si].bilder || [];
     for (var fi = 0; fi < bilder.length; fi++) {
@@ -944,20 +945,36 @@ async function bestaetigen() {
           var fn = cProz.id + '_S' + (si+1) + '_' + safeName + '_' + (fi+1) + '.jpg';
           showO('Bild ' + (si+1) + '.' + (fi+1) + ' wird hochgeladen…');
           var res = await uploadChunked(comp, fn);
-          if (res.success) { loc[cProz.id].schs[si].bilder[fi].driveUrl = res.url; savL(); }
-        } catch(err) { console.error('Bild fehlgeschlagen:', err); }
+          if (res && res.success) {
+            loc[cProz.id].schs[si].bilder[fi].driveUrl = res.url;
+            savL();
+          } else {
+            fotoFehler++;
+            console.error('Upload fehlgeschlagen:', res);
+          }
+        } catch(err) {
+          fotoFehler++;
+          console.error('Bild ' + (si+1) + '.' + (fi+1) + ' fehlgeschlagen:', err);
+        }
       }
     }
   }
-  // PDF
+  if (fotoFehler > 0) showT('⚠️ ' + fotoFehler + ' Foto(s) nicht hochgeladen', true);
+
+  // PDF — UTF-8-sichere Kodierung (passend zu Utilities.base64Decode im Script)
   try {
     showO('Dokument wird gespeichert…');
     var safeName = cProz.name.replace(/[^a-zA-Z0-9äöüÄÖÜß]/g, '_').slice(0, 40);
     var fn = cProz.id + '_' + safeName + '_' + new Date().toLocaleDateString('de-DE').replace(/\./g, '-') + '.html';
     var full = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + cProz.name + '</title></head><body>' + document.getElementById('a4').innerHTML + '</body></html>';
-    var b64 = btoa(unescape(encodeURIComponent(full)));
-    await postJ({action:'save_pdf',htmlContent:b64,fileName:fn,prozessId:cProz.id,prozessName:cProz.name});
+    // TextEncoder für korrekte UTF-8 → Base64 Konvertierung (Umlaute-sicher)
+    var bytes = new TextEncoder().encode(full);
+    var binary = String.fromCharCode.apply(null, bytes);
+    var b64 = btoa(binary);
+    var pdfRes = await postJ({action:'save_pdf',htmlContent:b64,fileName:fn,prozessId:cProz.id,prozessName:cProz.name});
+    if (!pdfRes.success) console.error('PDF Fehler:', pdfRes.error);
   } catch(e) { console.error('PDF fehlgeschlagen:', e); }
+
   // Sheet
   showO('Wird in Google Sheet gespeichert…');
   var payload = {
@@ -983,7 +1000,7 @@ async function bestaetigen() {
       loc[cProz.id].mitarbeiter = usr;
       loc[cProz.id].datum = new Date().toLocaleDateString('de-DE');
       savL();
-      showT('✓ Gespeichert');
+      showT(fotoFehler > 0 ? '✓ Gespeichert (Fotos prüfen)' : '✓ Gespeichert');
       setTimeout(function() { nav = ['stat', 'proz']; showProz(cStat); }, 1400);
     } else { showT('Fehler: ' + r.error, true); }
   } catch(err) { hideO(); showT('Verbindungsfehler', true); }
