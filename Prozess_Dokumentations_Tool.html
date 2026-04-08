@@ -117,7 +117,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.5</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.6</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -908,23 +908,22 @@ function compressB64(b64, maxPx, q) {
   });
 }
 
-async function uploadChunked(b64, fn) {
+async function uploadDirekt(b64, fn) {
+  // Base64 ohne Data-URL-Prefix
   var data = b64.includes(',') ? b64.split(',')[1] : b64;
-  var CHUNK = 250000;
-  var total = Math.ceil(data.length / CHUNK);
-  var uid = Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
-  for (var i = 0; i < total; i++) {
-    var chunk = data.slice(i * CHUNK, (i + 1) * CHUNK);
-    var ok = false;
-    for (var a = 0; a < 3; a++) {
-      try { var r = await postJ({action:'upload_chunk',uploadId:uid,chunkIndex:i,chunk:chunk}); if (r.success) { ok = true; break; } }
-      catch(e) { if (a < 2) await new Promise(function(r) { setTimeout(r, 1200); }); }
+  for (var a = 0; a < 4; a++) {
+    try {
+      var r = await postJ({action: 'upload_image', base64: data, fileName: fn});
+      if (r && r.success) return r;
+      throw new Error(r ? (r.error || 'Unbekannter Fehler') : 'Keine Antwort');
+    } catch(e) {
+      if (a < 3) {
+        showO('Bild-Upload Versuch ' + (a+2) + '/4…');
+        await new Promise(function(res) { setTimeout(res, 2000 * (a + 1)); });
+      } else {
+        throw e;
+      }
     }
-    if (!ok) throw new Error('Chunk ' + i + ' fehlgeschlagen');
-  }
-  for (var a = 0; a < 3; a++) {
-    try { var r = await postJ({action:'finalize_image',uploadId:uid,totalChunks:total,fileName:fn}); if (r.success) return r; throw new Error(r.error); }
-    catch(e) { if (a < 2) await new Promise(function(r) { setTimeout(r, 1500); }); else throw e; }
   }
 }
 
@@ -945,11 +944,12 @@ async function bestaetigen() {
       if (!bild || bild.driveUrl || !bild.url || !bild.url.startsWith('data:')) continue;
       try {
         showO('Bild ' + (si+1) + '.' + (fi+1) + ' wird komprimiert…');
-        var comp = await compressB64(bild.url, 1000, 0.78);
+        // Max 800px, Qualität 0.65 → typisch 80–150KB, passt sicher in einen POST
+        var comp = await compressB64(bild.url, 800, 0.65);
         var safeName = cProz.name.replace(/[^a-zA-Z0-9äöüÄÖÜß]/g, '_').replace(/_+/g, '_').slice(0, 40);
         var fn = cProz.id + '_S' + (si+1) + '_' + safeName + '_' + (fi+1) + '.jpg';
         showO('Bild ' + (si+1) + '.' + (fi+1) + ' wird hochgeladen…');
-        var res = await uploadChunked(comp, fn);
+        var res = await uploadDirekt(comp, fn);
         if (res && res.success) {
           loc[cProz.id].schs[si].bilder[fi].driveUrl = res.url;
           savL();
