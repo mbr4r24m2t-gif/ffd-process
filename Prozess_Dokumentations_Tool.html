@@ -242,7 +242,7 @@ hr { border: none; border-top: 1px solid var(--gray4); margin: 12px 0; }
   <button class="back-btn" id="backBtn" onclick="goBack()">← Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
   <div class="header-right">
-    <span style="font-size:10px;color:var(--gray3);letter-spacing:.06em">V1.1</span><span class="header-user" id="headerUser"></span>
+    <span style="font-size:10px;color:var(--gray3);letter-spacing:.06em">V1.2</span><span class="header-user" id="headerUser"></span>
   </div>
 </div>
 <div class="prog-bar" id="progBar" style="display:none"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
@@ -366,6 +366,63 @@ let userName='', currentStation=null, currentProzess=null;
 let navStack=[], timerIv=null, timerStart=null, timerSec=0;
 let local={};
 let pinEntry='';
+
+
+// ── BILD KOMPRIMIERUNG ──────────────────────────────────
+function compressImage(base64, maxSize, quality) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      if (w > maxSize || h > maxSize) {
+        if (w > h) { h = Math.round(h * maxSize / w); w = maxSize; }
+        else { w = Math.round(w * maxSize / h); h = maxSize; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.src = base64;
+  });
+}
+
+// ── CHUNKED UPLOAD ───────────────────────────────────────
+// Bild in 500KB Chunks aufteilen und sequenziell senden
+async function uploadImageChunked(base64, fileName) {
+  // Nur den Data-Teil ohne Header
+  const data = base64.includes(',') ? base64.split(',')[1] : base64;
+  const CHUNK_SIZE = 400000; // ~400KB pro Chunk (sicher unter 1MB Request-Limit)
+  const totalChunks = Math.ceil(data.length / CHUNK_SIZE);
+  const uploadId = Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+  
+  // Chunks senden
+  for (let i = 0; i < totalChunks; i++) {
+    const chunk = data.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
+    const r = await fetch(WEBHOOK, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'upload_chunk',
+        uploadId, chunkIndex: i, chunk
+      })
+    });
+    const res = await r.json();
+    if (!res.success) throw new Error(`Chunk ${i} fehlgeschlagen: ${res.error}`);
+  }
+  
+  // Finalisieren
+  const r = await fetch(WEBHOOK, {
+    method: 'POST',
+    body: JSON.stringify({
+      action: 'finalize_image',
+      uploadId, totalChunks, fileName
+    })
+  });
+  const res = await r.json();
+  if (!res.success) throw new Error('Finalize fehlgeschlagen: ' + res.error);
+  return res;
+}
 
 // ── PIN ──────────────────────────────────────────────────
 function pinKey(k) {
