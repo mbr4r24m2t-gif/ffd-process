@@ -200,7 +200,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="backBtn" onclick="goBack()">← Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V2.4</span><span class="hdr-user" id="hdrUser"></span></div>
+  <div class="hdr-r"><span class="ver">V2.5</span><span class="hdr-user" id="hdrUser"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
 <div class="overlay" id="overlay"><div class="spinner"></div><div class="ov-txt" id="ovTxt"></div></div>
@@ -608,53 +608,30 @@ async function handleFoto(idx, input){
   if(!local[curProz.id].schs[idx]) local[curProz.id].schs[idx] = {};
   if(!local[curProz.id].schs[idx].bilder) local[curProz.id].schs[idx].bilder = [];
 
-  // Schritt 1: Foto sofort als ObjectURL anzeigen (kein Base64, kein Canvas)
-  const objectUrl = URL.createObjectURL(file);
-  const fIdx = local[curProz.id].schs[idx].bilder.length;
-  local[curProz.id].schs[idx].bilder.push({url: objectUrl, driveUrl: null, file: null});
+  showToast('📷 Foto wird verarbeitet…');
 
-  // Sofort rendern
+  // Direkt als Base64 lesen — kein Canvas, keine Komprimierung
+  // Einfachste und zuverlässigste Methode auf iOS Safari
+  const b64 = await new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = e => res(e.target.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+
+  // Speichern
+  const fIdx = local[curProz.id].schs[idx].bilder.length;
+  local[curProz.id].schs[idx].bilder.push({url: b64, driveUrl: null});
+  saveLocal();
+
+  // Schritt neu rendern — Foto sichtbar
   const schEl = document.getElementById(`sch-${idx}`);
   if(schEl){
     const d = document.createElement('div');
     d.innerHTML = mkSch(local[curProz.id].schs[idx], idx);
     schEl.replaceWith(d.firstChild);
   }
-  showToast('📷 Foto aufgenommen');
-
-  // Schritt 2: Im Hintergrund als Base64 lesen + komprimieren für späteren Upload
-  try {
-    const b64raw = await new Promise((res, rej) => {
-      const r = new FileReader();
-      r.onload = e => res(e.target.result);
-      r.onerror = rej;
-      r.readAsDataURL(file);
-    });
-
-    // Komprimieren — auf iOS nutzen wir kleinere Zielgröße (800px) für Stabilität
-    let compressed = b64raw;
-    try {
-      const maxPx = file.size > 3000000 ? 800 : 1200; // große Fotos kleiner machen
-      const quality = file.size > 3000000 ? 0.7 : 0.82;
-      compressed = await compressImg(b64raw, maxPx, quality);
-    } catch(e) {
-      console.warn('Komprimierung fehlgeschlagen, nutze Original');
-    }
-
-    // ObjectURL durch Base64 ersetzen (für Upload + localStorage)
-    URL.revokeObjectURL(objectUrl);
-    local[curProz.id].schs[idx].bilder[fIdx].url = compressed;
-    saveLocal();
-
-    // Vorschau mit Base64 aktualisieren (Foto bleibt sichtbar)
-    const img = document.querySelector(`#sch-${idx} #fw-${idx}-${fIdx} img`);
-    if(img) img.src = compressed;
-
-  } catch(e) {
-    console.error('Base64 Konvertierung fehlgeschlagen:', e);
-    // ObjectURL bleibt — Foto ist sichtbar aber kann nicht hochgeladen werden
-    showToast('Foto sichtbar, aber Upload evtl. nicht möglich', true);
-  }
+  showToast('📷 Foto gespeichert');
 }
 
 function delFoto(si,fi){ ensure(); local[curProz.id].schs?.[si]?.bilder?.splice(fi,1); saveLocal(); const el=document.getElementById(`sch-${si}`); if(el){ const d=document.createElement('div'); d.innerHTML=mkSch(local[curProz.id].schs[si]||{},si); el.replaceWith(d.firstChild); } }
@@ -763,19 +740,25 @@ async function bestaetigen(){
   for(let si=0;si<schs.length;si++){
     const bilder=schs[si].bilder||[];
     for(let fi=0;fi<bilder.length;fi++){
-      if(!bilder[fi].driveUrl && bilder[fi].url){
+      if(!bilder[fi].driveUrl && bilder[fi].url && !bilder[fi].url.startsWith('blob:')){
         try{
+          showOv(`Bild ${si+1}.${fi+1} wird komprimiert…`);
+          // Jetzt komprimieren für Upload (800px reicht für Dokumentation)
+          let uploadData = bilder[fi].url;
+          try {
+            uploadData = await compressImg(bilder[fi].url, 1000, 0.78);
+          } catch(e) { /* Original nehmen */ }
+
           const safeName=curProz.name.replace(/[^a-zA-Z0-9äöüÄÖÜß]/g,'_').replace(/_+/g,'_').slice(0,40);
           const fn=`${curProz.id}_S${si+1}_${safeName}_${fi+1}.jpg`;
           showOv(`Bild ${si+1}.${fi+1} wird hochgeladen…`);
-          const res=await uploadChunked(bilder[fi].url, fn);
+          const res=await uploadChunked(uploadData, fn);
           if(res.success){
             local[curProz.id].schs[si].bilder[fi].driveUrl=res.url;
             saveLocal();
           }
         }catch(err){
           console.error('Bild-Upload fehlgeschlagen:',err);
-          // Weiter trotz Fehler
         }
       }
     }
