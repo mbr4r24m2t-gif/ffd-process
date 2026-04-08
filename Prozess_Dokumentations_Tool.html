@@ -74,7 +74,8 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 .fbtn{flex:1;padding:11px 6px;border:1.5px solid var(--k);border-radius:var(--r);background:var(--w);color:var(--k);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--f);display:flex;align-items:center;justify-content:center;gap:4px;touch-action:manipulation}
 .fbtn:active{background:var(--g5)}.fin{display:none}
 .bh{display:flex;align-items:center;gap:6px;padding-bottom:7px;border-bottom:1.5px solid var(--br);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g2)}
-.br{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid var(--g5)}
+.br{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid var(--g5);transition:background .2s;border-radius:4px}
+.br.bom-warn{background:#fff5f5;border-left:3px solid var(--rd);padding-left:6px;margin:0 -2px}
 .br:last-child{border:none}.bi{flex:1;min-width:0}
 .bn{font-size:13px;font-weight:500;line-height:1.3}.bnr{font-size:10px;color:var(--g2);margin-top:1px}
 .bs{width:44px;text-align:center;font-size:12px;color:var(--g2);flex-shrink:0}
@@ -115,7 +116,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.1</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.2</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -152,6 +153,23 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
       <button class="pk" onclick="pk('0')">0</button>
       <button class="pk del" onclick="pdel()">&#9003;</button>
     </div>
+  </div></div>
+</div>
+
+<div class="scr" id="sStby">
+  <div class="cw"><div class="card" style="text-align:center">
+    <div style="font-size:36px;margin-bottom:16px">📱</div>
+    <div class="ct" style="margin-bottom:8px">Standby deaktivieren</div>
+    <div style="background:#fffbe6;border:1px solid #f0e08a;border-radius:8px;padding:14px 16px;margin-bottom:20px;text-align:left">
+      <div style="font-weight:700;font-size:13px;margin-bottom:6px;color:#7a6000">⚠️ Wichtiger Hinweis</div>
+      <div style="font-size:13px;color:#555;line-height:1.6">Damit das Handy beim Dokumentieren <strong>nicht in Standby geht</strong>, bitte vor dem Starten:</div>
+      <div style="margin-top:10px;font-size:13px;color:#333;display:flex;flex-direction:column;gap:6px">
+        <div>1. <strong>Einstellungen</strong> öffnen</div>
+        <div>2. <strong>Bildschirm &amp; Helligkeit</strong> → <strong>Automatische Sperre</strong></div>
+        <div>3. Auf <strong>„Nie"</strong> oder maximal <strong>5 Minuten</strong> stellen</div>
+      </div>
+    </div>
+    <button class="btn btn-k" onclick="go('sName')">Verstanden, weiter &#8594;</button>
   </div></div>
 </div>
 
@@ -273,7 +291,7 @@ function pk(k) {
   if (pin.length === 4) {
     setTimeout(function() {
       if (pin === String(PN)) {
-        go('sName');
+        go('sStby');
       } else {
         for (var i = 0; i < 4; i++) document.getElementById('p' + i).className = 'pd e';
         setTimeout(function() { pin = ''; updP(); }, 700);
@@ -449,7 +467,7 @@ function renderDet() {
   var bSec = mkSec('📦 Stückliste prüfen');
   var bHint = document.createElement('div');
   bHint.style.cssText = 'font-size:11px;color:var(--g2);margin-bottom:10px';
-  bHint.textContent = 'Menge anpassen falls nötig · ✓ ok · ! fehlt';
+  bHint.textContent = 'Pflichtfeld: Jede Position muss bestätigt werden · ✓ verwendet · ✗ nicht verwendet';
   bSec.appendChild(bHint);
   if (p.bom.length) {
     var bh = document.createElement('div'); bh.className = 'bh';
@@ -494,7 +512,7 @@ function mkSec(label) {
 function mkBomRow(b, boms, bomM) {
   var bs = boms[b.nr] || '';
   var mv = bomM[b.nr] !== undefined ? bomM[b.nr] : b.menge;
-  var row = document.createElement('div'); row.className = 'br';
+  var row = document.createElement('div'); row.className = 'br' + (!bs ? ' bom-warn' : ''); row.id = 'brow-' + b.nr.replace(/[^a-z0-9]/gi,'_');
   var bi = document.createElement('div'); bi.className = 'bi';
   var bn = document.createElement('div'); bn.className = 'bn'; bn.textContent = b.name;
   var bnr = document.createElement('div'); bnr.className = 'bnr'; bnr.textContent = b.nr;
@@ -507,7 +525,7 @@ function mkBomRow(b, boms, bomM) {
   var ok = document.createElement('button'); ok.className = 'bb ok' + (bs === 'ok' ? ' on' : '');
   ok.textContent = '✓'; ok.onclick = (function(nr) { return function() { sBom(nr, 'ok'); }; })(b.nr);
   var fl = document.createElement('button'); fl.className = 'bb fl' + (bs === 'fl' ? ' on' : '');
-  fl.textContent = '!'; fl.onclick = (function(nr) { return function() { sBom(nr, 'fl'); }; })(b.nr);
+  fl.textContent = '✗'; fl.onclick = (function(nr) { return function() { sBom(nr, 'fl'); }; })(b.nr);
   bbtns.appendChild(ok); bbtns.appendChild(fl);
   row.appendChild(bi); row.appendChild(bsol); row.appendChild(bmi); row.appendChild(bbtns);
   return row;
@@ -698,6 +716,25 @@ function fmt(s) { return (Math.floor(s/60)+'').padStart(2,'0') + ':' + (s%60+'')
 
 // VORSCHAU
 function zeigV() {
+  // BOM Pflichtfeld-Prüfung
+  if (cProz.bom && cProz.bom.length > 0) {
+    var d = loc[cProz.id] || {};
+    var boms = d.boms || {};
+    var missing = cProz.bom.filter(function(b) { return !boms[b.nr]; });
+    if (missing.length > 0) {
+      showT('⚠️ Stückliste unvollständig: ' + missing.length + ' Position' + (missing.length > 1 ? 'en' : '') + ' noch nicht bestätigt', true);
+      // Highlight BOM section
+      var bomRows = document.querySelectorAll('.br');
+      bomRows.forEach(function(row) {
+        var nr = row.querySelector('.bnr');
+        if (nr) {
+          var isUnchecked = !boms[nr.textContent.trim()];
+          row.style.background = isUnchecked ? '#fff5f5' : '';
+        }
+      });
+      return;
+    }
+  }
   if (tIv && tSec > 0) { ens(); loc[cProz.id].zeit = Math.ceil(tSec / 60); savL(); stopT(); }
   nav = ['stat', 'proz', 'det', 'vor'];
   document.getElementById('bk').classList.add('show');
@@ -733,7 +770,7 @@ function renderVor() {
 
   var tt = document.createElement('div'); tt.className = 'a4t'; tt.textContent = p.name;
   var sb = document.createElement('div'); sb.className = 'a4sub';
-  sb.textContent = cStat.replace(/Station \d+[a-z]? — /, '');
+  sb.textContent = p.id + ' · ' + cStat.replace(/Station \d+[a-z]? — /, '');
   a4.appendChild(tt); a4.appendChild(sb);
 
   // Schritte
@@ -759,8 +796,14 @@ function renderVor() {
       }
       sc.appendChild(sn); sc.appendChild(sb2);
       if (s.bilder && s.bilder.length) {
-        var si2 = document.createElement('img'); si2.className = 'a4si'; si2.src = s.bilder[0].url;
-        sc.appendChild(si2);
+        var imgWrap = document.createElement('div');
+        imgWrap.style.cssText = 'display:flex;flex-direction:column;gap:4px;flex-shrink:0';
+        s.bilder.forEach(function(b) {
+          var si2 = document.createElement('img'); si2.className = 'a4si';
+          si2.src = b.driveUrl || b.url;
+          imgWrap.appendChild(si2);
+        });
+        sc.appendChild(imgWrap);
       }
       swrap.appendChild(sc);
     });
@@ -783,7 +826,7 @@ function renderVor() {
       var bm = document.createElement('div'); bm.className = 'a4bm'; bm.textContent = mv + '×';
       var bst = document.createElement('div');
       bst.className = 'a4bst' + (st === 'ok' ? ' ok' : st === 'fl' ? ' fl' : '');
-      bst.textContent = st === 'ok' ? '✓' : st === 'fl' ? '!' : '—';
+      bst.textContent = st === 'ok' ? '✓' : st === 'fl' ? '✗' : '—';
       row.appendChild(bn); row.appendChild(bm); row.appendChild(bst);
       bwrap.appendChild(row);
     });
@@ -924,6 +967,7 @@ async function bestaetigen() {
       return {
         beschreibung: s.beschreibung || '',
         werkzeuge: (s.wks || []).join(', '),
+        bildUrls: (s.bilder || []).filter(function(b) { return b.driveUrl; }).map(function(b) { return b.driveUrl; }),
         bildUrl: (s.bilder && s.bilder.find(function(b) { return b.driveUrl; })) ? s.bilder.find(function(b) { return b.driveUrl; }).driveUrl : ''
       };
     })
