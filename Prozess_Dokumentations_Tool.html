@@ -4,701 +4,659 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>farbflut · Prozessdokumentation</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #f5f4f0;
   --white: #ffffff;
   --black: #111111;
-  --gray1: #444444;
-  --gray2: #888888;
-  --gray3: #cccccc;
-  --gray4: #e8e6e1;
+  --gray1: #444;
+  --gray2: #888;
+  --gray3: #bbb;
+  --gray4: #e0ddd8;
   --gray5: #f0eee9;
-  --accent: #111111;
   --green: #2d6a45;
   --green-bg: #edf5f0;
   --red: #b83232;
   --red-bg: #fdf0f0;
   --blue: #2556a0;
-  --blue-bg: #eef3fb;
   --border: #e0ddd8;
-  --r: 6px;
-  --r-lg: 10px;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --r: 6px; --r-lg: 10px;
+  --shadow: 0 1px 4px rgba(0,0,0,.07);
+  --shadow-md: 0 3px 12px rgba(0,0,0,.09);
   --font: 'Inter', system-ui, sans-serif;
-  --font-d: 'Inter', system-ui, sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { font-family: var(--font); background: var(--bg); color: var(--black); min-height: 100vh; font-size: 14px; }
 
 /* HEADER */
-.header {
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  padding: 0 20px;
-  height: 52px;
-  display: flex; align-items: center; gap: 12px;
-  position: sticky; top: 0; z-index: 100;
-}
-.logo { font-family: var(--font-d); font-size: 17px; font-weight: 600; color: var(--black); letter-spacing: -.01em; }
-.logo-dot { color: var(--gray3); margin: 0 4px; }
-.back-btn { display: none; align-items: center; gap: 4px; background: none; border: none; color: var(--gray2); font-family: var(--font); font-size: 13px; cursor: pointer; padding: 4px 0; letter-spacing: -.01em; }
-.back-btn.show { display: flex; }
-.back-btn:hover { color: var(--black); }
-.header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-.header-user { font-size: 12px; color: var(--gray2); }
+.hdr { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 18px; height: 50px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 15px; font-weight: 700; letter-spacing: -.02em; }
+.logo span { color: var(--gray3); font-weight: 400; margin: 0 3px; }
+.back { display: none; align-items: center; gap: 4px; background: none; border: none; color: var(--gray2); font-family: var(--font); font-size: 13px; cursor: pointer; }
+.back.show { display: flex; }
+.hdr-r { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.ver { font-size: 10px; color: var(--gray3); font-weight: 600; letter-spacing: .04em; }
+.hdr-user { font-size: 12px; color: var(--gray2); }
 
 /* PROGRESS */
-.prog-bar { height: 2px; background: var(--gray4); position: sticky; top: 52px; z-index: 99; }
+.prog { height: 2px; background: var(--gray4); position: sticky; top: 50px; z-index: 99; display: none; }
 .prog-fill { height: 100%; background: var(--black); transition: width .3s; }
 
 /* SCREENS */
-.screen { display: none; }
-.screen.active { display: block; }
+.scr { display: none; }
+.scr.on { display: block; }
 
-/* PIN SCREEN */
-.pin-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 32px 20px; }
-.pin-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 40px 32px; max-width: 340px; width: 100%; text-align: center; box-shadow: var(--shadow); }
-.pin-logo { font-family: var(--font-d); font-size: 22px; font-weight: 600; margin-bottom: 28px; }
+/* PIN */
+.center-wrap { min-height: calc(100vh - 50px); display: flex; align-items: center; justify-content: center; padding: 24px 20px; }
+.card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 36px 28px; max-width: 360px; width: 100%; box-shadow: var(--shadow-md); }
+.card.center { text-align: center; }
+.pin-logo { font-size: 20px; font-weight: 700; letter-spacing: -.02em; margin-bottom: 28px; }
+.pin-hint { font-size: 12px; color: var(--gray2); margin-bottom: 18px; }
 .pin-dots { display: flex; justify-content: center; gap: 14px; margin-bottom: 28px; }
-.pin-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--border); background: var(--white); transition: all .15s; }
-.pin-dot.filled { background: var(--black); border-color: var(--black); }
-.pin-dot.error { background: var(--red); border-color: var(--red); }
-.pin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.pin-btn { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; font-size: 20px; font-weight: 500; cursor: pointer; font-family: var(--font); transition: background .1s; color: var(--black); }
-.pin-btn:active { background: var(--gray5); }
-.pin-btn.del { font-size: 16px; color: var(--gray2); }
-.pin-btn.empty { background: transparent; border-color: transparent; cursor: default; }
-.pin-hint { font-size: 12px; color: var(--gray2); margin-bottom: 20px; }
+.pin-dot { width: 13px; height: 13px; border-radius: 50%; border: 2px solid var(--gray4); transition: all .15s; }
+.pin-dot.fill { background: var(--black); border-color: var(--black); }
+.pin-dot.err { background: var(--red); border-color: var(--red); }
+.pin-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.pin-key { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--r); padding: 16px; font-size: 20px; font-weight: 600; cursor: pointer; font-family: var(--font); transition: background .1s; }
+.pin-key:active { background: var(--gray5); }
+.pin-key.del { font-size: 15px; color: var(--gray2); }
+.pin-key.empty { background: transparent; border-color: transparent; cursor: default; }
 
-/* NAME SCREEN */
-.name-wrap { min-height: calc(100vh - 52px); display: flex; align-items: center; justify-content: center; padding: 32px 20px; }
-.name-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 36px 28px; max-width: 340px; width: 100%; box-shadow: var(--shadow); }
-.card-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--gray2); margin-bottom: 8px; }
-.card-title { font-family: var(--font-d); font-size: 24px; font-weight: 600; margin-bottom: 6px; line-height: 1.2; }
-.card-sub { font-size: 13px; color: var(--gray2); margin-bottom: 24px; line-height: 1.5; }
+/* NAME + WELCOME */
+.eyebrow { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--gray2); margin-bottom: 6px; }
+.card-title { font-size: 22px; font-weight: 700; letter-spacing: -.02em; margin-bottom: 18px; }
+.field-label { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--black); margin-bottom: 6px; }
+.input { width: 100%; padding: 12px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); color: var(--black); font-size: 16px; font-family: var(--font); outline: none; transition: border-color .15s; }
+.input:focus { border-color: var(--black); background: var(--white); }
+textarea.input { min-height: 70px; resize: vertical; line-height: 1.5; font-size: 14px; }
+.btn { width: 100%; padding: 13px; border: none; border-radius: var(--r); font-size: 13px; font-weight: 600; font-family: var(--font); cursor: pointer; letter-spacing: .02em; transition: opacity .15s; margin-top: 12px; }
+.btn-b { background: var(--black); color: var(--white); }
+.btn-b:hover { opacity: .85; }
+.btn-b:disabled { opacity: .3; cursor: not-allowed; }
+.btn-ghost { background: var(--white); border: 1.5px dashed var(--gray2); color: var(--gray1); font-weight: 600; }
+.btn-ghost:hover { border-color: var(--black); color: var(--black); }
 
-/* INPUTS */
-.field-label { font-size: 11px; font-weight: 600; letter-spacing: .04em; color: var(--gray1); margin-bottom: 6px; text-transform: uppercase; }
-.field-input { width: 100%; padding: 11px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); color: var(--black); font-size: 14px; font-family: var(--font); outline: none; transition: border-color .15s, background .15s; }
-.field-input:focus { border-color: var(--black); background: var(--white); }
-textarea.field-input { min-height: 72px; resize: vertical; line-height: 1.5; }
-
-/* BUTTONS */
-.btn { width: 100%; padding: 13px; border: none; border-radius: var(--r); font-size: 13px; font-weight: 600; font-family: var(--font); cursor: pointer; letter-spacing: .02em; transition: opacity .15s; }
-.btn-black { background: var(--black); color: var(--white); }
-.btn-black:hover { opacity: .85; }
-.btn-black:disabled { opacity: .35; cursor: not-allowed; }
-.btn-outline { background: var(--white); border: 1px solid var(--border); color: var(--gray1); margin-top: 8px; }
-.btn-outline:hover { border-color: var(--black); color: var(--black); }
-.btn-dashed { background: var(--white); border: 1px dashed var(--border); color: var(--gray2); margin-top: 4px; }
-.btn-dashed:hover { border-color: var(--black); color: var(--black); }
+/* WELCOME HINTS */
+.hints { display: flex; flex-direction: column; gap: 11px; margin-bottom: 22px; }
+.hint { display: flex; align-items: flex-start; gap: 11px; font-size: 13px; color: var(--gray1); line-height: 1.5; }
+.hint-ic { font-size: 17px; flex-shrink: 0; }
 
 /* PAGE HEADER */
-.page-hdr { background: var(--white); border-bottom: 1px solid var(--border); padding: 20px 20px 16px; }
-.page-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--gray2); margin-bottom: 4px; }
-.page-title { font-family: var(--font-d); font-size: 20px; font-weight: 600; }
-.page-sub { font-size: 12px; color: var(--gray2); margin-top: 3px; }
-.list-wrap { padding: 14px 16px; }
+.ph { background: var(--white); border-bottom: 1px solid var(--border); padding: 18px 18px 14px; }
+.ph-ey { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--gray2); margin-bottom: 3px; }
+.ph-title { font-size: 22px; font-weight: 700; letter-spacing: -.02em; }
+.ph-sub { font-size: 12px; color: var(--gray2); margin-top: 3px; }
+.lw { padding: 12px 16px; }
 
 /* STATION CARDS */
-.s-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 15px 16px; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow-sm); transition: border-color .15s; }
-.s-card:hover { border-color: var(--black); }
-.s-icon { width: 38px; height: 38px; border-radius: var(--r); background: var(--gray5); display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
-.s-name { font-size: 13px; font-weight: 600; }
-.s-meta { font-size: 11px; color: var(--gray2); margin-top: 2px; }
-.s-pill { margin-left: auto; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; white-space: nowrap; background: var(--gray4); color: var(--gray2); }
-.s-pill.done { background: var(--green-bg); color: var(--green); }
+.sc { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 14px 16px; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; gap: 13px; box-shadow: var(--shadow); transition: border-color .15s; }
+.sc:hover { border-color: var(--black); }
+.sc-ic { width: 36px; height: 36px; border-radius: var(--r); background: var(--gray5); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.sc-name { font-size: 14px; font-weight: 700; }
+.sc-meta { font-size: 11px; color: var(--gray2); margin-top: 2px; }
+.pill { margin-left: auto; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; background: var(--gray5); color: var(--gray2); white-space: nowrap; flex-shrink: 0; }
+.pill.done { background: var(--green-bg); color: var(--green); }
 
-/* PROZESS ITEMS */
-.p-item { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 14px; margin-bottom: 6px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: border-color .15s; }
-.p-item:hover { border-color: var(--black); }
-.p-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gray3); flex-shrink: 0; }
-.p-dot.done { background: var(--green); }
-.p-dot.ip { background: var(--black); }
-.p-name { font-size: 13px; font-weight: 500; flex: 1; line-height: 1.3; }
-.p-meta { font-size: 11px; color: var(--gray2); margin-top: 1px; }
-.p-chev { color: var(--gray3); }
+/* PROZESS LIST */
+.pi { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 14px; margin-bottom: 6px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: border-color .15s; }
+.pi:hover { border-color: var(--black); }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gray3); flex-shrink: 0; }
+.dot.done { background: var(--green); }
+.dot.ip { background: var(--black); }
+.pi-name { font-size: 13px; font-weight: 600; flex: 1; line-height: 1.3; }
+.pi-meta { font-size: 11px; color: var(--gray2); margin-top: 1px; }
 
 /* DETAIL */
-.d-wrap { padding: 14px 16px 48px; }
-.section { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px; margin-bottom: 10px; }
-.sec-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--gray2); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
-
-/* STATUS */
-.s-badge { display: inline-flex; align-items: center; gap: 5px; border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 600; margin-bottom: 10px; }
-.s-badge.open { background: var(--gray4); color: var(--gray2); }
-.s-badge.done { background: var(--green-bg); color: var(--green); }
-.s-badge.ip { background: var(--gray5); color: var(--gray1); }
+.dw { padding: 12px 16px 80px; }
+.sec { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 15px; margin-bottom: 10px; }
+.sec-lbl { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--black); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.badge { display: inline-flex; align-items: center; gap: 5px; border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 600; margin-bottom: 10px; }
+.badge.open { background: var(--gray5); color: var(--gray2); }
+.badge.done { background: var(--green-bg); color: var(--green); }
+.badge.ip { background: var(--gray5); color: var(--gray1); }
 
 /* ZEIT */
 .time-row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
-.time-btn { flex: 1; padding: 11px; border: none; border-radius: var(--r); font-size: 12px; font-weight: 600; cursor: pointer; font-family: var(--font); }
-.time-btn.start { background: var(--black); color: var(--white); }
-.time-btn.stop { background: var(--gray4); color: var(--gray1); }
-.time-disp { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); padding: 10px 14px; font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 82px; text-align: center; }
+.time-btn { flex: 1; padding: 12px; border: none; border-radius: var(--r); font-size: 12px; font-weight: 600; cursor: pointer; font-family: var(--font); }
+.time-btn.start { background: var(--black); color: #fff; }
+.time-btn.stop { background: var(--white); border: 1.5px solid var(--gray2); color: var(--gray1); font-weight: 600; }
+.time-d { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); padding: 10px 14px; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 80px; text-align: center; }
 
 /* SCHRITTE */
-.schritt { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); padding: 13px; margin-bottom: 8px; position: relative; }
-.schritt-nr { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--gray2); margin-bottom: 8px; }
-.schritt-del { position: absolute; top: 10px; right: 10px; background: none; border: none; color: var(--gray3); font-size: 16px; cursor: pointer; }
+.sch { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); padding: 12px; margin-bottom: 8px; position: relative; }
+.sch-nr { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--black); margin-bottom: 8px; }
+.sch-del { position: absolute; top: 10px; right: 10px; background: none; border: none; color: var(--gray3); font-size: 16px; cursor: pointer; padding: 4px; }
 
 /* FOTOS */
-.foto-row { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 8px; }
+.foto-row { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 8px; min-height: 4px; }
 .foto-wrap { position: relative; }
-.foto-thumb { width: 68px; height: 68px; object-fit: cover; border-radius: var(--r); border: 1px solid var(--border); display: block; }
-.foto-del { position: absolute; top: -5px; right: -5px; width: 16px; height: 16px; background: var(--black); color: var(--white); border-radius: 50%; font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; }
+.foto-img { width: 72px; height: 72px; object-fit: cover; border-radius: var(--r); border: 1px solid var(--border); display: block; }
+.foto-del { position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; background: var(--black); color: #fff; border-radius: 50%; font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; line-height: 1; }
+.foto-uploading { width: 72px; height: 72px; border-radius: var(--r); border: 1px dashed var(--border); background: var(--gray5); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--gray2); flex-direction: column; gap: 4px; }
 .foto-btns { display: flex; gap: 6px; margin-top: 8px; }
-.foto-btn { flex: 1; padding: 9px 6px; border: 1px solid var(--border); border-radius: var(--r); background: var(--white); color: var(--gray1); font-size: 11px; cursor: pointer; font-family: var(--font); display: flex; align-items: center; justify-content: center; gap: 4px; transition: border-color .15s; }
-.foto-btn:hover { border-color: var(--black); color: var(--black); }
-.file-input { display: none; }
+.foto-btn { flex: 1; padding: 12px 6px; border: 1.5px solid var(--black); border-radius: var(--r); background: var(--white); color: var(--black); font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font); display: flex; align-items: center; justify-content: center; gap: 5px; transition: background .15s; }
+.foto-btn:hover { background: var(--gray5); }
+.file-in { display: none; }
 
-/* TAGS */
-.tag-list { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; min-height: 4px; }
+/* WERKZEUGE */
+.tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; min-height: 2px; }
 .tag { background: var(--gray5); border: 1px solid var(--gray4); border-radius: 20px; padding: 4px 10px; font-size: 12px; display: flex; align-items: center; gap: 5px; }
-.tag-x { color: var(--gray3); cursor: pointer; font-size: 13px; }
+.tag-x { color: var(--gray3); cursor: pointer; font-size: 13px; line-height: 1; }
 
 /* BOM */
-.bom-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--gray4); }
-.bom-item:last-child { border: none; }
-.bom-name { font-size: 12px; flex: 1; line-height: 1.4; }
-.bom-nr { font-size: 10px; color: var(--gray2); margin-top: 1px; }
-.bom-btns { display: flex; gap: 3px; }
-.bom-btn { width: 30px; height: 30px; border: 1px solid var(--border); border-radius: var(--r); font-size: 12px; font-weight: 600; cursor: pointer; background: var(--bg); color: var(--gray2); font-family: var(--font); transition: all .12s; }
-.bom-btn.ok.on { background: var(--green); border-color: var(--green); color: #fff; }
-.bom-btn.fehl.on { background: var(--red); border-color: var(--red); color: #fff; }
-.bom-btn.viel.on { background: var(--blue); border-color: var(--blue); color: #fff; }
-
-/* SAVE */
-.btn-save { width: 100%; padding: 15px; background: var(--black); border: none; border-radius: var(--r); color: var(--white); font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font); letter-spacing: .03em; transition: opacity .15s; margin-top: 4px; }
-.btn-save:hover { opacity: .85; }
-
-/* OVERLAY */
-.overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,.9); z-index: 200; align-items: center; justify-content: center; flex-direction: column; gap: 10px; }
-.overlay.show { display: flex; }
-.spinner { width: 28px; height: 28px; border: 2px solid var(--gray4); border-top-color: var(--black); border-radius: 50%; animation: spin .7s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.overlay-txt { font-size: 13px; color: var(--gray2); }
-
-/* TOAST */
-.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--black); color: var(--white); padding: 10px 22px; border-radius: 40px; font-size: 13px; font-weight: 500; z-index: 999; opacity: 0; transition: opacity .25s; pointer-events: none; white-space: nowrap; max-width: 88vw; text-align: center; }
-.toast.show { opacity: 1; }
-.toast.err { background: var(--red); }
-
-
-/* MOBILE OPTIMIERUNGEN */
-@media (max-width: 480px) {
-  .pin-btn { padding: 18px; font-size: 22px; }
-  .btn-save { padding: 18px; font-size: 15px; position: sticky; bottom: 16px; box-shadow: 0 4px 16px rgba(0,0,0,.15); }
-  .foto-thumb { width: 80px; height: 80px; }
-  .foto-btn { padding: 12px 6px; font-size: 13px; }
-  .time-btn { padding: 14px; font-size: 14px; }
-  .time-disp { font-size: 24px; padding: 12px 16px; }
-  .bom-btn { width: 36px; height: 36px; font-size: 14px; }
-  .section { padding: 16px; }
-  .field-input { font-size: 16px; } /* verhindert zoom auf iOS */
-  .s-card { padding: 16px; }
-  .p-item { padding: 14px; }
-  .page-hdr { padding: 18px 16px 14px; }
-  .list-wrap { padding: 12px 14px; }
-  .d-wrap { padding: 12px 14px 80px; }
-}
-
-/* iOS Safari fixes */
-input[type="number"] { -webkit-appearance: none; }
-button { -webkit-appearance: none; }
-* { -webkit-overflow-scrolling: touch; }
-
-
-.welcome-hints { display: flex; flex-direction: column; gap: 12px; }
-.hint-item { display: flex; align-items: flex-start; gap: 12px; font-size: 13px; color: var(--gray1); line-height: 1.5; }
-.hint-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-
-
-/* BOM TABELLE */
-.bom-table { width: 100%; }
-.bom-header-row { display: flex; align-items: center; gap: 6px; padding: 0 0 8px; border-bottom: 2px solid var(--border); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gray2); }
-.bom-row { display: flex; align-items: center; gap: 6px; padding: 10px 0; border-bottom: 1px solid var(--gray4); }
+.bom-hdr { display: flex; align-items: center; gap: 6px; padding-bottom: 8px; border-bottom: 1px solid var(--border); font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--gray2); margin-bottom: 4px; }
+.bom-row { display: flex; align-items: center; gap: 8px; padding: 9px 0; border-bottom: 1px solid var(--gray5); }
 .bom-row:last-child { border: none; }
 .bom-info { flex: 1; min-width: 0; }
 .bom-name { font-size: 13px; font-weight: 500; line-height: 1.3; }
 .bom-nr { font-size: 10px; color: var(--gray2); margin-top: 1px; }
-.bom-soll { width: 80px; text-align: center; font-size: 13px; color: var(--gray2); flex-shrink: 0; }
-.bom-used { width: 80px; display: flex; justify-content: center; flex-shrink: 0; }
-.bom-menge-input:focus { border-color: var(--black) !important; background: var(--white) !important; }
-.bom-status-btns { width: 90px; display: flex; gap: 4px; justify-content: center; flex-shrink: 0; }
+.bom-soll { width: 44px; text-align: center; font-size: 12px; color: var(--gray2); flex-shrink: 0; }
+.bom-inp { width: 60px; padding: 6px 6px; text-align: center; font-size: 13px; border: 1px solid var(--border); border-radius: var(--r); background: var(--bg); font-family: var(--font); outline: none; flex-shrink: 0; }
+.bom-inp:focus { border-color: var(--black); background: var(--white); }
+.bom-btns { display: flex; gap: 4px; flex-shrink: 0; }
+.bom-btn { width: 34px; height: 34px; border: 1.5px solid var(--gray2); border-radius: var(--r); font-size: 13px; font-weight: 700; cursor: pointer; background: var(--white); color: var(--gray1); font-family: var(--font); transition: all .12s; }
+.bom-btn.ok.on { background: var(--green); border-color: var(--green); color: #fff; }
+.bom-btn.fehl.on { background: var(--red); border-color: var(--red); color: #fff; }
 
-/* DIVIDER */
-hr { border: none; border-top: 1px solid var(--gray4); margin: 12px 0; }
+/* SAVE */
+.btn-save { width: 100%; padding: 16px; background: var(--black); border: none; border-radius: var(--r); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font); letter-spacing: .02em; transition: opacity .15s; }
+.btn-save:hover { opacity: .85; }
+
+/* OVERLAY */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,.92); z-index: 200; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+.overlay.on { display: flex; }
+.spinner { width: 26px; height: 26px; border: 2px solid var(--gray4); border-top-color: var(--black); border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.ov-txt { font-size: 13px; color: var(--gray2); }
+
+/* TOAST */
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--black); color: #fff; padding: 10px 22px; border-radius: 40px; font-size: 13px; font-weight: 500; z-index: 999; opacity: 0; transition: opacity .25s; pointer-events: none; white-space: nowrap; max-width: 88vw; text-align: center; }
+.toast.on { opacity: 1; }
+.toast.err { background: var(--red); }
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .pin-key { padding: 18px; font-size: 22px; }
+  .btn-save { position: sticky; bottom: 14px; box-shadow: 0 4px 16px rgba(0,0,0,.15); }
+  .input { font-size: 16px; }
+  .foto-img { width: 80px; height: 80px; }
+  .bom-inp { font-size: 16px; }
+}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="header">
-  <button class="back-btn" id="backBtn" onclick="goBack()">← Zurück</button>
-  <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="header-right">
-    <span style="font-size:10px;color:var(--gray3);letter-spacing:.06em">V1.2</span><span class="header-user" id="headerUser"></span>
+<div class="hdr">
+  <button class="back" id="backBtn" onclick="goBack()">← Zurück</button>
+  <div class="logo">farbflut <span>·</span> Prozessdok</div>
+  <div class="hdr-r">
+    <span class="ver">V1.3</span>
+    <span class="hdr-user" id="hdrUser"></span>
   </div>
 </div>
-<div class="prog-bar" id="progBar" style="display:none"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
-
-<!-- OVERLAY -->
-<div class="overlay" id="overlay"><div class="spinner"></div><div class="overlay-txt" id="overlayTxt">Wird gespeichert…</div></div>
+<div class="prog" id="prog"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+<div class="overlay" id="overlay"><div class="spinner"></div><div class="ov-txt" id="ovTxt"></div></div>
 <div class="toast" id="toast"></div>
 
 <!-- PIN -->
-<div class="screen active" id="screenPin">
-  <div class="pin-wrap">
-    <div class="pin-card">
+<div class="scr on" id="scrPin">
+  <div class="center-wrap">
+    <div class="card center">
       <div class="pin-logo">farbflut Design</div>
-      <div class="pin-hint">Bitte PIN eingeben</div>
+      <div class="pin-hint">PIN eingeben</div>
       <div class="pin-dots" id="pinDots">
-        <div class="pin-dot" id="d0"></div>
-        <div class="pin-dot" id="d1"></div>
-        <div class="pin-dot" id="d2"></div>
-        <div class="pin-dot" id="d3"></div>
+        <div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div>
+        <div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
       </div>
       <div class="pin-grid">
-        <button class="pin-btn" onclick="pinKey('1')">1</button>
-        <button class="pin-btn" onclick="pinKey('2')">2</button>
-        <button class="pin-btn" onclick="pinKey('3')">3</button>
-        <button class="pin-btn" onclick="pinKey('4')">4</button>
-        <button class="pin-btn" onclick="pinKey('5')">5</button>
-        <button class="pin-btn" onclick="pinKey('6')">6</button>
-        <button class="pin-btn" onclick="pinKey('7')">7</button>
-        <button class="pin-btn" onclick="pinKey('8')">8</button>
-        <button class="pin-btn" onclick="pinKey('9')">9</button>
-        <button class="pin-btn empty"></button>
-        <button class="pin-btn" onclick="pinKey('0')">0</button>
-        <button class="pin-btn del" onclick="pinDel()">⌫</button>
+        <button class="pin-key" onclick="pk('1')">1</button>
+        <button class="pin-key" onclick="pk('2')">2</button>
+        <button class="pin-key" onclick="pk('3')">3</button>
+        <button class="pin-key" onclick="pk('4')">4</button>
+        <button class="pin-key" onclick="pk('5')">5</button>
+        <button class="pin-key" onclick="pk('6')">6</button>
+        <button class="pin-key" onclick="pk('7')">7</button>
+        <button class="pin-key" onclick="pk('8')">8</button>
+        <button class="pin-key" onclick="pk('9')">9</button>
+        <button class="pin-key empty"></button>
+        <button class="pin-key" onclick="pk('0')">0</button>
+        <button class="pin-key del" onclick="pdel()">⌫</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- NAME -->
-<div class="screen" id="screenName">
-  <div class="name-wrap">
-    <div class="name-card">
-      <div class="card-eyebrow">farbflut Design</div>
+<div class="scr" id="scrName">
+  <div class="center-wrap">
+    <div class="card">
+      <div class="eyebrow">farbflut Design</div>
       <div class="card-title">Prozess­dokumentation</div>
-      
       <div class="field-label">Dein Name</div>
-      <input class="field-input" id="nameInput" type="text" placeholder="Dein Name" oninput="checkName()">
-      <button class="btn btn-black" id="nameBtn" onclick="startApp()" disabled style="margin-top:14px">Weiter →</button>
+      <input class="input" id="nameIn" type="text" placeholder="Name eingeben" oninput="chkName()">
+      <button class="btn btn-b" id="nameBtn" onclick="goWelcome()" disabled>Weiter →</button>
     </div>
   </div>
 </div>
 
-
 <!-- WELCOME -->
-<div class="screen" id="screenWelcome">
-  <div class="name-wrap">
-    <div class="name-card" style="max-width:400px">
-      <div style="font-size:13px;color:var(--gray2);margin-bottom:4px">Hallo,</div>
-      <div style="font-size:24px;font-weight:700;margin-bottom:24px" id="welcomeName"></div>
-      <div style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gray2);margin-bottom:14px">Bitte beachte beim Dokumentieren</div>
-      <div class="welcome-hints">
-        <div class="hint-item">
-          <div class="hint-icon">📐</div>
-          <div>Präzise Maße & Mengen — wie lang, wie viel, wie oft</div>
-        </div>
-        <div class="hint-item">
-          <div class="hint-icon">🔩</div>
-          <div>Kraft & Festigkeit — wie fest verschraubt, wie stark verklebt, mit welchem Drehmoment</div>
-        </div>
-        <div class="hint-item">
-          <div class="hint-icon">👁</div>
-          <div>Sichtbarkeit — wo dürfen Klebestellen sichtbar sein, wo nicht</div>
-        </div>
-        <div class="hint-item">
-          <div class="hint-icon">✅</div>
-          <div>Qualität — was ist in Ordnung, was ist ein Fehler, worauf muss man achten</div>
-        </div>
-        <div class="hint-item">
-          <div class="hint-icon">🆕</div>
-          <div>So dokumentieren, dass ein neuer Mitarbeiter ohne Rückfragen den Prozess versteht</div>
-        </div>
+<div class="scr" id="scrWelcome">
+  <div class="center-wrap">
+    <div class="card" style="max-width:400px">
+      <div class="eyebrow">Hallo,</div>
+      <div class="card-title" id="welcomeName"></div>
+      <div class="field-label" style="margin-bottom:14px">Bitte beim Dokumentieren beachten</div>
+      <div class="hints">
+        <div class="hint"><div class="hint-ic">📐</div><div>Präzise Maße & Mengen angeben — wie lang, wie viel, wie oft</div></div>
+        <div class="hint"><div class="hint-ic">🔩</div><div>Kraft & Festigkeit beschreiben — wie fest verschraubt, wie stark verklebt</div></div>
+        <div class="hint"><div class="hint-ic">👁</div><div>Sichtbarkeit klären — wo dürfen Klebestellen sichtbar sein, wo nicht</div></div>
+        <div class="hint"><div class="hint-ic">✅</div><div>Qualität festhalten — was ist in Ordnung, was ist ein Fehler</div></div>
+        <div class="hint"><div class="hint-ic">🆕</div><div>So dokumentieren, dass ein neuer Mitarbeiter ohne Rückfragen versteht</div></div>
       </div>
-      <button class="btn btn-black" onclick="showStationen()" style="margin-top:24px">Los geht's →</button>
+      <button class="btn btn-b" onclick="showStationen()">Los geht's →</button>
     </div>
   </div>
 </div>
 
 <!-- STATIONEN -->
-<div class="screen" id="screenStationen">
-  <div class="page-hdr">
-    <div class="page-eyebrow">Übersicht</div>
-    <div class="page-title">Produktionsstationen</div>
-    <div class="page-sub" id="subStat"></div>
+<div class="scr" id="scrStat">
+  <div class="ph">
+    <div class="ph-ey">Übersicht</div>
+    <div class="ph-title">Produktionsstationen</div>
+    <div class="ph-sub" id="subStat"></div>
   </div>
-  <div class="list-wrap" id="stationGrid"></div>
+  <div class="lw" id="statGrid"></div>
 </div>
 
 <!-- PROZESSE -->
-<div class="screen" id="screenProzesse">
-  <div class="page-hdr">
-    <div class="page-eyebrow" id="pEyebrow"></div>
-    <div class="page-title">Prozesse</div>
-    <div class="page-sub" id="pSub"></div>
+<div class="scr" id="scrProz">
+  <div class="ph">
+    <div class="ph-ey" id="prozEy"></div>
+    <div class="ph-title">Prozesse</div>
+    <div class="ph-sub" id="prozSub"></div>
   </div>
-  <div class="list-wrap" id="prozessList"></div>
+  <div class="lw" id="prozList"></div>
 </div>
 
 <!-- DETAIL -->
-<div class="screen" id="screenDetail">
-  <div class="page-hdr" id="dHdr"></div>
-  <div class="d-wrap" id="dContent"></div>
+<div class="scr" id="scrDetail">
+  <div class="ph" id="dHdr"></div>
+  <div class="dw" id="dContent"></div>
 </div>
 
 <script>
 const PROZESSE = [{"id":"P-001","name":"Birkenholzplatte / 3 mm / Lasieren","station":"Station 1 — Plattenoberflächenbehandlung","varianten":1,"artikel":["BG-100-10001"],"bom":[{"nr":"BG-100-10000","name":"3mm Birkensperrholz gesägt, 760 x 505 mm","menge":"1"},{"nr":"HW-50-10125","name":"Aquavison Flächenlasur, Isolierweiss, 2,5L","menge":"1"},{"nr":"HW-60-10075","name":"Microfaser Farbwalze, 10cm","menge":"0,02"},{"nr":"HW-60-10100","name":"Staubfix Staubbindetuch","menge":"0,02"},{"nr":"HW-60-10125","name":"MIRKA Schleifscheiben / 150mm / P320 / Pack á 50 Stück","menge":"0,02"}]},{"id":"P-002","name":"Birkenholzplatte / 3 mm / Ölen","station":"Station 1 — Plattenoberflächenbehandlung","varianten":4,"artikel":["BG-100-10002","BG-100-10003","BG-100-10004","BG-100-10005"],"bom":[{"nr":"BG-100-10000","name":"3mm Birkensperrholz gesägt, 760 x 505 mm","menge":"1"},{"nr":"HW-50-10103","name":"OSMO Dekorwachs Kiesel, 2,5L","menge":"0,02"},{"nr":"HW-60-10075","name":"Microfaser Farbwalze, 10cm","menge":"0,02"},{"nr":"HW-60-10100","name":"Staubfix Staubbindetuch","menge":"0,02"},{"nr":"HW-60-10125","name":"MIRKA Schleifscheiben / 150mm / P320 / Pack á 50 Stück","menge":"0,02"}]},{"id":"P-003","name":"ZEUS Blende / Linoleum / Zuschnitt","station":"Station 1 — Plattenoberflächenbehandlung","varianten":4,"artikel":["BG-100-10025","BG-100-10026","BG-100-10027","BG-100-10028"],"bom":[{"nr":"RM-100-10051","name":"Forbo Tischlinoleum Desktop, nero (schwarz), B = 1.830 mm","menge":"0,01"}]},{"id":"P-004","name":"Bausatz Lampenschirm Pendelleuchte HUEVO 33 cm","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10000","BG-110-10001","BG-110-10002","BG-110-10003","BG-110-10004"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"2"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,034"}]},{"id":"P-005","name":"Bausatz Lampenschirm Pendelleuchte HUEVO 43 cm","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10005","BG-110-10006","BG-110-10007","BG-110-10008","BG-110-10009"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"5"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,085"}]},{"id":"P-006","name":"Bausatz Lampenschirm Pendelleuchte CONO","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10010","BG-110-10011","BG-110-10012","BG-110-10013","BG-110-10014"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"2"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,034"}]},{"id":"P-007","name":"Bausatz Lampenschirm Pendelleuchte BOLA 30 cm","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10015","BG-110-10016","BG-110-10017","BG-110-10018","BG-110-10019"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"2"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,034"}]},{"id":"P-008","name":"Bausatz Lampenschirm Pendelleuchte BOLA 40 cm","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10020","BG-110-10021","BG-110-10022","BG-110-10023","BG-110-10024"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"5"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,085"}]},{"id":"P-009","name":"Bausatz Lampenschirm Pendelleuchte BOLA 50 cm","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10025","BG-110-10026","BG-110-10027","BG-110-10028","BG-110-10029"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"10"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,17"}]},{"id":"P-010","name":"Bausatz Lampenschirm Pendelleuchte CAMPANA","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10030","BG-110-10031","BG-110-10032","BG-110-10033","BG-110-10034"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"5"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,085"}]},{"id":"P-011","name":"Bausatz Lampenschirm Pendelleuchte CARAMELO","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10035","BG-110-10036","BG-110-10037","BG-110-10038","BG-110-10039"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"5"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,085"}]},{"id":"P-012","name":"Bausatz Lampenschirm Pendelleuchte COLUMNA","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10040","BG-110-10041","BG-110-10042","BG-110-10043","BG-110-10044"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"1"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,017"}]},{"id":"P-013","name":"Bausatz Lampenschirm Pendelleuchte BARRIL 30 cm","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10045","BG-110-10046","BG-110-10047","BG-110-10048","BG-110-10049"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"2"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,034"}]},{"id":"P-014","name":"Bausatz Lampenschirm Pendelleuchte BARRIL 50 cm","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10050","BG-110-10051","BG-110-10052","BG-110-10053","BG-110-10054"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"4"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,068"}]},{"id":"P-015","name":"Bausatz Lampenschirm Pendelleuchte PIPA","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10055","BG-110-10056","BG-110-10057","BG-110-10058","BG-110-10059"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"1"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,017"}]},{"id":"P-016","name":"Bausatz Lampenschirm Pendelleuchte UNO","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10060","BG-110-10061","BG-110-10062","BG-110-10063","BG-110-10064"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"1"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,017"}]},{"id":"P-017","name":"Bausatz Lampenschirm Pendelleuchte NINO","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10065","BG-110-10066","BG-110-10067","BG-110-10068","BG-110-10069"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"3"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,051"}]},{"id":"P-018","name":"Bausatz Lampenschirm Pendelleuchte CILINDRO","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10070","BG-110-10071","BG-110-10072","BG-110-10073","BG-110-10074"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"1"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,017"}]},{"id":"P-019","name":"Bausatz Lampenschirm Tischleuchte FARO","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10075","BG-110-10076","BG-110-10077","BG-110-10078","BG-110-10079"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"5"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,085"}]},{"id":"P-020","name":"Bausatz Lampenschirm Tischleuchte GLOBO","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10080","BG-110-10081","BG-110-10082","BG-110-10083","BG-110-10084"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"5"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,085"}]},{"id":"P-021","name":"Bausatz Lampenschirm Wandleuchte CONO","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10085","BG-110-10086","BG-110-10087","BG-110-10088","BG-110-10089"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"1"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,017"}]},{"id":"P-022","name":"Bausatz Lampenschirm Wandleuchte CUBO","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10090","BG-110-10091","BG-110-10092","BG-110-10093","BG-110-10094"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"0,5"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,0085"}]},{"id":"P-023","name":"Bausatz Lampenschirm Wandleuchte ALTO","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10095","BG-110-10096","BG-110-10097","BG-110-10098","BG-110-10099"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"0,5"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,0085"}]},{"id":"P-024","name":"Bausatz Lampenschirm Deckenleuchte COPA","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10100","BG-110-10101","BG-110-10102","BG-110-10103","BG-110-10104"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"2"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,034"}]},{"id":"P-025","name":"Bausatz Lampenschirm Deckenleuchte RAYOS","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10105","BG-110-10106","BG-110-10107","BG-110-10108","BG-110-10109"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"5"},{"nr":"BG-110-10155","name":"Bausatz Ringe Deckenleuchte RAYOS / Natur","menge":"1"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,085"}]},{"id":"P-026","name":"Bausatz Lampenschirm Deckenleuchte LUNA","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10110","BG-110-10111","BG-110-10112","BG-110-10113","BG-110-10114"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"5"},{"nr":"BG-110-10160","name":"Bausatz Ringe Deckenleuchte LUNA / NINO / Natur","menge":"1"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,085"}]},{"id":"P-027","name":"Bausatz Lampenschirm Deckenleuchte NINO","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10115","BG-110-10116","BG-110-10117","BG-110-10118","BG-110-10119"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"3"},{"nr":"BG-110-10160","name":"Bausatz Ringe Deckenleuchte LUNA / NINO / Natur","menge":"1"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,051"}]},{"id":"P-028","name":"Bausatz Lampenschirm Wandleuchte RAYOS","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10120","BG-110-10121","BG-110-10122","BG-110-10123","BG-110-10124"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"4"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,068"}]},{"id":"P-029","name":"Bausatz Lampenschirm Deckenleuchte PANERA 40 cm","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10125","BG-110-10126","BG-110-10127","BG-110-10128","BG-110-10129"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"2"},{"nr":"BG-110-10165","name":"Bausatz Ringe Deckenleuchte PANERA 40 cm / Natur","menge":"1"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,068"}]},{"id":"P-030","name":"Bausatz Lampenschirm Deckenleuchte PANERA 50 cm","station":"Station 2 — Laserbearbeitung","varianten":5,"artikel":["BG-110-10130","BG-110-10131","BG-110-10132","BG-110-10133","BG-110-10134"],"bom":[{"nr":"BG-100-10003","name":"Birkenholzplatte / 3 mm / 760x506 mm / Natur geölt","menge":"3"},{"nr":"BG-110-10170","name":"Bausatz Ringe Deckenleuchte PANERA 50 cm / Natur","menge":"1"},{"nr":"HW-10-10075","name":"Transferpapier 61 cm, Rolle á 50 m","menge":"0,085"}]},{"id":"P-031","name":"Streuscheibe Deckenleuchte PANERA 40 cm / Klar","station":"Station 2 — Laserbearbeitung","varianten":1,"artikel":["BG-130-10000"],"bom":[{"nr":"ET-01-10027","name":"Acrylglas GS Platte transparent / 3 mm / 130 cm x 55 cm","menge":"0,83333"}]},{"id":"P-032","name":"LED Profil ZEUS / 1.100 mm","station":"Station 3 — Mechanische Bearbeitung","varianten":1,"artikel":["BG-50-10200"],"bom":[{"nr":"RM-100-10077","name":"LED Profil ZEUS, Aluminium, L = 3.000 mm","menge":"0,3667"}]},{"id":"P-033","name":"Streuscheibe Deckenleuchte RAYOS / LUNA / NINO / Zylindrisch","station":"Station 3 — Mechanische Bearbeitung","varianten":1,"artikel":["ET-01-10000"],"bom":[{"nr":"RM-100-10025","name":"CREApop® Folie 1300 x 1000 x 0,5 mm (ES)","menge":"0,1"},{"nr":"HW-80-10025","name":"3M VHB Klebeband 4910F, Transparent, 6 mm x 33 m, 1 mm","menge":"0,1"}]},{"id":"P-034","name":"ZEUS Blende / Eiche / Sägen & Fräsen","station":"Station 3 — Mechanische Bearbeitung","varianten":3,"artikel":["ET-01-10012","ET-01-10013","ET-01-10014"],"bom":[{"nr":"ET-01-10034","name":"OSMO Hartwachsöl 3041 Natural Matt","menge":"1"},{"nr":"RM-25-10025","name":"Eiche-Rechteckleiste 4 x 45 mm, scharfkantig, gehobelt & ges","menge":"1"}]},{"id":"P-035","name":"Lampenschirm Pendelleuchte HUEVO 33 cm","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10000","BG-99-10001","BG-99-10002","BG-99-10003","BG-99-10004"],"bom":[{"nr":"BG-110-10000","name":"Bausatz Lampenschirm Pendelleuchte HUEVO 33 cm / Natur","menge":"1"}]},{"id":"P-036","name":"Lampenschirm Pendelleuchte HUEVO 43 cm","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10005","BG-99-10006","BG-99-10007","BG-99-10008","BG-99-10009"],"bom":[{"nr":"BG-110-10005","name":"Bausatz Lampenschirm Pendelleuchte HUEVO 43 cm / Natur","menge":"1"}]},{"id":"P-037","name":"Lampenschirm Pendelleuchte CONO","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10011","BG-99-10012","BG-99-10013","BG-99-10014","BG-99-10015"],"bom":[{"nr":"BG-110-10010","name":"Bausatz Lampenschirm Pendelleuchte CONO / Natur","menge":"1"}]},{"id":"P-038","name":"Lampenschirm Pendelleuchte BOLA 30 cm","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10016","BG-99-10017","BG-99-10018","BG-99-10019","BG-99-10020"],"bom":[{"nr":"BG-110-10015","name":"Bausatz Lampenschirm Pendelleuchte BOLA 30 cm / Natur","menge":"1"}]},{"id":"P-039","name":"Lampenschirm Pendelleuchte BOLA 40 cm","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10021","BG-99-10022","BG-99-10023","BG-99-10024","BG-99-10025"],"bom":[{"nr":"BG-110-10020","name":"Bausatz Lampenschirm Pendelleuchte BOLA 40 cm / Natur","menge":"1"}]},{"id":"P-040","name":"Lampenschirm Pendelleuchte BOLA 50 cm","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10026","BG-99-10027","BG-99-10028","BG-99-10029","BG-99-10030"],"bom":[{"nr":"BG-110-10025","name":"Bausatz Lampenschirm Pendelleuchte BOLA 50 cm / Natur","menge":"1"}]},{"id":"P-041","name":"Lampenschirm Pendelleuchte CAMPANA","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10031","BG-99-10032","BG-99-10033","BG-99-10034","BG-99-10035"],"bom":[{"nr":"BG-110-10030","name":"Bausatz Lampenschirm Pendelleuchte CAMPANA / Natur","menge":"1"}]},{"id":"P-042","name":"Lampenschirm Pendelleuchte CARAMELO","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10036","BG-99-10037","BG-99-10038","BG-99-10039","BG-99-10040"],"bom":[{"nr":"BG-110-10035","name":"Bausatz Lampenschirm Pendelleuchte CARAMELO / Natur","menge":"1"}]},{"id":"P-043","name":"Lampenschirm Pendelleuchte COLUMNA","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10041","BG-99-10042","BG-99-10043","BG-99-10044","BG-99-10045"],"bom":[{"nr":"BG-110-10040","name":"Bausatz Lampenschirm Pendelleuchte COLUMNA / Natur","menge":"1"}]},{"id":"P-044","name":"Lampenschirm Pendelleuchte BARRIL 30 cm","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10046","BG-99-10047","BG-99-10048","BG-99-10049","BG-99-10050"],"bom":[{"nr":"BG-110-10045","name":"Bausatz Lampenschirm Pendelleuchte BARRIL 30 cm / Natur","menge":"1"}]},{"id":"P-045","name":"Lampenschirm Pendelleuchte BARRIL 50 cm","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10051","BG-99-10052","BG-99-10053","BG-99-10054","BG-99-10055"],"bom":[{"nr":"BG-110-10050","name":"Bausatz Lampenschirm Pendelleuchte BARRIL 50 cm / Natur","menge":"1"}]},{"id":"P-046","name":"Lampenschirm Pendelleuchte PIPA","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10056","BG-99-10057","BG-99-10058","BG-99-10059","BG-99-10060"],"bom":[{"nr":"BG-110-10055","name":"Bausatz Lampenschirm Pendelleuchte PIPA / Natur","menge":"1"}]},{"id":"P-047","name":"Lampenschirm Pendelleuchte UNO","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10061","BG-99-10062","BG-99-10063","BG-99-10064","BG-99-10065"],"bom":[{"nr":"BG-110-10060","name":"Bausatz Lampenschirm Pendelleuchte UNO / Natur","menge":"1"}]},{"id":"P-048","name":"Lampenschirm Pendelleuchte NINO","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10066","BG-99-10067","BG-99-10068","BG-99-10069","BG-99-10070"],"bom":[{"nr":"BG-110-10065","name":"Bausatz Lampenschirm Pendelleuchte NINO / Natur","menge":"1"}]},{"id":"P-049","name":"Lampenschirm Pendelleuchte CILINDRO","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10071","BG-99-10072","BG-99-10073","BG-99-10074","BG-99-10075"],"bom":[{"nr":"BG-110-10070","name":"Bausatz Lampenschirm Pendelleuchte CILINDRO / Natur","menge":"1"}]},{"id":"P-050","name":"Lampenschirm Tischleuchte FARO","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10076","BG-99-10077","BG-99-10078","BG-99-10079","BG-99-10080"],"bom":[{"nr":"BG-110-10075","name":"Bausatz Lampenschirm Tischleuchte FARO / Natur","menge":"1"}]},{"id":"P-051","name":"Lampenschirm Tischleuchte GLOBO","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10081","BG-99-10082","BG-99-10083","BG-99-10084","BG-99-10085"],"bom":[{"nr":"BG-110-10080","name":"Bausatz Lampenschirm Tischleuchte GLOBO / Natur","menge":"1"}]},{"id":"P-052","name":"Lampenschirm Wandleuchte CONO","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10086","BG-99-10087","BG-99-10088","BG-99-10089","BG-99-10090"],"bom":[{"nr":"BG-110-10085","name":"Bausatz Lampenschirm Wandleuchte CONO / Natur","menge":"1"},{"nr":"ET-01-10004","name":"Streuscheibe Wandleuchte CONO","menge":"1"}]},{"id":"P-053","name":"Lampenschirm Wandleuchte CUBO","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10091","BG-99-10092","BG-99-10093","BG-99-10094","BG-99-10095"],"bom":[{"nr":"BG-110-10090","name":"Bausatz Lampenschirm Wandleuchte CUBO / Natur","menge":"1"}]},{"id":"P-054","name":"Lampenschirm Wandleuchte ALTO","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10096","BG-99-10097","BG-99-10098","BG-99-10099","BG-99-10100"],"bom":[{"nr":"BG-110-10095","name":"Bausatz Lampenschirm Wandleuchte ALTO / Natur","menge":"1"}]},{"id":"P-055","name":"Lampenschirm Deckenleuchte COPA","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10101","BG-99-10102","BG-99-10103","BG-99-10104","BG-99-10105"],"bom":[{"nr":"BG-110-10100","name":"Bausatz Lampenschirm Deckenleuchte COPA / Natur","menge":"1"}]},{"id":"P-056","name":"Lampenschirm Deckenleuchte RAYOS","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10106","BG-99-10107","BG-99-10108","BG-99-10109","BG-99-10110"],"bom":[{"nr":"BG-110-10105","name":"Bausatz Lampenschirm Deckenleuchte RAYOS / Natur","menge":"1"},{"nr":"BG-130-10050","name":"Streuscheibe Deckenleuchte RAYOS / NINO / LUNA / Milchglas","menge":"1"},{"nr":"ET-01-10000","name":"Streuscheibe Deckenleuchte RAYOS / LUNA / NINO / Zylindrisch","menge":"1"},{"nr":"RM-100-10200","name":"Topfmagnet Ø 13 mm mit Gewindezapfen, hält ca. 3,5 kg","menge":"4"},{"nr":"RM-50-10250","name":"RS PRO Sechskantmuttern, Stahl Glanzverzinkt, M3 5.5mm","menge":"4"},{"nr":"RM-50-10325","name":"Scheiben DIN 7349 verzinkt M3 (3,2x9,0x1,0mm)","menge":"4"}]},{"id":"P-057","name":"Lampenschirm Deckenleuchte PANERA 40 cm","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10111","BG-99-10112","BG-99-10113","BG-99-10114","BG-99-10115"],"bom":[{"nr":"BG-110-10125","name":"Bausatz Lampenschirm Deckenleuchte PANERA 40 cm / Natur","menge":"1"},{"nr":"BG-130-10025","name":"Streuscheibe Deckenleuchte PANERA 40 cm / Milchglas","menge":"1"},{"nr":"RM-100-10200","name":"Topfmagnet Ø 13 mm mit Gewindezapfen, hält ca. 3,5 kg","menge":"4"},{"nr":"RM-50-10250","name":"RS PRO Sechskantmuttern, Stahl Glanzverzinkt, M3 5.5mm","menge":"4"},{"nr":"RM-50-10325","name":"Scheiben DIN 7349 verzinkt M3 (3,2x9,0x1,0mm)","menge":"4"},{"nr":"RM-50-10525","name":"RS PRO Abstandshalter, Messing, Sechskant, Innen/Innen: M3 x","menge":"4"}]},{"id":"P-058","name":"Lampenschirm Deckenleuchte PANERA 50 cm","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10116","BG-99-10117","BG-99-10118","BG-99-10119","BG-99-10120"],"bom":[{"nr":"BG-110-10130","name":"Bausatz Lampenschirm Deckenleuchte PANERA 50 cm / Natur","menge":"1"},{"nr":"BG-130-10026","name":"Streuscheibe Deckenleuchte PANERA 50 cm / Milchglas","menge":"1"},{"nr":"RM-100-10200","name":"Topfmagnet Ø 13 mm mit Gewindezapfen, hält ca. 3,5 kg","menge":"4"},{"nr":"RM-50-10250","name":"RS PRO Sechskantmuttern, Stahl Glanzverzinkt, M3 5.5mm","menge":"4"},{"nr":"RM-50-10325","name":"Scheiben DIN 7349 verzinkt M3 (3,2x9,0x1,0mm)","menge":"4"},{"nr":"RM-50-10525","name":"RS PRO Abstandshalter, Messing, Sechskant, Innen/Innen: M3 x","menge":"4"}]},{"id":"P-059","name":"Lampenschirm Deckenleuchte LUNA","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10121","BG-99-10122","BG-99-10123","BG-99-10124","BG-99-10125"],"bom":[{"nr":"BG-110-10110","name":"Bausatz Lampenschirm Deckenleuchte LUNA / Natur","menge":"1"},{"nr":"BG-130-10050","name":"Streuscheibe Deckenleuchte RAYOS / NINO / LUNA / Milchglas","menge":"1"},{"nr":"ET-01-10000","name":"Streuscheibe Deckenleuchte RAYOS / LUNA / NINO / Zylindrisch","menge":"1"},{"nr":"RM-100-10200","name":"Topfmagnet Ø 13 mm mit Gewindezapfen, hält ca. 3,5 kg","menge":"4"},{"nr":"RM-50-10250","name":"RS PRO Sechskantmuttern, Stahl Glanzverzinkt, M3 5.5mm","menge":"4"},{"nr":"RM-50-10325","name":"Scheiben DIN 7349 verzinkt M3 (3,2x9,0x1,0mm)","menge":"4"}]},{"id":"P-060","name":"Lampenschirm Deckenleuchte NINO","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10126","BG-99-10127","BG-99-10128","BG-99-10129","BG-99-10130"],"bom":[{"nr":"BG-110-10115","name":"Bausatz Lampenschirm Deckenleuchte NINO / Natur","menge":"1"},{"nr":"BG-130-10050","name":"Streuscheibe Deckenleuchte RAYOS / NINO / LUNA / Milchglas","menge":"1"},{"nr":"ET-01-10000","name":"Streuscheibe Deckenleuchte RAYOS / LUNA / NINO / Zylindrisch","menge":"1"},{"nr":"RM-100-10200","name":"Topfmagnet Ø 13 mm mit Gewindezapfen, hält ca. 3,5 kg","menge":"4"},{"nr":"RM-50-10250","name":"RS PRO Sechskantmuttern, Stahl Glanzverzinkt, M3 5.5mm","menge":"4"},{"nr":"RM-50-10325","name":"Scheiben DIN 7349 verzinkt M3 (3,2x9,0x1,0mm)","menge":"4"}]},{"id":"P-061","name":"Lampenschirm Wandleuchte RAYOS","station":"Station 4 — Montage Lampenschirme","varianten":5,"artikel":["BG-99-10131","BG-99-10132","BG-99-10133","BG-99-10134","BG-99-10135"],"bom":[{"nr":"BG-110-10120","name":"Bausatz Lampenschirm Wandleuchte RAYOS / Natur","menge":"1"},{"nr":"ET-01-10003","name":"Streuscheibe Wandleuchte RAYOS","menge":"1"}]},{"id":"P-062","name":"Baldachin Rund / 100 x 22 mm","station":"Station 5a — Baldachin-Montage","varianten":3,"artikel":["BG-80-10250","BG-80-10251","BG-80-10252"],"bom":[{"nr":"DR-01-10050","name":"Aufkleber Baldachin / Pendelleuchten","menge":"1"},{"nr":"RM-05-10125","name":"Baldachin Rund / 100 x 22 mm / Silber gebürstet / Roh","menge":"1"},{"nr":"RM-30-10125","name":"KU Zugentlaster 12,5x18 M10x1x7 AG seitl. Made DIN 551 Trans","menge":"1"},{"nr":"RM-35-10125","name":"Cu Kabelschuh o. Isolierung ML10,2 0,5-1,0 mm2 Din 46234 ver","menge":"1"},{"nr":"RM-50-10275","name":"Fächerscheibe 15x10,5x0,5 ähnlich DIN 6798 verzinkt","menge":"1"},{"nr":"RM-50-10425","name":"FE 6kt. Mutter 14x3 M10x1 verzinkt","menge":"1"},{"nr":"RM-60-10075","name":"Kabel 1x0,75 H05V2-U starr grün-gelb","menge":"0,08"}]},{"id":"P-063","name":"Kabelsatz Pendelleuchte / E27 / 150 cm","station":"Station 5b — Kabelsatz-Montage","varianten":3,"artikel":["BG-01-10000","BG-01-10001","BG-01-10002"],"bom":[{"nr":"BG-50-10050","name":"Textilkabel / E27 / 150 cm / Schwarz","menge":"1"},{"nr":"BG-80-10025","name":"Befestigungsset Baldachin / 100 x 22 mm / Pendelleuchten","menge":"1"},{"nr":"BG-80-10252","name":"Baldachin Rund / 100 x 22 mm / Schwarz / Montiert","menge":"1"},{"nr":"DR-01-20100","name":"Aufkleber Kabelsatz Pendelleuchte / E27","menge":"1"},{"nr":"DR-10-10175","name":"Montageanleitung / Pendelleuchten Holz","menge":"1"},{"nr":"VP-10-10000","name":"Faltentaschen C4 ohne Fenster 20mm Falte","menge":"1"}]},{"id":"P-064","name":"Kabelsatz Pendelleuchte / E27 / 300 cm","station":"Station 5b — Kabelsatz-Montage","varianten":3,"artikel":["BG-01-10003","BG-01-10004","BG-01-10005"],"bom":[{"nr":"BG-50-10053","name":"Textilkabel / E27 / 300 cm / Schwarz","menge":"1"},{"nr":"BG-80-10025","name":"Befestigungsset Baldachin / 100 x 22 mm / Pendelleuchten","menge":"1"},{"nr":"BG-80-10252","name":"Baldachin Rund / 100 x 22 mm / Schwarz / Montiert","menge":"1"},{"nr":"DR-01-20100","name":"Aufkleber Kabelsatz Pendelleuchte / E27","menge":"1"},{"nr":"DR-10-10175","name":"Montageanleitung / Pendelleuchten Holz","menge":"1"},{"nr":"VP-10-10000","name":"Faltentaschen C4 ohne Fenster 20mm Falte","menge":"1"}]},{"id":"P-065","name":"Kabelsatz Pendelleuchte / E27 / 500 cm","station":"Station 5b — Kabelsatz-Montage","varianten":3,"artikel":["BG-01-10006","BG-01-10007","BG-01-10008"],"bom":[{"nr":"BG-50-10056","name":"Textilkabel / E27 / 500 cm / Schwarz","menge":"1"},{"nr":"BG-80-10025","name":"Befestigungsset Baldachin / 100 x 22 mm / Pendelleuchten","menge":"1"},{"nr":"BG-80-10252","name":"Baldachin Rund / 100 x 22 mm / Schwarz / Montiert","menge":"1"},{"nr":"DR-01-20100","name":"Aufkleber Kabelsatz Pendelleuchte / E27","menge":"1"},{"nr":"DR-10-10175","name":"Montageanleitung / Pendelleuchten Holz","menge":"1"},{"nr":"VP-10-10000","name":"Faltentaschen C4 ohne Fenster 20mm Falte","menge":"1"}]},{"id":"P-066","name":"Kabelsatz Pendelleuchte / E14 / 150 cm","station":"Station 5b — Kabelsatz-Montage","varianten":3,"artikel":["BG-01-10020","BG-01-10021","BG-01-10022"],"bom":[{"nr":"BG-50-10059","name":"Textilkabel / E14 / 150 cm / Schwarz","menge":"1"},{"nr":"BG-80-10025","name":"Befestigungsset Baldachin / 100 x 22 mm / Pendelleuchten","menge":"1"},{"nr":"BG-80-10252","name":"Baldachin Rund / 100 x 22 mm / Schwarz / Montiert","menge":"1"},{"nr":"DR-01-20125","name":"Aufkleber Kabelsatz Pendelleuchte / E14","menge":"1"},{"nr":"DR-10-10175","name":"Montageanleitung / Pendelleuchten Holz","menge":"1"},{"nr":"VP-10-10000","name":"Faltentaschen C4 ohne Fenster 20mm Falte","menge":"1"}]},{"id":"P-067","name":"Kabelsatz Pendelleuchte / E14 / 300 cm","station":"Station 5b — Kabelsatz-Montage","varianten":3,"artikel":["BG-01-10023","BG-01-10024","BG-01-10025"],"bom":[{"nr":"BG-50-10062","name":"Textilkabel / E14 / 300 cm / Schwarz","menge":"1"},{"nr":"BG-80-10025","name":"Befestigungsset Baldachin / 100 x 22 mm / Pendelleuchten","menge":"1"},{"nr":"BG-80-10252","name":"Baldachin Rund / 100 x 22 mm / Schwarz / Montiert","menge":"1"},{"nr":"DR-01-20125","name":"Aufkleber Kabelsatz Pendelleuchte / E14","menge":"1"},{"nr":"DR-10-10175","name":"Montageanleitung / Pendelleuchten Holz","menge":"1"},{"nr":"VP-10-10000","name":"Faltentaschen C4 ohne Fenster 20mm Falte","menge":"1"}]},{"id":"P-068","name":"Kabelsatz Pendelleuchte / E14 / 500 cm","station":"Station 5b — Kabelsatz-Montage","varianten":3,"artikel":["BG-01-10026","BG-01-10027","BG-01-10028"],"bom":[{"nr":"BG-50-10065","name":"Textilkabel / E14 / 500 cm / Schwarz","menge":"1"},{"nr":"BG-80-10025","name":"Befestigungsset Baldachin / 100 x 22 mm / Pendelleuchten","menge":"1"},{"nr":"BG-80-10252","name":"Baldachin Rund / 100 x 22 mm / Schwarz / Montiert","menge":"1"},{"nr":"DR-01-20125","name":"Aufkleber Kabelsatz Pendelleuchte / E14","menge":"1"},{"nr":"DR-10-10175","name":"Montageanleitung / Pendelleuchten Holz","menge":"1"},{"nr":"VP-10-10000","name":"Faltentaschen C4 ohne Fenster 20mm Falte","menge":"1"}]},{"id":"P-069","name":"Kabelsatz Lightswing / E27 / 150 cm","station":"Station 5b — Kabelsatz-Montage","varianten":3,"artikel":["BG-01-10050","BG-01-10051","BG-01-10052"],"bom":[{"nr":"BG-50-10050","name":"Textilkabel / E27 / 150 cm / Schwarz","menge":"2"},{"nr":"DR-01-20175","name":"Aufkleber Kabelsatz Lightswing / E27","menge":"1"},{"nr":"DR-10-10175","name":"Montageanleitung / Pendelleuchten Holz","menge":"1"},{"nr":"VP-10-10000","name":"Faltentaschen C4 ohne Fenster 20mm Falte","menge":"1"}]},{"id":"P-070","name":"Kabelsatz Lightswing / E14 / 150 cm","station":"Station 5b — Kabelsatz-Montage","varianten":3,"artikel":["BG-01-10075","BG-01-10076","BG-01-10077"],"bom":[{"nr":"BG-50-10059","name":"Textilkabel / E14 / 150 cm / Schwarz","menge":"2"},{"nr":"DR-01-20150","name":"Aufkleber Kabelsatz Lightswing / E14","menge":"1"},{"nr":"DR-10-10175","name":"Montageanleitung / Pendelleuchten Holz","menge":"1"},{"nr":"VP-10-10000","name":"Faltentaschen C4 ohne Fenster 20mm Falte","menge":"1"}]},{"id":"P-071","name":"Montagesatz Wandleuchte CONO","station":"Station 5b — Kabelsatz-Montage","varianten":1,"artikel":["BG-01-10100"],"bom":[{"nr":"DR-01-20025","name":"Aufkleber Montagesatz / Wandleuchte CONO","menge":"1"},{"nr":"DR-10-10225","name":"Montageanleitung / Wandleuchte CONO","menge":"1"},{"nr":"ET-01-10005","name":"Befestigungsset 2-fach / SPAX 4x35 / Fischer 6x35","menge":"1"},{"nr":"ET-01-10006","name":"Leuchteinheit Wandleuchte CONO","menge":"1"},{"nr":"VP-10-10025","name":"Faltentaschen B5 ohne Fenster Klotzboden","menge":"1"}]},{"id":"P-072","name":"Montagesatz Wandleuchte CUBO, ALTO, RAYOS","station":"Station 5b — Kabelsatz-Montage","varianten":1,"artikel":["BG-01-10125"],"bom":[{"nr":"DR-01-20000","name":"Aufkleber Montagesatz / Wandleuchte CUBO / ALTO / RAYOS","menge":"1"},{"nr":"DR-10-10200","name":"Montageanleitung / Wandleuchte RAYOS / CUBO / ALTO","menge":"1"},{"nr":"ET-01-10005","name":"Befestigungsset 2-fach / SPAX 4x35 / Fischer 6x35","menge":"1"},{"nr":"ET-01-10007","name":"Leuchteinheit Wandleuchte RAYOS / CUBO / ALTO","menge":"1"},{"nr":"VP-10-10025","name":"Faltentaschen B5 ohne Fenster Klotzboden","menge":"1"}]},{"id":"P-073","name":"Montagesatz Deckenleuchte COPA","station":"Station 5b — Kabelsatz-Montage","varianten":1,"artikel":["BG-01-10150"],"bom":[{"nr":"BG-80-10050","name":"Befestigungsset Baldachin / 100 x 22 mm / Deckenleuchten","menge":"1"},{"nr":"BG-80-10150","name":"Leuchteinheit Deckenleuchte COPA","menge":"1"},{"nr":"DR-01-20050","name":"Aufkleber Montagesatz / Deckenleuchte COPA","menge":"1"},{"nr":"VP-10-10025","name":"Faltentaschen B5 ohne Fenster Klotzboden","menge":"1"},{"nr":"VP-255-10150","name":"Aufkleber Montagesatz / Deckenleuchte COPA","menge":"1"}]},{"id":"P-074","name":"Montagesatz Deckenleuchte RAYOS, LUNA, NINO","station":"Station 5b — Kabelsatz-Montage","varianten":1,"artikel":["BG-01-10175"],"bom":[{"nr":"BG-01-10175","name":"Montagesatz Deckenleuchte RAYOS, LUNA, NINO","menge":"1"},{"nr":"BG-80-10050","name":"Befestigungsset Baldachin / 100 x 22 mm / Deckenleuchten","menge":"1"},{"nr":"DR-10-10075","name":"Montageanleitung / Deckenleuchte RAYOS / LUNA / NINO","menge":"1"},{"nr":"VP-10-10025","name":"Faltentaschen B5 ohne Fenster Klotzboden","menge":"1"},{"nr":"VP-255-10125","name":"Aufkleber Montagesatz / Deckenleuchte RAYOS / LUNA / NINO","menge":"1"}]},{"id":"P-075","name":"Montagesatz Deckenleuchte PANERA","station":"Station 5b — Kabelsatz-Montage","varianten":1,"artikel":["BG-01-10200"],"bom":[{"nr":"BG-80-10125","name":"Leuchteinheit Deckenleuchte PANERA","menge":"1"},{"nr":"DR-10-10100","name":"Montageanleitung / Deckenleuchte PANERA","menge":"1"},{"nr":"ET-01-10015","name":"Befestigungsset 3-fach / SPAX 4x35 / Fischer 6x35","menge":"1"},{"nr":"ET-01-10023","name":"Bohrschablone Leuchteinheit PANERA","menge":"1"},{"nr":"ET-01-10024","name":"Karton Leuchteinheit PANERA","menge":"1"}]},{"id":"P-076","name":"Befestigungsset LAZO","station":"Station 5b — Kabelsatz-Montage","varianten":1,"artikel":["BG-80-10000"],"bom":[{"nr":"DR-10-10025","name":"Montageanleitung / Stehleuchte LAZO","menge":"1"},{"nr":"ET-01-10022","name":"Maulschlüssel 14mm","menge":"1"},{"nr":"RM-100-10125","name":"Innen-Sechskant Schlüssel 2mm","menge":"1"},{"nr":"RM-50-10100","name":"Madenschraube M4 schwarz","menge":"1"},{"nr":"VP-10-10000","name":"Faltentaschen C4 ohne Fenster 20mm Falte","menge":"1"},{"nr":"VP-10-10050","name":"Druckverschlussbeutel 120 x 80 x 0,090mm","menge":"1"}]},{"id":"P-077","name":"Befestigungsset Baldachin / 100 x 22 mm / Pendelleuchten","station":"Station 5b — Kabelsatz-Montage","varianten":1,"artikel":["BG-80-10025"],"bom":[{"nr":"RM-05-10128","name":"Haltebügel Baldachin / 100 x 22 mm","menge":"1"},{"nr":"RM-35-10225","name":"Lüsterklemme Mini 1,5m2 3plg. m. Beschriftung","menge":"1"},{"nr":"RM-50-10175","name":"SPAX Halbrundkopf Kreuzschlitz Z 4CUT Vollgewinde WIROX A3J ","menge":"2"},{"nr":"RM-50-10176","name":"Fischer Deutschl. SX Dübel DUOPOWER 6x30","menge":"2"},{"nr":"RM-50-10350","name":"Schraube M3 x 10 für Haltebügel für Baldachin 100 x 22 mm","menge":"2"},{"nr":"VP-10-10050","name":"Druckverschlussbeutel 120 x 80 x 0,090mm","menge":"1"}]},{"id":"P-078","name":"Befestigungsset Baldachin / 100 x 22 mm / Deckenleuchten","station":"Station 5b — Kabelsatz-Montage","varianten":1,"artikel":["BG-80-10050"],"bom":[{"nr":"RM-05-10128","name":"Haltebügel Baldachin / 100 x 22 mm","menge":"1"},{"nr":"RM-50-10175","name":"SPAX Halbrundkopf Kreuzschlitz Z 4CUT Vollgewinde WIROX A3J ","menge":"2"},{"nr":"RM-50-10176","name":"Fischer Deutschl. SX Dübel DUOPOWER 6x30","menge":"2"},{"nr":"RM-50-10350","name":"Schraube M3 x 10 für Haltebügel für Baldachin 100 x 22 mm","menge":"2"},{"nr":"VP-10-10050","name":"Druckverschlussbeutel 120 x 80 x 0,090mm","menge":"1"}]},{"id":"P-079","name":"Leuchtenfuß Stehleuchte LAZO","station":"Station 5b — Kabelsatz-Montage","varianten":1,"artikel":["BG-99-10136"],"bom":[{"nr":"BG-50-10056","name":"Textilkabel / E27 / 500 cm / Schwarz","menge":"1"},{"nr":"BG-50-10068","name":"Textilkabel / Ohne Fassung / 150 cm / Schwarz","menge":"1"},{"nr":"BG-80-10000","name":"Befestigungsset LAZO","menge":"1"},{"nr":"ET-01-10009","name":"Stahlrohr Stehleuchte LAZO / 183 cm / Schwarz RAL 9005","menge":"1"},{"nr":"ET-01-10010","name":"Stahlrohr Stehleuchte LAZO / 60,5 cm / Schwarz RAL 9005","menge":"1"},{"nr":"ET-01-10011","name":"Fußplatte Stehleuchte LAZO / Schwarz RAL 9005","menge":"1"},{"nr":"RM-100-10100","name":"Kabeltülle Stehleuchte LAZO, Kunststoff, Schwarz","menge":"1"},{"nr":"RM-35-10200","name":"Kabelbinder 2,5x100 schwarz","menge":"1"},{"nr":"RM-50-10125","name":"Gewindestift Feingewinde M10 x 1 x 30 mm","menge":"1"},{"nr":"RM-80-10025","name":"Euro-Stecker 250V/2,5A/SK II steckbar Schwarz","menge":"1"},{"nr":"RM-80-10050","name":"LED Schnurdimmer Schwarz 0-50 Watt 220-240V - Phasenabschnit","menge":"1"}]},{"id":"P-080","name":"Aufhängung 3-fach Pendelleuchten","station":"Station 5b — Kabelsatz-Montage","varianten":2,"artikel":["BG-99-10156","BG-99-10157"],"bom":[{"nr":"BG-50-10100","name":"Erdungskabel 0,75 mm2, mit Kabelschuh ML 10,2 mm, 8 cm lang","menge":"1"},{"nr":"DR-01-10050","name":"Aufkleber Baldachin / Pendelleuchten","menge":"1"},{"nr":"ET-01-10005","name":"Befestigungsset 2-fach / SPAX 4x35 / Fischer 6x35","menge":"1"},{"nr":"ET-01-10016","name":"Deckenverteilernippel 2tlg. / SCHWARZ","menge":"3"},{"nr":"ET-01-10019","name":"Bügel 18x96,5 f. Baldachin 100x25mm seitl. 15 mm","menge":"1"},{"nr":"ET-01-10020","name":"FISCHER Dübel DuoPower 5 x 25 S","menge":"3"},{"nr":"ET-01-10021","name":"Senkkopfschraube 4,0x35","menge":"3"},{"nr":"RM-05-10140","name":"Baldachin 3-fach / 100x25 mm / Schwarz / Roh","menge":"1"},{"nr":"RM-30-10126","name":"KU Zugentlaster 12,5x18 M10x1x7 AG seitl. Made DIN 551 schwa","menge":"3"},{"nr":"RM-50-10275","name":"Fächerscheibe 15x10,5x0,5 ähnlich DIN 6798 verzinkt","menge":"3"},{"nr":"RM-50-10425","name":"FE 6kt. Mutter 14x3 M10x1 verzinkt","menge":"3"},{"nr":"VP-10-10050","name":"Druckverschlussbeutel 120 x 80 x 0,090mm","menge":"3"}]},{"id":"P-081","name":"Erdungskabel 0,75 mm2, mit Kabelschuh ML 10,2 mm, 8 cm lang","station":"Station 5c — Elektrik / Leuchteinheit-Montage","varianten":1,"artikel":["BG-50-10100"],"bom":[{"nr":"RM-35-10125","name":"Cu Kabelschuh o. Isolierung ML10,2 0,5-1,0 mm2 Din 46234 ver","menge":"1"},{"nr":"RM-60-10075","name":"Kabel 1x0,75 H05V2-U starr grün-gelb","menge":"0,08"}]},{"id":"P-082","name":"Teflon Litze FEP 0,5 mm2 Transparent, 36 cm lang","station":"Station 5c — Elektrik / Leuchteinheit-Montage","varianten":1,"artikel":["BG-50-10150"],"bom":[{"nr":"RM-60-10025","name":"Teflon Litze FEP 0,5 mm2 Transparent/ Rolle á 100 m","menge":"0,036"}]},{"id":"P-083","name":"Teflon Litze FEP 0,5 mm2 Transparent, 80 cm lang","station":"Station 5c — Elektrik / Leuchteinheit-Montage","varianten":1,"artikel":["BG-50-10151"],"bom":[{"nr":"RM-60-10025","name":"Teflon Litze FEP 0,5 mm2 Transparent auf Rolle","menge":"0,08"}]},{"id":"P-084","name":"Wago Netzanschlussklemme, für HL ZEUS","station":"Station 5c — Elektrik / Leuchteinheit-Montage","varianten":1,"artikel":["BG-50-10175"],"bom":[{"nr":"RM-35-10075","name":"Wago Female 294-4413 Netzanschlussklemmen, 3-fach 2,5 mm²","menge":"1"},{"nr":"RM-35-10175","name":"Glasseide, siliconbeschichtet 5,0 mm weiss","menge":"0,00105"},{"nr":"RM-35-10200","name":"Kabelbinder 2,5x100 schwarz","menge":"1"},{"nr":"RM-60-10075","name":"Kabel 1x0,75 H05V2-U starr grün-gelb","menge":"0,14"},{"nr":"RM-60-10076","name":"Kabel 1x0,75 H05V2-U starr braun","menge":"0,14"},{"nr":"RM-60-10077","name":"Kabel 1x0,75 H05V2-U starr blau","menge":"0,14"}]},{"id":"P-085","name":"Leuchteinheit Deckenleuchte PANERA","station":"Station 5c — Elektrik / Leuchteinheit-Montage","varianten":1,"artikel":["BG-80-10125"],"bom":[{"nr":"BG-130-10000","name":"Streuscheibe Deckenleuchte PANERA 40 cm / Klar","menge":"1"},{"nr":"DR-01-10000","name":"Aufkleber Baldachin / Deckenleuchte PANERA","menge":"1"},{"nr":"HW-80-10050","name":"3M VHB Klebeband 4910P, Transparent, 25 mm x 33 m, 1 mm","menge":"0,05"},{"nr":"RM-05-10000","name":"Deckenplatte, 2mm Stahl, PB weiss für DL PANERA","menge":"1"},{"nr":"RM-05-10001","name":"Befestigungsplatte LED Modul DL PANERA, 2mm Stahl, PB Weiss","menge":"1"},{"nr":"RM-35-10000","name":"MS Kabelschuuh o. Isolierung ML 4,2","menge":"1"},{"nr":"RM-35-10175","name":"Glasseide, siliconbeschichtet 5,0 mm weiss","menge":"0,4"},{"nr":"RM-35-10200","name":"Kabelbinder 2,5x100 schwarz","menge":"2"},{"nr":"RM-35-10225","name":"Lüsterklemme Mini 1,5m2 3plg. m. Beschriftung","menge":"1"},{"nr":"RM-50-10000","name":"DIN7985 Linsenschraube M3x5 mit Kreuzschlitz VZ","menge":"7"},{"nr":"RM-50-10005","name":"Linsenschrauben 4.8 mit Kreuzschlitz H galv. verzinkt DIN 79","menge":"4"},{"nr":"RM-50-10225","name":"RS PRO Senkkopf Pozidriv Schrauben, Stahl verzinkt, M3 x 8mm","menge":"4"},{"nr":"RM-50-10325","name":"Scheiben DIN 7349 verzinkt M3 (3,2x9,0x1,0mm)","menge":"2,01"},{"nr":"RM-50-10400","name":"RS PRO Abstandshalter, Messing, Sechskant, Innen/Innen: M3 x","menge":"3"},{"nr":"RM-50-10475","name":"RS PRO Abstandshalter, Messing, Sechskant, Innen/Innen: M3 x","menge":"4"},{"nr":"RM-60-10075","name":"Kabel 1x0,75 H05V2-U starr grün-gelb","menge":"0,5"},{"nr":"RM-60-10076","name":"Kabel 1x0,75 H05V2-U starr braun","menge":"0,5"},{"nr":"RM-60-10077","name":"Kabel 1x0,75 H05V2-U starr blau","menge":"0,5"},{"nr":"RM-80-10000","name":"LED Modul rund, 240mm, 24V, 2700K, CRI>95, 1.920 LM","menge":"1"},{"nr":"RM-80-10200","name":"LED Treiber CV50W24CD TRIAC dimmbar","menge":"1"}]},{"id":"P-086","name":"Leuchteinheit Deckenleuchte COPA","station":"Station 5c — Elektrik / Leuchteinheit-Montage","varianten":1,"artikel":["BG-80-10150"],"bom":[{"nr":"DR-01-10050","name":"Aufkleber Baldachin / Pendelleuchten","menge":"1"},{"nr":"RM-05-10127","name":"Baldachin Rund / 100 x 22 mm / Weiss / Roh","menge":"1"},{"nr":"RM-30-10027","name":"E27 Stein f. 3tlg. Bakelit- o. Thermoplast Fassung","menge":"1"},{"nr":"RM-30-10100","name":"E27 Kappe f. 2tlg. Thermoplast-Fassung M10x1 Gewinde weiss","menge":"1"},{"nr":"RM-30-10101","name":"E27 Teilgewindemantel f. 2tlg. Thermoplast-Fassung weiss","menge":"1"},{"nr":"RM-30-10102","name":"E27 Schraubring 58x10 weiss","menge":"1"},{"nr":"RM-35-10125","name":"Cu Kabelschuh o. Isolierung ML10,2 0,5-1,0 mm2 Din 46234 ver","menge":"1"},{"nr":"RM-35-10175","name":"Glasseide, siliconbeschichtet 5,0 mm weiss","menge":"0,065"},{"nr":"RM-35-10200","name":"Kabelbinder 2,5x100 schwarz","menge":"1"},{"nr":"RM-50-10275","name":"Fächerscheibe 15x10,5x0,5 ähnlich DIN 6798 verzinkt","menge":"1"},{"nr":"RM-50-10500","name":"Ms 6kt. Trompetennippel 12x10 M10x1x8 o. V-Schutz roh","menge":"1"},{"nr":"RM-60-10075","name":"Kabel 1x0,75 H05V2-U starr grün-gelb","menge":"0,08"},{"nr":"RM-60-10076","name":"Kabel 1x0,75 H05V2-U starr braun","menge":"0,12"},{"nr":"RM-60-10077","name":"Kabel 1x0,75 H05V2-U starr blau","menge":"0,12"}]},{"id":"P-087","name":"Leuchtmodul DL RAYOS / NINO / LUNA","station":"Station 5c — Elektrik / Leuchteinheit-Montage","varianten":1,"artikel":["BG-80-10175"],"bom":[{"nr":"DR-01-10050","name":"Aufkleber Baldachin / Pendelleuchten","menge":"1"},{"nr":"RM-05-10025","name":"Ronde DL RAYOS, Stahl 2 mm, DM 120 mm, ML 40 mm, PB Weiss","menge":"1"},{"nr":"RM-05-10127","name":"Baldachin Rund / 100 x 22 mm / Weiss / Roh","menge":"1"},{"nr":"RM-30-10027","name":"E27 Stein f. 3tlg. Bakelit- o. Thermoplast Fassung","menge":"1"},{"nr":"RM-30-10100","name":"E27 Kappe f. 2tlg. Thermoplast-Fassung M10x1 Gewinde weiss","menge":"1"},{"nr":"RM-30-10101","name":"E27 Teilgewindemantel f. 2tlg. Thermoplast-Fassung weiss","menge":"1"},{"nr":"RM-30-10102","name":"E27 Schraubring 58x10 weiss","menge":"1"},{"nr":"RM-35-10125","name":"Cu Kabelschuh o. Isolierung ML10,2 0,5-1,0 mm2 Din 46234 ver","menge":"1"},{"nr":"RM-35-10175","name":"Glasseide, siliconbeschichtet 5,0 mm weiss","menge":"0,065"},{"nr":"RM-35-10200","name":"Kabelbinder 2,5x100 schwarz","menge":"1"},{"nr":"RM-50-10275","name":"Fächerscheibe 15x10,5x0,5 ähnlich DIN 6798 verzinkt","menge":"1"},{"nr":"RM-50-10500","name":"Ms 6kt. Trompetennippel 12x10 M10x1x8 o. V-Schutz roh","menge":"1"},{"nr":"RM-60-10075","name":"Kabel 1x0,75 H05V2-U starr grün-gelb","menge":"0,08"},{"nr":"RM-60-10076","name":"Kabel 1x0,75 H05V2-U starr braun","menge":"0,12"},{"nr":"RM-60-10077","name":"Kabel 1x0,75 H05V2-U starr blau","menge":"0,12"}]},{"id":"P-088","name":"ZEUS Leuchteinheit / 116 cm","station":"Station 5c — Elektrik / Leuchteinheit-Montage","varianten":2,"artikel":["BG-99-10152","BG-99-10153"],"bom":[{"nr":"BG-50-10150","name":"Teflon Litze FEP 0,5 mm2 Transparent, 36 cm lang","menge":"1"},{"nr":"BG-50-10151","name":"Teflon Litze FEP 0,5 mm2 Transparent, 80 cm lang","menge":"1"},{"nr":"BG-888-10000","name":"Streuscheibe ZEUS / 31 cm / Milchglas / Mit Sensor-Druck","menge":"1"},{"nr":"BG-888-10001","name":"Streuscheibe ZEUS / 31 cm / Milchglas","menge":"1"},{"nr":"BG-888-10002","name":"Streuscheibe ZEUS / 34,5 cm / Milchglas","menge":"1"},{"nr":"ET-01-10026","name":"Streuscheibe ZEUS / 110 cm / Milchglas","menge":"1"},{"nr":"HW-80-10025","name":"3M VHB Klebeband 4910F, Transparent, 6 mm x 33 m, 1 mm","menge":"0,04"},{"nr":"RM-05-10177","name":"Endkappe ZEUS mit M4 IG, Frästeil Alu, Schwarz","menge":"2"},{"nr":"BG-50-10200","name":"LED Profil ZEUS / 1.100 mm","menge":"1"},{"nr":"RM-100-10175","name":"Halter für Proxidimmer HL ZEUS, Kunststoff, Schwarz","menge":"1"},{"nr":"RM-35-10025","name":"Schrumpfschlauch 3,2 / 1,6 mm","menge":"0,05"},{"nr":"RM-50-10077","name":"DIN 653-M4-10 Flache Rändelschraube SCHWARZ","menge":"4"},{"nr":"RM-50-10150","name":"M4 Beilagscheibe Nylon","menge":"4,01"},{"nr":"RM-80-10100","name":"LED-Streifen, Typ 2835, 24V, CRI > 85, 2700K-6000K, 25m Roll","menge":"0,09"},{"nr":"RM-80-10175","name":"Proxidimmer - 2 Kanal TW","menge":"1"}]},{"id":"P-089","name":"ZEUS Deckengehäuse mit HV","station":"Station 5c — Elektrik / Leuchteinheit-Montage","varianten":2,"artikel":["BG-99-10154","BG-99-10155"],"bom":[{"nr":"BG-50-10175","name":"Wago Netzanschlussklemme, montiert für HL ZEUS","menge":"1"},{"nr":"ET-01-10037","name":"Aufkleber / ZEUS Kennzeichnung","menge":"1"},{"nr":"HW-80-10050","name":"3M VHB Klebeband 4910P, Transparent, 25 mm x 33 m, 1 mm","menge":"0,1"},{"nr":"RM-05-10102","name":"Deckel Netzteilgehäuse mit HV, 1 mm Stahl, 529 x 67 x 51mm, ","menge":"1"},{"nr":"RM-05-10105","name":"Netzteilgehäuse mit HV, 2mm Stahl, 524 x 64 x 52mm, PB Schwa","menge":"1"},{"nr":"RM-100-10200","name":"Topfmagnet Ø 13 mm mit Gewindezapfen, hält ca. 3,5 kg","menge":"2"},{"nr":"RM-35-10025","name":"Schrumpfschlauch 3,2 / 1,6 mm","menge":"1"},{"nr":"RM-50-10225","name":"RS PRO Senkkopf Pozidriv Schrauben, Stahl verzinkt, M3 x 8mm","menge":"11"},{"nr":"RM-50-10250","name":"RS PRO Sechskantmuttern, Stahl Glanzverzinkt, M3 5.5mm","menge":"11"},{"nr":"RM-50-10325","name":"Scheiben DIN 7349 verzinkt M3 (3,2x9,0x1,0mm)","menge":"1"},{"nr":"RM-50-10475","name":"RS PRO Abstandshalter, Messing, Sechskant, Innen/Innen: M3 x","menge":"2"},{"nr":"RM-60-10078","name":"Kabel 1 x 0,75 H05V2-U starr Schwarz","menge":"0,2"},{"nr":"RM-80-10125","name":"CV LED Driver, 24V, 60W, schaltbar","menge":"1"},{"nr":"RM-80-10150","name":"ROLLI ST/ Set Schwarz & Rot","menge":"1"}]},{"id":"P-090","name":"2-fach Befestigungsset / SPAX 4x35 / FISCHER 6x30","station":"Station 5c — Elektrik / Leuchteinheit-Montage","varianten":1,"artikel":["ET-01-10005"],"bom":[{"nr":"RM-50-10175","name":"SPAX Halbrundkopf Kreuzschlitz Z 4CUT Vollgewinde WIROX A3J ","menge":"2"},{"nr":"RM-50-10176","name":"Fischer Deutschl. SX Dübel DUOPOWER 6x30","menge":"2"},{"nr":"VP-10-10050","name":"Druckverschlussbeutel 120 x 80 x 0,090mm","menge":"1"}]},{"id":"P-091","name":"Leuchteinheit Wandleuchte CONO","station":"Station 5c — Elektrik / Leuchteinheit-Montage","varianten":1,"artikel":["ET-01-10006"],"bom":[{"nr":"RM-05-10075","name":"Wandplatte WL CONO, 2 mm Stahl, PB Weiss","menge":"1"},{"nr":"RM-30-10000","name":"G9 Halogenfassung HV 24x22mm","menge":"1"},{"nr":"RM-35-10000","name":"MS Kabelschuuh o. Isolierung ML 4,2","menge":"1"},{"nr":"RM-35-10175","name":"Glasseide, siliconbeschichtet 5,0 mm weiss","menge":"0,0065"},{"nr":"RM-35-10225","name":"Lüsterklemme Mini 1,5m2 3plg. m. Beschriftung","menge":"1"},{"nr":"RM-50-10000","name":"DIN7985 Linsenschraube M3x5 mit Kreuzschlitz VZ","menge":"1"},{"nr":"RM-50-10025","name":"DIN7985 Linsenschraube M3x25 mit Kreuzschlitz VZ","menge":"2"},{"nr":"RM-50-10050","name":"DIN 464-M3-6 Hohe Rändelschraube","menge":"1"},{"nr":"RM-60-10075","name":"Kabel 1x0,75 H05V2-U starr grün-gelb","menge":"0,0085"},{"nr":"RM-60-10076","name":"Kabel 1x0,75 H05V2-U starr braun","menge":"0,0085"},{"nr":"RM-60-10077","name":"Kabel 1x0,75 H05V2-U starr blau","menge":"0,0085"}]},{"id":"P-092","name":"Leuchteinheit Wandleuchte RAYOS / CUBO / ALTO","station":"Station 5c — Elektrik / Leuchteinheit-Montage","varianten":1,"artikel":["ET-01-10007"],"bom":[{"nr":"RM-05-10076","name":"Wandplatte WL ALTO / CUBO / RAYOS, 2 mm Stahl, PB Weiss","menge":"1"},{"nr":"RM-30-10000","name":"G9 Halogenfassung HV 24x22mm","menge":"1"},{"nr":"RM-35-10000","name":"MS Kabelschuuh o. Isolierung ML 4,2","menge":"1"},{"nr":"RM-35-10175","name":"Glasseide, siliconbeschichtet 5,0 mm weiss","menge":"0,0065"},{"nr":"RM-35-10225","name":"Lüsterklemme Mini 1,5m2 3plg. m. Beschriftung","menge":"1"},{"nr":"RM-50-10000","name":"DIN7985 Linsenschraube M3x5 mit Kreuzschlitz VZ","menge":"1"},{"nr":"RM-50-10025","name":"DIN7985 Linsenschraube M3x25 mit Kreuzschlitz VZ","menge":"2"},{"nr":"RM-60-10075","name":"Kabel 1x0,75 H05V2-U starr grün-gelb","menge":"0,085"},{"nr":"RM-60-10076","name":"Kabel 1x0,75 H05V2-U starr braun","menge":"0,085"},{"nr":"RM-60-10077","name":"Kabel 1x0,75 H05V2-U starr blau","menge":"0,085"}]},{"id":"P-093","name":"Befestigungsset 3-fach / SPAX 4x35 / Fischer 6x35","station":"Station 5c — Elektrik / Leuchteinheit-Montage","varianten":1,"artikel":["ET-01-10015"],"bom":[{"nr":"RM-50-10175","name":"SPAX Halbrundkopf Kreuzschlitz Z 4CUT Vollgewinde WIROX A3J ","menge":"3"},{"nr":"RM-50-10176","name":"Fischer Deutschl. SX Dübel DUOPOWER 6x30","menge":"3"},{"nr":"VP-10-10050","name":"Druckverschlussbeutel 120 x 80 x 0,090mm","menge":"1"}]},{"id":"P-094","name":"ZEUS Designcover / 116 cm / Eiche","station":"Station 5d — ZEUS Designcover-Montage","varianten":6,"artikel":["BG-99-10138","BG-99-10139","BG-99-10140","BG-99-10141","BG-99-10142","BG-99-10143"],"bom":[{"nr":"ET-01-10012","name":"ZEUS Blende / Eiche Natur geölt","menge":"2"},{"nr":"HW-80-10050","name":"3M VHB Klebeband 4910P, Transparent, 25 mm x 33 m, 1 mm","menge":"0,0697"},{"nr":"RM-05-10051","name":"Seitenblech HL ZEUS 115, Stahl 1 mm, PB Weiss","menge":"2"}]},{"id":"P-095","name":"ZEUS Designcover / 116 cm / Linoleum","station":"Station 5d — ZEUS Designcover-Montage","varianten":8,"artikel":["BG-99-10144","BG-99-10145","BG-99-10146","BG-99-10147","BG-99-10148","BG-99-10149","BG-99-10150","BG-99-10151"],"bom":[{"nr":"BG-100-10025","name":"ZEUS Blende / Linoleum / Schwarz","menge":"2"},{"nr":"HW-80-10050","name":"3M VHB Klebeband 4910P, Transparent, 25 mm x 33 m, 1 mm","menge":"0,0697"},{"nr":"RM-05-10051","name":"Seitenblech HL ZEUS 115, Stahl 1 mm, PB Weiss","menge":"2"}]},{"id":"P-096","name":"Stahlrohr Stehleuchte LAZO / 183 cm RAL 9005","station":"Station 5d — ZEUS Designcover-Montage","varianten":1,"artikel":["ET-01-10009"],"bom":[{"nr":"ET-01-10031","name":"Stahlrohr Stehleuchte LAZO / 183 cm / Roh","menge":"1"}]},{"id":"P-097","name":"Stahlrohr Stehleuchte LAZO / 60,5 cm RAL 9005","station":"Station 5d — ZEUS Designcover-Montage","varianten":1,"artikel":["ET-01-10010"],"bom":[{"nr":"ET-01-10033","name":"Stahlrohr Stehleuchte LAZO / 60,5 cm / Roh","menge":"1"}]},{"id":"P-098","name":"Fußplatte Stehleuchte LAZO RAL 9005","station":"Station 5d — ZEUS Designcover-Montage","varianten":1,"artikel":["ET-01-10011"],"bom":[{"nr":"DR-01-10075","name":"Aufkleber Standfuß / Stehleuchte LAZO","menge":"1"},{"nr":"ET-01-10028","name":"Fußplatte Stehleuchte LAZO / Roh","menge":"1"},{"nr":"PB-10-10210","name":"Pulverbeschichtung / Feinstruktur Matt Schwarz RAL 9005 / St","menge":"1"}]},{"id":"P-099","name":"Seitenblech HL ZEUS 115, Stahl 1 mm, PB Weiss","station":"Station 5d — ZEUS Designcover-Montage","varianten":1,"artikel":["RM-05-10051"],"bom":[{"nr":"PB-10-10124","name":"Pulverbeschichtung / Feinstruktur Matt Weiss RAL 9016 / Seit","menge":"1"},{"nr":"RM-05-10050","name":"Seitenblech HL ZEUS 115, Stahl 1 mm, Roh","menge":"1"}]},{"id":"P-100","name":"Seitenblech HL ZEUS 115, Stahl 1 mm, PB Schwarz","station":"Station 5d — ZEUS Designcover-Montage","varianten":1,"artikel":["RM-05-10052"],"bom":[{"nr":"PB-10-10125","name":"Pulverbeschichtung / Feinstruktur Matt Schwarz RAL 9005 / Se","menge":"1"},{"nr":"RM-05-10050","name":"Seitenblech HL ZEUS 115, Stahl 1 mm, Roh","menge":"1"}]}];
 const WEBHOOK = 'https://script.google.com/macros/s/AKfycbxLJuoa8_usU5knsLGq0kBax9Vj46YqEV7G_qjEwceCPR6lYNc8G7ifDUsouX4xiild/exec';
-const CORRECT_PIN = '0116';
+const PIN = '0116';
 const ICONS = {'1':'🪵','2':'✂️','3':'⚙️','4':'💡','5a':'🔩','5b':'🔌','5c':'⚡','5d':'🪟'};
 
-let userName='', currentStation=null, currentProzess=null;
-let navStack=[], timerIv=null, timerStart=null, timerSec=0;
+let user='', curStation=null, curProz=null, nav=[];
+let timerIv=null, timerStart=null, timerSec=0;
 let local={};
-let pinEntry='';
+let pinStr='';
 
+// ── INIT ────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  local = JSON.parse(localStorage.getItem('ffd-v12')||'{}');
+});
+function saveLocal() { localStorage.setItem('ffd-v12', JSON.stringify(local)); }
 
-// ── BILD KOMPRIMIERUNG ──────────────────────────────────
-function compressImage(base64, maxSize, quality) {
-  return new Promise(resolve => {
-    const img = new Image();
-    img.onload = () => {
-      let w = img.width, h = img.height;
-      if (w > maxSize || h > maxSize) {
-        if (w > h) { h = Math.round(h * maxSize / w); w = maxSize; }
-        else { w = Math.round(w * maxSize / h); h = maxSize; }
-      }
-      const canvas = document.createElement('canvas');
-      canvas.width = w; canvas.height = h;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, w, h);
-      resolve(canvas.toDataURL('image/jpeg', quality));
-    };
-    img.src = base64;
-  });
-}
-
-// ── CHUNKED UPLOAD ───────────────────────────────────────
-// Bild in 500KB Chunks aufteilen und sequenziell senden
-async function uploadImageChunked(base64, fileName) {
-  // Nur den Data-Teil ohne Header
-  const data = base64.includes(',') ? base64.split(',')[1] : base64;
-  const CHUNK_SIZE = 400000; // ~400KB pro Chunk (sicher unter 1MB Request-Limit)
-  const totalChunks = Math.ceil(data.length / CHUNK_SIZE);
-  const uploadId = Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-  
-  // Chunks senden
-  for (let i = 0; i < totalChunks; i++) {
-    const chunk = data.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
-    const r = await fetch(WEBHOOK, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'upload_chunk',
-        uploadId, chunkIndex: i, chunk
-      })
-    });
-    const res = await r.json();
-    if (!res.success) throw new Error(`Chunk ${i} fehlgeschlagen: ${res.error}`);
-  }
-  
-  // Finalisieren
-  const r = await fetch(WEBHOOK, {
-    method: 'POST',
-    body: JSON.stringify({
-      action: 'finalize_image',
-      uploadId, totalChunks, fileName
-    })
-  });
-  const res = await r.json();
-  if (!res.success) throw new Error('Finalize fehlgeschlagen: ' + res.error);
-  return res;
-}
-
-// ── PIN ──────────────────────────────────────────────────
-function pinKey(k) {
-  if (pinEntry.length >= 4) return;
-  pinEntry += k;
-  updatePinDots();
-  if (pinEntry.length === 4) {
+// ── PIN ─────────────────────────────────────────────────
+function pk(k) {
+  if (pinStr.length >= 4) return;
+  pinStr += k;
+  updDots();
+  if (pinStr.length === 4) {
     setTimeout(() => {
-      if (pinEntry === CORRECT_PIN) {
-        local = JSON.parse(localStorage.getItem('ffd-local')||'{}');
-        showScreen('screenName');
-      } else {
-        document.querySelectorAll('.pin-dot').forEach(d => d.className='pin-dot error');
-        setTimeout(() => { pinEntry=''; updatePinDots(); }, 700);
+      if (pinStr === PIN) { go('scrName'); }
+      else {
+        [0,1,2,3].forEach(i => document.getElementById('pd'+i).className='pin-dot err');
+        setTimeout(() => { pinStr=''; updDots(); }, 700);
       }
     }, 150);
   }
 }
-function pinDel() { pinEntry = pinEntry.slice(0,-1); updatePinDots(); }
-function updatePinDots() {
-  for(let i=0;i<4;i++) {
-    const d = document.getElementById('d'+i);
-    d.className = 'pin-dot' + (i < pinEntry.length ? ' filled' : '');
-  }
+function pdel() { pinStr=pinStr.slice(0,-1); updDots(); }
+function updDots() {
+  [0,1,2,3].forEach(i => {
+    document.getElementById('pd'+i).className='pin-dot'+(i<pinStr.length?' fill':'');
+  });
 }
 
 // ── NAME ────────────────────────────────────────────────
-function showWelcome() {
-  document.getElementById('welcomeName').textContent = userName;
-  showScreen('screenWelcome');
+function chkName() { document.getElementById('nameBtn').disabled = document.getElementById('nameIn').value.trim().length < 2; }
+function goWelcome() {
+  user = document.getElementById('nameIn').value.trim();
+  document.getElementById('hdrUser').textContent = user;
+  document.getElementById('welcomeName').textContent = user;
+  go('scrWelcome');
 }
-function checkName() { document.getElementById('nameBtn').disabled = document.getElementById('nameInput').value.trim().length < 2; }
-function startApp() { userName = document.getElementById('nameInput').value.trim(); document.getElementById('headerUser').textContent = userName; showWelcome(); }
-function saveLocal() { localStorage.setItem('ffd-local', JSON.stringify(local)); }
 
 // ── STATIONEN ───────────────────────────────────────────
 function showStationen() {
-  navStack=['stationen'];
+  nav=['stat'];
   document.getElementById('backBtn').classList.remove('show');
-  document.getElementById('progBar').style.display='none';
-  showScreen('screenStationen');
+  document.getElementById('prog').style.display='none';
+  go('scrStat');
   const stats=[...new Set(PROZESSE.map(p=>p.station))].sort();
-  const tot=PROZESSE.length, don=PROZESSE.filter(p=>local[p.id]?.status==='done').length;
+  const tot=PROZESSE.length, don=PROZESSE.filter(p=>local[p.id]?.s==='done').length;
   document.getElementById('subStat').textContent=`${don} von ${tot} Prozessen dokumentiert`;
-  const g=document.getElementById('stationGrid'); g.innerHTML='';
+  const g=document.getElementById('statGrid'); g.innerHTML='';
   stats.forEach(s=>{
     const ps=PROZESSE.filter(p=>p.station===s);
-    const d=ps.filter(p=>local[p.id]?.status==='done').length;
+    const d=ps.filter(p=>local[p.id]?.s==='done').length;
     const m=s.match(/Station (\d+[a-z]?)/);
     const icon=m?(ICONS[m[1]]||'🔧'):'🔧';
     const name=s.replace(/Station \d+[a-z]? — /,'');
-    const c=document.createElement('div'); c.className='s-card'; c.onclick=()=>showProzesse(s);
-    c.innerHTML=`<div class="s-icon">${icon}</div><div style="flex:1"><div class="s-name">${name}</div><div class="s-meta">${d} von ${ps.length} abgeschlossen</div></div><div class="s-pill ${d===ps.length?'done':''}">${d===ps.length?'✓ fertig':ps.length+' Prozesse'}</div>`;
+    const c=document.createElement('div'); c.className='sc'; c.onclick=()=>showProz(s);
+    c.innerHTML=`<div class="sc-ic">${icon}</div><div style="flex:1"><div class="sc-name">${name}</div><div class="sc-meta">${d} von ${ps.length} abgeschlossen</div></div><div class="pill ${d===ps.length?'done':''}">${d===ps.length?'✓ fertig':ps.length+' Prozesse'}</div>`;
     g.appendChild(c);
   });
 }
 
 // ── PROZESSE ────────────────────────────────────────────
-function showProzesse(station) {
-  currentStation=station; navStack=['stationen','prozesse'];
+function showProz(station) {
+  curStation=station; nav=['stat','proz'];
   document.getElementById('backBtn').classList.add('show');
-  showScreen('screenProzesse');
+  go('scrProz');
   const ps=PROZESSE.filter(p=>p.station===station);
-  const d=ps.filter(p=>local[p.id]?.status==='done').length;
-  document.getElementById('pEyebrow').textContent=station.replace(/Station \d+[a-z]? — /,'');
-  document.getElementById('pSub').textContent=`${d} von ${ps.length} dokumentiert`;
-  const l=document.getElementById('prozessList'); l.innerHTML='';
+  const d=ps.filter(p=>local[p.id]?.s==='done').length;
+  document.getElementById('prozEy').textContent=station.replace(/Station \d+[a-z]? — /,'');
+  document.getElementById('prozSub').textContent=`${d} von ${ps.length} dokumentiert`;
+  const l=document.getElementById('prozList'); l.innerHTML='';
   ps.forEach(p=>{
-    const ld=local[p.id]; const st=ld?.status||'open';
-    const item=document.createElement('div'); item.className='p-item'; item.onclick=()=>showDetail(p);
-    item.innerHTML=`<div class="p-dot ${st==='done'?'done':st==='inprogress'?'ip':''}"></div><div style="flex:1"><div class="p-name">${p.name}</div><div class="p-meta">${p.varianten} Variante${p.varianten>1?'n':''} · ${p.id}${ld?.datum?' · '+ld.datum:''}</div></div><div class="p-chev">›</div>`;
+    const ld=local[p.id]; const st=ld?.s||'open';
+    const item=document.createElement('div'); item.className='pi'; item.onclick=()=>showDetail(p);
+    item.innerHTML=`<div class="dot ${st==='done'?'done':st==='ip'?'ip':''}"></div><div style="flex:1"><div class="pi-name">${p.name}</div><div class="pi-meta">${p.varianten} Variante${p.varianten>1?'n':''} · ${p.id}${ld?.datum?' · '+ld.datum:''}</div></div><span style="color:var(--gray3)">›</span>`;
     l.appendChild(item);
   });
 }
 
 // ── DETAIL ──────────────────────────────────────────────
 function showDetail(p) {
-  currentProzess=p; navStack=['stationen','prozesse','detail'];
+  curProz=p; nav=['stat','proz','detail'];
   document.getElementById('backBtn').classList.add('show');
-  document.getElementById('progBar').style.display='block';
+  document.getElementById('prog').style.display='block';
   timerSec=0; clearInterval(timerIv); timerIv=null;
-  showScreen('screenDetail'); renderDetail(p);
+  go('scrDetail');
+  renderDetail(p);
 }
 
 function renderDetail(p) {
   const d=local[p.id]||{};
-  const sc=d.schritte||[{}], wk=d.werkzeuge||[], bom=d.bomStatus||{}, st=d.status||'open';
-  document.getElementById('dHdr').innerHTML=`
-    <div class="page-eyebrow">${currentStation.replace(/Station \d+[a-z]? — /,'')}</div>
-    <div class="page-title">${p.name}</div>
-    <div style="margin-top:8px"><span class="s-badge ${st==='done'?'done':st==='inprogress'?'ip':'open'}">${st==='done'?'✓ Abgeschlossen':st==='inprogress'?'In Bearbeitung':'Offen'}</span>${d.mitarbeiter?`<span style="font-size:11px;color:var(--gray2)"> · ${d.mitarbeiter}${d.datum?', '+d.datum:''}</span>`:''}</div>`;
+  const schs=d.schs||[{}];
+  const wks=d.wks||[];
+  const boms=d.boms||{};
+  const bomM=d.bomM||{};
+  const st=d.s||'open';
 
-  const schHTML=sc.map((s,i)=>renderSchritt(s,i)).join('');
-  const bomData = d.bomMengen || {};
-  const bomHTML=p.bom.length?`<div class="bom-table">
-    <div class="bom-header-row">
+  document.getElementById('dHdr').innerHTML=`
+    <div class="ph-ey">${curStation.replace(/Station \d+[a-z]? — /,'')}</div>
+    <div class="ph-title">${p.name}</div>
+    <div style="margin-top:8px">
+      <span class="badge ${st==='done'?'done':st==='ip'?'ip':'open'}">${st==='done'?'✓ Abgeschlossen':st==='ip'?'In Bearbeitung':'Offen'}</span>
+      ${d.mitarbeiter?`<span style="font-size:11px;color:var(--gray2)"> · ${d.mitarbeiter}${d.datum?', '+d.datum:''}</span>`:''}
+    </div>`;
+
+  // Schritte
+  const schHTML=schs.map((s,i)=>mkSchritt(s,i)).join('');
+
+  // BOM
+  const bomHTML=p.bom.length?`
+    <div class="bom-hdr">
       <div style="flex:1">Artikel</div>
-      <div style="width:80px;text-align:center">Soll</div>
-      <div style="width:80px;text-align:center">Verwendet</div>
-      <div style="width:90px;text-align:center">Status</div>
+      <div style="width:44px;text-align:center">Soll</div>
+      <div style="width:60px;text-align:center">Verw.</div>
+      <div style="width:72px;text-align:center">Status</div>
     </div>
     ${p.bom.map(b=>{
-    const bs=bom[b.nr]||'';
-    const usedMenge = bomData[b.nr] !== undefined ? bomData[b.nr] : b.menge;
-    return `<div class="bom-row">
-      <div class="bom-info">
-        <div class="bom-name">${b.name}</div>
-        <div class="bom-nr">${b.nr}</div>
-      </div>
-      <div class="bom-soll">${b.menge}×</div>
-      <div class="bom-used">
-        <input class="bom-menge-input" type="number" step="0.01" min="0" value="${usedMenge}" 
-          oninput="setBomMenge('${b.nr}',this.value)" 
-          style="width:70px;padding:6px 8px;text-align:center;font-size:13px;border:1px solid var(--border);border-radius:var(--r);background:var(--bg);font-family:var(--font);outline:none">
-      </div>
-      <div class="bom-status-btns">
-        <button class="bom-btn ok ${bs==='ok'?'on':''}" onclick="setBom('${b.nr}','ok')" title="Vorhanden">✓</button>
-        <button class="bom-btn fehl ${bs==='fehlt'?'on':''}" onclick="setBom('${b.nr}','fehlt')" title="Fehlt">!</button>
-      </div>
-    </div>`;
-  }).join('')}</div>`:'<div style="font-size:12px;color:var(--gray2)">Keine Positionen hinterlegt</div>';
+      const bs=boms[b.nr]||'';
+      const mv=bomM[b.nr]!==undefined?bomM[b.nr]:b.menge;
+      return `<div class="bom-row">
+        <div class="bom-info"><div class="bom-name">${b.name}</div><div class="bom-nr">${b.nr}</div></div>
+        <div class="bom-soll">${b.menge}×</div>
+        <input class="bom-inp" type="number" step="0.01" min="0" value="${mv}" oninput="setBomM('${b.nr}',this.value)">
+        <div class="bom-btns">
+          <button class="bom-btn ok ${bs==='ok'?'on':''}" onclick="setBom('${b.nr}','ok')">✓</button>
+          <button class="bom-btn fehl ${bs==='fehlt'?'on':''}" onclick="setBom('${b.nr}','fehlt')">!</button>
+        </div>
+      </div>`;
+    }).join('')}`:'<div style="font-size:12px;color:var(--gray2)">Keine Positionen hinterlegt</div>';
 
   document.getElementById('dContent').innerHTML=`
-    <div class="section">
-      <div class="sec-label">⏱ Zeiterfassung</div>
+    <div class="sec">
+      <div class="sec-lbl">⏱ Zeiterfassung</div>
       <div class="time-row">
-        <button class="time-btn start" onclick="startTimer()">▶ Start</button>
-        <div class="time-disp" id="timeDsp">00:00</div>
-        <button class="time-btn stop" onclick="stopTimer()">■ Stop</button>
+        <button class="time-btn start" onclick="startT()">▶ Start</button>
+        <div class="time-d" id="tDisp">00:00</div>
+        <button class="time-btn stop" onclick="stopT()">■ Stop</button>
       </div>
       <div class="field-label">Oder manuell (Minuten)</div>
-      <input class="field-input" id="zeitIn" type="number" min="0" placeholder="z. B. 30" value="${d.zeitMinuten||''}" oninput="autoSave('zeitMinuten',this.value)">
+      <input class="input" id="zeitIn" type="number" min="0" placeholder="z. B. 30" value="${d.zeit||''}" oninput="autoSave('zeit',this.value)">
     </div>
 
-    <div class="section">
-      <div class="sec-label">🔧 Werkzeuge & Maschinen</div>
-      <div class="tag-list" id="tagList">${wk.map((w,i)=>`<div class="tag">${w}<span class="tag-x" onclick="delWk(${i})">×</span></div>`).join('')}</div>
-      <input class="field-input" id="wkIn" placeholder="Werkzeug eingeben + Enter" onkeydown="addWk(event)">
+    <div class="sec">
+      <div class="sec-lbl">🔧 Werkzeuge & Maschinen</div>
+      <div class="tags" id="tags">${wks.map((w,i)=>`<div class="tag">${w}<span class="tag-x" onclick="delWk(${i})">×</span></div>`).join('')}</div>
+      <input class="input" id="wkIn" placeholder="Werkzeug eingeben + Enter" onkeydown="addWk(event)">
     </div>
 
-    <div class="section">
-      <div class="sec-label">📋 Arbeitsschritte & Fotos</div>
-      <div id="schritte">${schHTML}</div>
-      <button class="btn btn-dashed" onclick="addSchritt()">+ Schritt hinzufügen</button>
+    <div class="sec">
+      <div class="sec-lbl">📋 Arbeitsschritte & Fotos</div>
+      <div id="schs">${schHTML}</div>
+      <button class="btn btn-ghost" onclick="addSch()">+ Schritt hinzufügen</button>
     </div>
 
-    <div class="section">
-      <div class="sec-label">📦 Stückliste prüfen</div>
-      <div style="font-size:11px;color:var(--gray2);margin-bottom:12px">Soll-Menge anpassen falls nötig · ✓ vorhanden · ! fehlt</div>
+    <div class="sec">
+      <div class="sec-lbl">📦 Stückliste prüfen</div>
+      <div style="font-size:11px;color:var(--gray2);margin-bottom:10px">Soll-Menge anpassen falls nötig · ✓ ok · ! fehlt</div>
       ${bomHTML}
     </div>
 
-    <div class="section">
-      <div class="sec-label">💬 Hinweise</div>
-      <textarea class="field-input" placeholder="Besonderheiten, Verbesserungsvorschläge…" oninput="autoSave('hinweise',this.value)">${d.hinweise||''}</textarea>
+    <div class="sec">
+      <div class="sec-lbl">💬 Hinweise</div>
+      <textarea class="input" placeholder="Besonderheiten, Verbesserungsvorschläge…" oninput="autoSave('hinweise',this.value)">${d.hinweise||''}</textarea>
     </div>
 
-    <button class="btn-save" onclick="saveProzess()">In Google Sheet speichern →</button>
-  `;
-  updateProg();
+    <button class="btn-save" onclick="saveProzess()">In Google Sheet speichern →</button>`;
+
+  updProg();
 }
 
-function renderSchritt(s,i) {
-  const imgs=s.bilder||[];
-  const fotos=imgs.map((b,fi)=>`<div class="foto-wrap"><img class="foto-thumb" src="${b.url||b}"><button class="foto-del" onclick="delFoto(${i},${fi})">×</button></div>`).join('');
-  return `<div class="schritt" id="sch-${i}">
-    <div class="schritt-nr">Schritt ${i+1}</div>
-    <button class="schritt-del" onclick="delSch(${i})">×</button>
+// ── SCHRITT HELPER ──────────────────────────────────────
+function mkSchritt(s, i) {
+  const imgs = s.bilder || [];
+  const fotosHTML = imgs.map((b, fi) => {
+    const src = b.url || b;
+    return `<div class="foto-wrap" id="fw-${i}-${fi}">
+      <img class="foto-img" src="${src}" style="opacity:${b.driveUrl?1:.75}">
+      <button class="foto-del" onclick="delFoto(${i},${fi})">×</button>
+    </div>`;
+  }).join('');
+
+  return `<div class="sch" id="sch-${i}">
+    <div class="sch-nr">Schritt ${i+1}</div>
+    <button class="sch-del" onclick="delSch(${i})">×</button>
     <div class="field-label">Beschreibung</div>
-    <textarea class="field-input" style="min-height:60px" placeholder="Was wird gemacht?" oninput="updSch(${i},'beschreibung',this.value)">${s.beschreibung||''}</textarea>
-    <div class="foto-row" id="fr-${i}">${fotos}</div>
+    <textarea class="input" style="min-height:60px" placeholder="Was wird gemacht?" oninput="updSch(${i},'beschreibung',this.value)">${s.beschreibung||''}</textarea>
+    <div class="foto-row" id="fr-${i}">${fotosHTML}</div>
     <div class="foto-btns">
-      <label class="foto-btn" for="cam-${i}">📷 Foto<input class="file-input" type="file" id="cam-${i}" accept="image/*" capture="environment" onchange="handleFoto(${i},this)"></label>
-      <label class="foto-btn" for="gal-${i}">🖼 Galerie<input class="file-input" type="file" id="gal-${i}" accept="image/*" onchange="handleFoto(${i},this)"></label>
+      <label class="foto-btn" for="cam-${i}">📷 Foto<input class="file-in" type="file" id="cam-${i}" accept="image/*" capture="environment" onchange="handleFoto(${i},this)"></label>
+      <label class="foto-btn" for="gal-${i}">🖼 Galerie<input class="file-in" type="file" id="gal-${i}" accept="image/*" onchange="handleFoto(${i},this)"></label>
     </div>
   </div>`;
 }
 
-// ── FOTOS ───────────────────────────────────────────────
-async function handleFoto(idx, input) {
-  const file=input.files[0]; if(!file) return;
+// ── SCHRITT ACTIONS ─────────────────────────────────────
+function ensure() {
+  if (!local[curProz.id]) local[curProz.id]={};
+  if (!local[curProz.id].schs) local[curProz.id].schs=[{}];
+  if (local[curProz.id].s !== 'done') local[curProz.id].s='ip';
+}
+function autoSave(f,v){ ensure(); local[curProz.id][f]=v; saveLocal(); }
+function updSch(i,f,v){ ensure(); if(!local[curProz.id].schs[i]) local[curProz.id].schs[i]={}; local[curProz.id].schs[i][f]=v; saveLocal(); }
+
+function addSch() {
   ensure();
-  if(!local[currentProzess.id].schritte) local[currentProzess.id].schritte=[{}];
-  if(!local[currentProzess.id].schritte[idx]) local[currentProzess.id].schritte[idx]={};
-  if(!local[currentProzess.id].schritte[idx].bilder) local[currentProzess.id].schritte[idx].bilder=[];
-  const reader=new FileReader();
-  reader.onload=async e=>{
-    const b64=e.target.result;
-    local[currentProzess.id].schritte[idx].bilder.push({url:b64,driveUrl:null});
+  local[curProz.id].schs.push({});
+  saveLocal();
+  const idx = local[curProz.id].schs.length - 1;
+  const container = document.getElementById('schs');
+  const div = document.createElement('div');
+  div.innerHTML = mkSchritt({}, idx);
+  container.appendChild(div.firstChild);
+}
+
+function delSch(i) {
+  ensure();
+  local[curProz.id].schs.splice(i,1);
+  saveLocal();
+  renderDetail(curProz);
+}
+
+// ── FOTOS ───────────────────────────────────────────────
+function compressImg(base64, maxPx, quality) {
+  return new Promise(res => {
+    const img = new Image();
+    img.onload = () => {
+      let w=img.width, h=img.height;
+      if (w>maxPx||h>maxPx) {
+        if (w>h) { h=Math.round(h*maxPx/w); w=maxPx; }
+        else { w=Math.round(w*maxPx/h); h=maxPx; }
+      }
+      const c=document.createElement('canvas');
+      c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      res(c.toDataURL('image/jpeg', quality));
+    };
+    img.src = base64;
+  });
+}
+
+async function uploadChunked(base64, fileName) {
+  const data = base64.includes(',') ? base64.split(',')[1] : base64;
+  const CHUNK = 380000; // ~380KB
+  const total = Math.ceil(data.length / CHUNK);
+  const uid = Date.now().toString(36);
+
+  for (let i=0; i<total; i++) {
+    const chunk = data.slice(i*CHUNK, (i+1)*CHUNK);
+    const r = await fetch(WEBHOOK, {method:'POST', body:JSON.stringify({action:'upload_chunk', uploadId:uid, chunkIndex:i, chunk})});
+    const res = await r.json();
+    if (!res.success) throw new Error(`Chunk ${i} fehlgeschlagen`);
+  }
+  const r = await fetch(WEBHOOK, {method:'POST', body:JSON.stringify({action:'finalize_image', uploadId:uid, totalChunks:total, fileName})});
+  const res = await r.json();
+  if (!res.success) throw new Error(res.error||'Finalize fehlgeschlagen');
+  return res;
+}
+
+async function handleFoto(idx, input) {
+  const file = input.files[0];
+  if (!file) return;
+  input.value = ''; // reset damit gleiches Foto nochmal wählbar
+
+  ensure();
+  if (!local[curProz.id].schs[idx]) local[curProz.id].schs[idx]={};
+  if (!local[curProz.id].schs[idx].bilder) local[curProz.id].schs[idx].bilder=[];
+
+  const reader = new FileReader();
+  reader.onload = async e => {
+    // Komprimieren auf 1600px
+    const compressed = await compressImg(e.target.result, 1600, 0.82);
+
+    // Lokal speichern & sofort anzeigen
+    const fIdx = local[curProz.id].schs[idx].bilder.length;
+    local[curProz.id].schs[idx].bilder.push({url: compressed, driveUrl: null});
     saveLocal();
-    
-    // Foto sofort ins DOM einfügen ohne neu zu rendern
-    const container=document.getElementById(`fr-${idx}`);
-    if(container) {
-      const fotoIdx=local[currentProzess.id].schritte[idx].bilder.length-1;
-      const wrap=document.createElement('div');
-      wrap.className='foto-wrap';
-      wrap.id=`foto-${idx}-${fotoIdx}`;
-      wrap.innerHTML=`<img class="foto-thumb" src="${b64}" style="opacity:.75"><button class="foto-del" onclick="delFoto(${idx},${fotoIdx})">×</button>`;
-      container.appendChild(wrap);
+
+    // Foto sofort ins DOM
+    const fr = document.getElementById(`fr-${idx}`);
+    if (fr) {
+      const wrap = document.createElement('div');
+      wrap.className = 'foto-wrap';
+      wrap.id = `fw-${idx}-${fIdx}`;
+      wrap.innerHTML = `<img class="foto-img" src="${compressed}" style="opacity:.6"><button class="foto-del" onclick="delFoto(${idx},${fIdx})">×</button>`;
+      fr.appendChild(wrap);
     }
-    
-    if(WEBHOOK) {
-      try {
-        const fn=`${currentProzess.id}_S${idx+1}_${Date.now()}.jpg`;
-        const r=await fetch(WEBHOOK,{method:'POST',body:JSON.stringify({action:'upload_image',imageData:b64,fileName:fn})});
-        const res=await r.json();
-        if(res.success) {
-          const bArr=local[currentProzess.id].schritte[idx].bilder;
-          const fIdx=bArr.length-1;
-          bArr[fIdx].driveUrl=res.url;
-          saveLocal();
-          // Opacity auf 1 setzen wenn Drive-Upload erfolgreich
-          const el=document.getElementById(`foto-${idx}-${fIdx}`);
-          if(el) el.querySelector('img').style.opacity='1';
-        }
-      } catch(e){ console.error(e); }
+
+    // Upload zu Drive
+    try {
+      const fn = `${curProz.id}_S${idx+1}_${Date.now()}.jpg`;
+      showToast('↑ Foto wird hochgeladen…');
+      const res = await uploadChunked(compressed, fn);
+      if (res.success) {
+        local[curProz.id].schs[idx].bilder[fIdx].driveUrl = res.url;
+        saveLocal();
+        // Opacity auf 1 setzen
+        const el = document.getElementById(`fw-${idx}-${fIdx}`);
+        if (el) el.querySelector('img').style.opacity='1';
+        showToast('✓ Foto in Drive gespeichert');
+      }
+    } catch(err) {
+      console.error(err);
+      showToast('Foto lokal gespeichert — Drive-Upload fehlgeschlagen', true);
     }
   };
   reader.readAsDataURL(file);
 }
 
-function refreshFotos(idx) {
-  const c=document.getElementById(`fr-${idx}`); if(!c) return;
-  const imgs=local[currentProzess.id]?.schritte?.[idx]?.bilder||[];
-  c.innerHTML=imgs.map((b,fi)=>`<div class="foto-wrap"><img class="foto-thumb" src="${b.url||b}" style="opacity:${b.driveUrl?1:.75}"><button class="foto-del" onclick="delFoto(${idx},${fi})">×</button></div>`).join('');
-}
-
-function delFoto(sch,fi) {
+function delFoto(si, fi) {
   ensure();
-  local[currentProzess.id].schritte?.[sch]?.bilder?.splice(fi,1);
-  saveLocal(); refreshFotos(sch);
-}
-
-// ── SCHRITTE ────────────────────────────────────────────
-function ensure() {
-  if(!local[currentProzess.id]) local[currentProzess.id]={};
-  if(local[currentProzess.id].status!=='done') local[currentProzess.id].status='inprogress';
-}
-function autoSave(f,v){ ensure(); local[currentProzess.id][f]=v; saveLocal(); }
-function updSch(i,f,v){ ensure(); if(!local[currentProzess.id].schritte) local[currentProzess.id].schritte=[{}]; if(!local[currentProzess.id].schritte[i]) local[currentProzess.id].schritte[i]={}; local[currentProzess.id].schritte[i][f]=v; saveLocal(); }
-function addSchritt(){ ensure(); if(!local[currentProzess.id].schritte) local[currentProzess.id].schritte=[{}]; local[currentProzess.id].schritte.push({}); saveLocal(); const idx=local[currentProzess.id].schritte.length-1; const div=document.createElement('div'); div.innerHTML=renderSchritt({},idx); document.getElementById('schritte').appendChild(div.firstChild); }
-function delSch(i){ ensure(); local[currentProzess.id].schritte?.splice(i,1); saveLocal(); renderDetail(currentProzess); }
-function addWk(e){ if(e.key!=='Enter') return; const v=e.target.value.trim(); if(!v) return; ensure(); if(!local[currentProzess.id].werkzeuge) local[currentProzess.id].werkzeuge=[]; local[currentProzess.id].werkzeuge.push(v); saveLocal(); e.target.value=''; const t=document.createElement('div'); t.className='tag'; const i=local[currentProzess.id].werkzeuge.length-1; t.innerHTML=`${v}<span class="tag-x" onclick="delWk(${i})">×</span>`; document.getElementById('tagList').appendChild(t); }
-function delWk(i){ ensure(); local[currentProzess.id].werkzeuge?.splice(i,1); saveLocal(); renderDetail(currentProzess); }
-function setBomMenge(nr, val) {
-  ensure();
-  if(!local[currentProzess.id].bomMengen) local[currentProzess.id].bomMengen={};
-  local[currentProzess.id].bomMengen[nr] = val;
+  local[curProz.id].schs?.[si]?.bilder?.splice(fi,1);
   saveLocal();
+  // Nur den Schritt neu rendern
+  const sch = document.getElementById(`sch-${si}`);
+  if (sch) {
+    const newDiv = document.createElement('div');
+    newDiv.innerHTML = mkSchritt(local[curProz.id].schs[si]||{}, si);
+    sch.replaceWith(newDiv.firstChild);
+  }
 }
-function setBom(nr,st){ ensure(); if(!local[currentProzess.id].bomStatus) local[currentProzess.id].bomStatus={}; const c=local[currentProzess.id].bomStatus[nr]; local[currentProzess.id].bomStatus[nr]=c===st?'':st; saveLocal(); renderDetail(currentProzess); }
+
+// ── WERKZEUGE ───────────────────────────────────────────
+function addWk(e) {
+  if (e.key!=='Enter') return;
+  const v=e.target.value.trim(); if(!v) return;
+  ensure();
+  if(!local[curProz.id].wks) local[curProz.id].wks=[];
+  local[curProz.id].wks.push(v);
+  saveLocal(); e.target.value='';
+  const i=local[curProz.id].wks.length-1;
+  const t=document.createElement('div'); t.className='tag';
+  t.innerHTML=`${v}<span class="tag-x" onclick="delWk(${i})">×</span>`;
+  document.getElementById('tags').appendChild(t);
+}
+function delWk(i){ ensure(); local[curProz.id].wks?.splice(i,1); saveLocal(); renderDetail(curProz); }
+
+// ── BOM ─────────────────────────────────────────────────
+function setBom(nr,st){ ensure(); if(!local[curProz.id].boms) local[curProz.id].boms={}; const c=local[curProz.id].boms[nr]; local[curProz.id].boms[nr]=c===st?'':st; saveLocal(); renderDetail(curProz); }
+function setBomM(nr,v){ ensure(); if(!local[curProz.id].bomM) local[curProz.id].bomM={}; local[curProz.id].bomM[nr]=v; saveLocal(); }
 
 // ── TIMER ───────────────────────────────────────────────
-function startTimer(){ if(timerIv) return; timerStart=Date.now()-timerSec*1000; timerIv=setInterval(()=>{ timerSec=Math.floor((Date.now()-timerStart)/1000); const el=document.getElementById('timeDsp'); if(el) el.textContent=fmt(timerSec); const zi=document.getElementById('zeitIn'); if(zi) zi.value=Math.ceil(timerSec/60); },1000); }
-function stopTimer(){ clearInterval(timerIv); timerIv=null; if(timerSec>0) autoSave('zeitMinuten',Math.ceil(timerSec/60)); }
+function startT(){ if(timerIv) return; timerStart=Date.now()-timerSec*1000; timerIv=setInterval(()=>{ timerSec=Math.floor((Date.now()-timerStart)/1000); const el=document.getElementById('tDisp'); if(el) el.textContent=fmt(timerSec); const zi=document.getElementById('zeitIn'); if(zi) zi.value=Math.ceil(timerSec/60); },1000); }
+function stopT(){ clearInterval(timerIv); timerIv=null; if(timerSec>0) autoSave('zeit',Math.ceil(timerSec/60)); }
 function fmt(s){ return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`; }
 
 // ── SPEICHERN ───────────────────────────────────────────
 async function saveProzess() {
-  showOverlay('Wird gespeichert…');
+  showOv('Wird gespeichert…');
   ensure();
-  const d=local[currentProzess.id];
+  // Timer-Wert übernehmen falls noch läuft
+  if (timerIv && timerSec > 0) {
+    ensure();
+    local[curProz.id].zeit = Math.ceil(timerSec / 60);
+    saveLocal();
+  }
+  const d=local[curProz.id];
   const payload={
     action:'save_prozess',
-    prozessId:currentProzess.id,
-    prozessName:currentProzess.name,
-    station:currentProzess.station,
-    mitarbeiter:userName,
-    datum:new Date().toLocaleDateString('de-DE'),
-    zeitMinuten:d.zeitMinuten||'',
-    werkzeuge:d.werkzeuge||[],
-    hinweise:d.hinweise||'',
-    status:'done',
-    bomMengen:d.bomMengen||{},
-    schritte:(d.schritte||[]).map(s=>({
+    prozessId:curProz.id, prozessName:curProz.name, station:curProz.station,
+    mitarbeiter:user, datum:new Date().toLocaleDateString('de-DE'),
+    zeitMinuten:d.zeit||'', werkzeuge:d.wks||[], hinweise:d.hinweise||'',
+    status:'done', bomMengen:d.bomM||{},
+    schritte:(d.schs||[]).map(s=>({
       beschreibung:s.beschreibung||'',
       bildUrl:s.bilder?.find(b=>b.driveUrl)?.driveUrl||''
     }))
@@ -706,27 +664,29 @@ async function saveProzess() {
   try {
     const r=await fetch(WEBHOOK,{method:'POST',body:JSON.stringify(payload)});
     const res=await r.json();
-    hideOverlay();
+    hideOv();
     if(res.success){
-      local[currentProzess.id].status='done';
-      local[currentProzess.id].mitarbeiter=userName;
-      local[currentProzess.id].datum=new Date().toLocaleDateString('de-DE');
-      saveLocal(); toast('✓ Gespeichert'); setTimeout(()=>goBack(),1200);
-    } else toast('Fehler beim Speichern',true);
-  } catch(e){ hideOverlay(); toast('Verbindungsfehler',true); }
+      local[curProz.id].s='done';
+      local[curProz.id].mitarbeiter=user;
+      local[curProz.id].datum=new Date().toLocaleDateString('de-DE');
+      saveLocal();
+      showToast('✓ Gespeichert');
+      setTimeout(()=>goBack(),1200);
+    } else showToast('Fehler: '+res.error,true);
+  } catch(err){ hideOv(); showToast('Verbindungsfehler',true); }
 }
 
 // ── PROGRESS ────────────────────────────────────────────
-function updateProg(){ const ps=PROZESSE.filter(p=>p.station===currentStation); const d=ps.filter(p=>local[p.id]?.status==='done').length; document.getElementById('progFill').style.width=(ps.length?d/ps.length*100:0)+'%'; }
+function updProg(){ const ps=PROZESSE.filter(p=>p.station===curStation); const d=ps.filter(p=>local[p.id]?.s==='done').length; document.getElementById('progFill').style.width=(ps.length?d/ps.length*100:0)+'%'; }
 
 // ── NAV ─────────────────────────────────────────────────
-function showScreen(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
-function goBack(){ navStack.pop(); stopTimer(); timerSec=0; const p=navStack[navStack.length-1]; if(p==='stationen') showStationen(); else if(p==='prozesse') showProzesse(currentStation); }
+function go(id){ document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on')); document.getElementById(id).classList.add('on'); window.scrollTo(0,0); }
+function goBack(){ nav.pop(); stopT(); timerSec=0; const p=nav[nav.length-1]; if(p==='stat') showStationen(); else if(p==='proz') showProz(curStation); }
 
-// ── HELPERS ─────────────────────────────────────────────
-function showOverlay(t){ document.getElementById('overlayTxt').textContent=t; document.getElementById('overlay').classList.add('show'); }
-function hideOverlay(){ document.getElementById('overlay').classList.remove('show'); }
-function toast(msg,err=false){ const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'+(err?' err':''); setTimeout(()=>t.classList.remove('show'),3000); }
+// ── UI ──────────────────────────────────────────────────
+function showOv(t){ document.getElementById('ovTxt').textContent=t; document.getElementById('overlay').classList.add('on'); }
+function hideOv(){ document.getElementById('overlay').classList.remove('on'); }
+function showToast(msg,err=false){ const t=document.getElementById('toast'); t.textContent=msg; t.className='toast on'+(err?' err':''); clearTimeout(t._to); t._to=setTimeout(()=>t.classList.remove('on'),err?4000:2500); }
 </script>
 </body>
 </html>
