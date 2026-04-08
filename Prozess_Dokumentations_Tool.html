@@ -200,7 +200,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="backBtn" onclick="goBack()">← Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V2.0</span><span class="hdr-user" id="hdrUser"></span></div>
+  <div class="hdr-r"><span class="ver">V2.1</span><span class="hdr-user" id="hdrUser"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
 <div class="overlay" id="overlay"><div class="spinner"></div><div class="ov-txt" id="ovTxt"></div></div>
@@ -479,8 +479,10 @@ function mkSch(s, i){
     <div class="fl">Fotos</div>
     <div class="foto-row" id="fr-${i}">${fotosHTML}</div>
     <div class="foto-btns" style="margin-top:8px">
-      <label class="fbtn" for="cam-${i}">📷 Foto<input class="file-in" type="file" id="cam-${i}" accept="image/*" capture="environment" onchange="handleFoto(${i},this)"></label>
-      <label class="fbtn" for="gal-${i}">🖼 Galerie<input class="file-in" type="file" id="gal-${i}" accept="image/*" onchange="handleFoto(${i},this)"></label>
+      <button class="fbtn" onclick="document.getElementById('cam-${i}').click()">📷 Foto</button>
+      <input class="file-in" type="file" id="cam-${i}" accept="image/*" capture="environment" onchange="handleFoto(${i},this)">
+      <button class="fbtn" onclick="document.getElementById('gal-${i}').click()">🖼 Galerie</button>
+      <input class="file-in" type="file" id="gal-${i}" accept="image/*" onchange="handleFoto(${i},this)">
     </div>
   </div>`;
 }
@@ -568,6 +570,8 @@ async function handleFoto(idx,input){
   const file=input.files[0]; if(!file) return;
   input.value='';
   ensure();
+  // Sicherstellen dass Schritt-Array groß genug ist
+  while(local[curProz.id].schs.length <= idx) local[curProz.id].schs.push({});
   if(!local[curProz.id].schs[idx]) local[curProz.id].schs[idx]={};
   if(!local[curProz.id].schs[idx].bilder) local[curProz.id].schs[idx].bilder=[];
 
