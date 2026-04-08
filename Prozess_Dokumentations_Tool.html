@@ -21,9 +21,9 @@ body{font-family:var(--f);background:var(--bg);color:var(--k);min-height:100vh;f
 .card{background:var(--w);border:1px solid var(--br);border-radius:var(--rl);padding:32px 24px;max-width:380px;width:100%;box-shadow:0 3px 12px rgba(0,0,0,.09)}
 .ey{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g2);margin-bottom:6px}
 .ct{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
-.fl{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--k);margin-bottom:5px}
-.inp{width:100%;padding:11px 13px;background:var(--bg);border:1px solid var(--br);border-radius:var(--r);color:var(--k);font-size:16px;font-family:var(--f);outline:none;transition:border-color .15s}
-.inp:focus{border-color:var(--k);background:var(--w)}
+.fl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g2);margin-bottom:5px}
+.inp{width:100%;padding:10px 12px;background:var(--w);border:1px solid var(--br);border-radius:var(--r);color:var(--k);font-size:15px;font-family:var(--f);outline:none;transition:border-color .15s}
+.inp:focus{border-color:var(--k)}
 textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 .btn{width:100%;padding:13px;border:none;border-radius:var(--r);font-size:13px;font-weight:600;font-family:var(--f);cursor:pointer;letter-spacing:.02em;margin-top:10px;touch-action:manipulation}
 .btn-k{background:var(--k);color:var(--w)}.btn-k:disabled{opacity:.3;cursor:not-allowed}
@@ -38,9 +38,9 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 .pk:active{background:var(--g5)}.pk.del{font-size:15px;color:var(--g2)}.pk.emp{background:transparent;border-color:transparent;cursor:default}
 .hints{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
 .hint{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--g1);line-height:1.5}
-.ph{background:var(--w);border-bottom:1px solid var(--br);padding:16px 16px 12px}
-.ph-ey{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g2);margin-bottom:3px}
-.ph-t{font-size:21px;font-weight:700;letter-spacing:-.02em}.ph-s{font-size:12px;color:var(--g2);margin-top:3px}
+.ph{background:var(--w);border-bottom:1px solid var(--br);padding:14px 16px 12px}
+.ph-ey{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g2);margin-bottom:2px}
+.ph-t{font-size:18px;font-weight:700;letter-spacing:-.02em;line-height:1.2}.ph-s{font-size:11px;color:var(--g2);margin-top:3px}
 .lw{padding:12px 14px}
 .sc{background:var(--w);border:1px solid var(--br);border-radius:var(--rl);padding:14px 15px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);touch-action:manipulation}
 .sc:active{border-color:var(--k)}.sc-ic{width:36px;height:36px;border-radius:var(--r);background:var(--g5);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
@@ -51,18 +51,18 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 .pi:active{border-color:var(--k)}.dot{width:7px;height:7px;border-radius:50%;background:var(--g3);flex-shrink:0}
 .dot.done{background:var(--gn)}.dot.ip{background:var(--k)}
 .pi-n{font-size:13px;font-weight:600;flex:1;line-height:1.3}.pi-m{font-size:11px;color:var(--g2);margin-top:1px}
-.dw{padding:12px 14px 90px}
-.sec{background:var(--w);border:1px solid var(--br);border-radius:var(--rl);padding:15px;margin-bottom:10px}
-.sec-l{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--k);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--br)}
-.badge{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;margin-bottom:10px}
-.badge.open{background:var(--g5);color:var(--g2)}.badge.done{background:var(--gnb);color:var(--gn)}.badge.ip{background:var(--g5);color:var(--g1)}
+.dw{padding:0 0 90px}
+.sec{background:var(--w);border-bottom:1px solid var(--br);padding:20px 16px;margin-bottom:0}
+.sec-l{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g2);margin-bottom:16px}
+.badge{display:inline-flex;align-items:center;gap:5px;border-radius:4px;padding:2px 8px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-top:8px}
+.badge.open{background:var(--g5);color:var(--g2)}.badge.done{background:var(--gnb);color:var(--gn)}.badge.ip{background:#f5f0e0;color:#7a6000}
 .trow{display:flex;gap:8px;align-items:center;margin-bottom:12px}
-.tbtn{flex:1;padding:12px;border:none;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--f);touch-action:manipulation}
-.tbtn.st{background:var(--k);color:#fff}.tbtn.sp{background:var(--w);border:1.5px solid var(--g2);color:var(--g1)}
-.tdsp{background:var(--bg);border:1px solid var(--br);border-radius:var(--r);padding:10px 14px;font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;min-width:80px;text-align:center}
-.sch{background:var(--bg);border:1px solid var(--br);border-radius:var(--r);padding:13px;margin-bottom:8px;position:relative}
-.sch-n{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--k);margin-bottom:10px}
-.sch-x{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--g3);font-size:16px;cursor:pointer;padding:4px;line-height:1;touch-action:manipulation}
+.tbtn{flex:1;padding:11px;border:1px solid var(--br);border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--f);touch-action:manipulation;background:var(--w);color:var(--g1)}
+.tbtn.st{background:var(--k);color:#fff;border-color:var(--k)}.tbtn.sp{background:var(--w);border-color:var(--br);color:var(--g1)}
+.tdsp{background:var(--bg);border:1px solid var(--br);border-radius:var(--r);padding:10px 14px;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;min-width:80px;text-align:center}
+.sch{background:var(--bg);border:1px solid var(--br);border-radius:var(--r);padding:14px 14px 14px 16px;margin-bottom:8px;position:relative;border-left:3px solid var(--k)}
+.sch-n{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g2);margin-bottom:10px}
+.sch-x{position:absolute;top:12px;right:10px;background:none;border:none;color:var(--g3);font-size:18px;cursor:pointer;padding:4px;line-height:1;touch-action:manipulation}
 .wt{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px;min-height:2px}
 .wtag{background:var(--w);border:1px solid var(--g4);border-radius:20px;padding:4px 10px;font-size:12px;display:flex;align-items:center;gap:5px}
 .wx{color:var(--g3);cursor:pointer;font-size:13px;line-height:1;touch-action:manipulation}
@@ -71,8 +71,8 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 .fimg{width:72px;height:72px;object-fit:cover;border-radius:var(--r);border:1px solid var(--br);display:block}
 .fdel{position:absolute;top:-5px;right:-5px;width:18px;height:18px;background:var(--k);color:#fff;border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;line-height:1;touch-action:manipulation}
 .fbtns{display:flex;gap:7px;margin-top:8px}
-.fbtn{flex:1;padding:11px 6px;border:1.5px solid var(--k);border-radius:var(--r);background:var(--w);color:var(--k);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--f);display:flex;align-items:center;justify-content:center;gap:4px;touch-action:manipulation}
-.fbtn:active{background:var(--g5)}.fin{display:none}
+.fbtn{flex:1;padding:10px 6px;border:1px solid var(--br);border-radius:var(--r);background:var(--w);color:var(--g1);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--f);display:flex;align-items:center;justify-content:center;gap:4px;touch-action:manipulation}
+.fbtn:active{background:var(--g5);border-color:var(--k)}.fin{display:none}
 .bh{display:flex;align-items:center;gap:6px;padding-bottom:7px;border-bottom:1.5px solid var(--br);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g2)}
 .br{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid var(--g5);transition:background .2s;border-radius:4px}
 .br.bom-warn{background:#fff5f5;border-left:3px solid var(--rd);padding-left:6px;margin:0 -2px}
@@ -84,7 +84,8 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 .bbtns{display:flex;gap:4px;flex-shrink:0}
 .bb{width:34px;height:34px;border:1.5px solid var(--g2);border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;background:var(--w);color:var(--g1);font-family:var(--f);touch-action:manipulation}
 .bb.ok.on{background:var(--gn);border-color:var(--gn);color:#fff}.bb.fl.on{background:var(--rd);border-color:var(--rd);color:#fff}
-.sbtn{width:100%;padding:16px;background:var(--k);border:none;border-radius:var(--r);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--f);letter-spacing:.02em;position:sticky;bottom:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);touch-action:manipulation}
+.btn-d{background:var(--w);border:1px dashed var(--g3);color:var(--g2);font-size:12px}
+.sbtn{width:100%;padding:15px;background:var(--k);border:none;border-radius:var(--r);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--f);letter-spacing:.03em;position:sticky;bottom:14px;box-shadow:0 4px 20px rgba(0,0,0,.18);touch-action:manipulation}
 .a4{background:var(--w);border:1px solid var(--br);border-radius:var(--rl);padding:24px 20px;box-shadow:0 3px 12px rgba(0,0,0,.09);max-width:600px;margin:0 auto}
 .a4h{display:flex;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #111}
 .a4logo{font-size:17px;font-weight:800}.a4logo span{font-weight:300;color:#888}
@@ -116,7 +117,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.2</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.3</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -177,8 +178,8 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
   <div class="cw"><div class="card">
     <div class="ey">farbflut Design</div>
     <div class="ct">Prozessdokumentation</div>
-    <div class="fl" style="margin-top:16px">Name</div>
-    <input class="inp" id="nIn" type="text" placeholder="Name eingeben" autocomplete="name"
+    <div class="fl" style="margin-top:16px">Wer dokumentiert den Prozess?</div>
+    <input class="inp" id="nIn" type="text" placeholder="Vor- und Nachname" autocomplete="name"
       oninput="document.getElementById('nBtn').disabled=this.value.trim().length<2"
       onkeydown="if(event.key==='Enter'&&this.value.trim().length>=2)goW()">
     <button class="btn btn-k" id="nBtn" onclick="goW()" disabled>Weiter &#8594;</button>
@@ -187,20 +188,19 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 
 <div class="scr" id="sWelc">
   <div class="cw"><div class="card" style="max-width:420px">
-    <div class="ey">Hallo,</div>
-    <div class="ct" id="wn" style="margin-bottom:16px"></div>
-    <div style="background:#f9f8f5;border:1px solid #e0ddd8;border-radius:8px;padding:14px;margin-bottom:16px;font-size:13px">
-      <div style="font-weight:700;margin-bottom:4px">Ziel: Neue Mitarbeiter müssen anhand deiner Beschreibung alles alleine verstehen.</div>
-      <div style="font-size:12px;color:#666">Nimm dir die Zeit. Genauigkeit ist wichtiger als Schnelligkeit.</div>
+    <div style="font-size:24px;font-weight:700;letter-spacing:-.03em;margin-bottom:20px">Hallo, <span id="wn" style="color:var(--k)"></span> 👋</div>
+    <div style="background:var(--k);border-radius:8px;padding:16px 18px;margin-bottom:18px">
+      <div style="font-weight:700;font-size:14px;color:#fff;margin-bottom:4px">Ziel: Neue Mitarbeiter müssen anhand deiner Beschreibung alles alleine verstehen.</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.65)">Nimm dir die Zeit. Genauigkeit ist wichtiger als Schnelligkeit.</div>
     </div>
     <div class="hints">
-      <div class="hint"><span>&#128207;</span><div><strong>Alles messbar beschreiben</strong> — nicht "etwas Farbe", sondern "ca. 2cm auf die Rolle, einmal abtupfen". Nicht "fest anziehen", sondern "bis es nicht mehr dreht".</div></div>
-      <div class="hint"><span>&#127912;</span><div><strong>Mengen &amp; Verhältnisse</strong> — wie viel Material, wie tief eintauchen, wie viele mm abisolieren, welche Einstellungen.</div></div>
-      <div class="hint"><span>&#9986;</span><div><strong>Maschineneinstellungen</strong> — Schnittwerte, Laserleistung, Sägeblattstellung — alles was man einstellen muss.</div></div>
-      <div class="hint"><span>&#128065;</span><div><strong>Qualität &amp; Sichtbarkeit</strong> — wo dürfen Klebestellen sichtbar sein, was ist ein Fehler.</div></div>
-      <div class="hint"><span>&#128247;</span><div><strong>Fotos</strong> — Zustand vor/nach dem Schritt, Details, typische Fehler.</div></div>
+      <div class="hint"><span>📐</span><div><strong>Alles messbar beschreiben</strong> — nicht "etwas Farbe", sondern "ca. 2cm auf die Rolle, einmal abtupfen". Nicht "fest anziehen", sondern "bis es nicht mehr dreht".</div></div>
+      <div class="hint"><span>🎨</span><div><strong>Mengen &amp; Verhältnisse</strong> — wie viel Material, wie tief eintauchen, wie viele mm abisolieren, welche Einstellungen.</div></div>
+      <div class="hint"><span>✂️</span><div><strong>Maschineneinstellungen</strong> — Schnittwerte, Laserleistung, Sägeblattstellung — alles was man einstellen muss.</div></div>
+      <div class="hint"><span>👁</span><div><strong>Qualität &amp; Sichtbarkeit</strong> — wo dürfen Klebestellen sichtbar sein, was ist ein Fehler.</div></div>
+      <div class="hint"><span>📷</span><div><strong>Fotos</strong> — Zustand vor/nach dem Schritt, Details, typische Fehler.</div></div>
     </div>
-    <button class="btn btn-k" onclick="showStat()">Los geht&#39;s &#8594;</button>
+    <button class="btn btn-k" onclick="showStat()">Los geht's &#8594;</button>
   </div></div>
 </div>
 
@@ -494,10 +494,13 @@ function renderDet() {
   cont.appendChild(hSec);
 
   // Vorschau Button
+  var vWrap = document.createElement('div'); vWrap.style.cssText = 'padding:16px';
   var vBtn = document.createElement('button'); vBtn.className = 'sbtn';
+  vBtn.style.position = 'static';
   vBtn.textContent = 'Vorschau & Abschließen →';
   vBtn.onclick = zeigV;
-  cont.appendChild(vBtn);
+  vWrap.appendChild(vBtn);
+  cont.appendChild(vWrap);
 
   updProg();
 }
