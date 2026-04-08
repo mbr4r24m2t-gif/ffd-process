@@ -191,7 +191,7 @@ textarea.input { min-height: 70px; resize: vertical; line-height: 1.5; font-size
   <button class="back" id="backBtn" onclick="goBack()">← Zurück</button>
   <div class="logo">farbflut <span>·</span> Prozessdok</div>
   <div class="hdr-r">
-    <span class="ver">V1.3</span>
+    <span class="ver">V1.4</span>
     <span class="hdr-user" id="hdrUser"></span>
   </div>
 </div>
@@ -583,7 +583,9 @@ async function handleFoto(idx, input) {
 
     // Upload zu Drive
     try {
-      const fn = `${curProz.id}_S${idx+1}_${Date.now()}.jpg`;
+      // Dateiname: P-002_S1_Prozessname.jpg
+        const safeName = curProz.name.replace(/[^a-zA-Z0-9äöüÄÖÜß]/g, '_').replace(/_+/g, '_').slice(0, 40);
+        const fn = `${curProz.id}_S${idx+1}_${safeName}.jpg`;
       showToast('↑ Foto wird hochgeladen…');
       const res = await uploadChunked(compressed, fn);
       if (res.success) {
