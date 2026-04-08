@@ -117,7 +117,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.4</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.5</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -932,51 +932,60 @@ async function bestaetigen() {
   showO('Bilder werden hochgeladen…');
   ens();
   var d = loc[cProz.id];
-  var schs = d.schs || [];
   var fotoFehler = 0;
-  for (var si = 0; si < schs.length; si++) {
-    var bilder = schs[si].bilder || [];
-    for (var fi = 0; fi < bilder.length; fi++) {
-      if (!bilder[fi].driveUrl && bilder[fi].url && bilder[fi].url.startsWith('data:')) {
-        try {
-          showO('Bild ' + (si+1) + '.' + (fi+1) + ' wird komprimiert…');
-          var comp = await compressB64(bilder[fi].url, 1000, 0.78);
-          var safeName = cProz.name.replace(/[^a-zA-Z0-9äöüÄÖÜß]/g, '_').replace(/_+/g, '_').slice(0, 40);
-          var fn = cProz.id + '_S' + (si+1) + '_' + safeName + '_' + (fi+1) + '.jpg';
-          showO('Bild ' + (si+1) + '.' + (fi+1) + ' wird hochgeladen…');
-          var res = await uploadChunked(comp, fn);
-          if (res && res.success) {
-            loc[cProz.id].schs[si].bilder[fi].driveUrl = res.url;
-            savL();
-          } else {
-            fotoFehler++;
-            console.error('Upload fehlgeschlagen:', res);
-          }
-        } catch(err) {
+
+  // Immer direkt über loc lesen/schreiben — keine lokale Kopie
+  var numSchs = (d.schs || []).length;
+  for (var si = 0; si < numSchs; si++) {
+    if (!d.schs[si]) continue;
+    if (!d.schs[si].bilder) continue;
+    var numBilder = d.schs[si].bilder.length;
+    for (var fi = 0; fi < numBilder; fi++) {
+      var bild = d.schs[si].bilder[fi];
+      if (!bild || bild.driveUrl || !bild.url || !bild.url.startsWith('data:')) continue;
+      try {
+        showO('Bild ' + (si+1) + '.' + (fi+1) + ' wird komprimiert…');
+        var comp = await compressB64(bild.url, 1000, 0.78);
+        var safeName = cProz.name.replace(/[^a-zA-Z0-9äöüÄÖÜß]/g, '_').replace(/_+/g, '_').slice(0, 40);
+        var fn = cProz.id + '_S' + (si+1) + '_' + safeName + '_' + (fi+1) + '.jpg';
+        showO('Bild ' + (si+1) + '.' + (fi+1) + ' wird hochgeladen…');
+        var res = await uploadChunked(comp, fn);
+        if (res && res.success) {
+          loc[cProz.id].schs[si].bilder[fi].driveUrl = res.url;
+          savL();
+        } else {
           fotoFehler++;
-          console.error('Bild ' + (si+1) + '.' + (fi+1) + ' fehlgeschlagen:', err);
+          console.error('Upload fehlgeschlagen S' + (si+1) + ' F' + (fi+1) + ':', res);
         }
+      } catch(err) {
+        fotoFehler++;
+        console.error('Bild ' + (si+1) + '.' + (fi+1) + ' fehlgeschlagen:', err);
       }
     }
   }
   if (fotoFehler > 0) showT('⚠️ ' + fotoFehler + ' Foto(s) nicht hochgeladen', true);
 
-  // PDF — UTF-8-sichere Kodierung (passend zu Utilities.base64Decode im Script)
+  // PDF — chunked btoa für große Dokumente (verhindert Stack Overflow)
   try {
     showO('Dokument wird gespeichert…');
     var safeName = cProz.name.replace(/[^a-zA-Z0-9äöüÄÖÜß]/g, '_').slice(0, 40);
     var fn = cProz.id + '_' + safeName + '_' + new Date().toLocaleDateString('de-DE').replace(/\./g, '-') + '.html';
     var full = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + cProz.name + '</title></head><body>' + document.getElementById('a4').innerHTML + '</body></html>';
-    // TextEncoder für korrekte UTF-8 → Base64 Konvertierung (Umlaute-sicher)
     var bytes = new TextEncoder().encode(full);
-    var binary = String.fromCharCode.apply(null, bytes);
+    // Chunked String.fromCharCode — verhindert "Maximum call stack exceeded" bei großen Dokumenten
+    var binary = '';
+    var CHUNK = 8192;
+    for (var i = 0; i < bytes.length; i += CHUNK) {
+      binary += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK));
+    }
     var b64 = btoa(binary);
     var pdfRes = await postJ({action:'save_pdf',htmlContent:b64,fileName:fn,prozessId:cProz.id,prozessName:cProz.name});
-    if (!pdfRes.success) console.error('PDF Fehler:', pdfRes.error);
+    if (!pdfRes || !pdfRes.success) console.error('PDF Fehler:', pdfRes && pdfRes.error);
   } catch(e) { console.error('PDF fehlgeschlagen:', e); }
 
-  // Sheet
+  // Sheet — aktuellen loc-Stand lesen (mit allen driveUrls)
   showO('Wird in Google Sheet gespeichert…');
+  var schs = loc[cProz.id].schs || [];
   var payload = {
     action: 'save_prozess',
     prozessId: cProz.id, prozessName: cProz.name, station: cProz.station,
