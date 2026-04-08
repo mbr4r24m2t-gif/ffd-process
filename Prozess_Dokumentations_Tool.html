@@ -242,7 +242,7 @@ hr { border: none; border-top: 1px solid var(--gray4); margin: 12px 0; }
   <button class="back-btn" id="backBtn" onclick="goBack()">← Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
   <div class="header-right">
-    <span style="font-size:10px;color:var(--gray3);letter-spacing:.06em">V1.0</span><span class="header-user" id="headerUser"></span>
+    <span style="font-size:10px;color:var(--gray3);letter-spacing:.06em">V1.1</span><span class="header-user" id="headerUser"></span>
   </div>
 </div>
 <div class="prog-bar" id="progBar" style="display:none"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
@@ -556,7 +556,18 @@ async function handleFoto(idx, input) {
     const b64=e.target.result;
     local[currentProzess.id].schritte[idx].bilder.push({url:b64,driveUrl:null});
     saveLocal();
-    refreshFotos(idx);
+    
+    // Foto sofort ins DOM einfügen ohne neu zu rendern
+    const container=document.getElementById(`fr-${idx}`);
+    if(container) {
+      const fotoIdx=local[currentProzess.id].schritte[idx].bilder.length-1;
+      const wrap=document.createElement('div');
+      wrap.className='foto-wrap';
+      wrap.id=`foto-${idx}-${fotoIdx}`;
+      wrap.innerHTML=`<img class="foto-thumb" src="${b64}" style="opacity:.75"><button class="foto-del" onclick="delFoto(${idx},${fotoIdx})">×</button>`;
+      container.appendChild(wrap);
+    }
+    
     if(WEBHOOK) {
       try {
         const fn=`${currentProzess.id}_S${idx+1}_${Date.now()}.jpg`;
@@ -564,8 +575,12 @@ async function handleFoto(idx, input) {
         const res=await r.json();
         if(res.success) {
           const bArr=local[currentProzess.id].schritte[idx].bilder;
-          bArr[bArr.length-1].driveUrl=res.url;
-          saveLocal(); refreshFotos(idx);
+          const fIdx=bArr.length-1;
+          bArr[fIdx].driveUrl=res.url;
+          saveLocal();
+          // Opacity auf 1 setzen wenn Drive-Upload erfolgreich
+          const el=document.getElementById(`foto-${idx}-${fIdx}`);
+          if(el) el.querySelector('img').style.opacity='1';
         }
       } catch(e){ console.error(e); }
     }
