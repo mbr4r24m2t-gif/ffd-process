@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>farbflut · Prozessdokumentation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #f5f4f0;
@@ -29,7 +29,7 @@
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
   --shadow: 0 2px 8px rgba(0,0,0,0.08);
   --font: 'Inter', system-ui, sans-serif;
-  --font-d: 'Playfair Display', serif;
+  --font-d: 'Inter', system-ui, sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { font-family: var(--font); background: var(--bg); color: var(--black); min-height: 100vh; font-size: 14px; }
@@ -188,6 +188,49 @@ textarea.field-input { min-height: 72px; resize: vertical; line-height: 1.5; }
 .toast.show { opacity: 1; }
 .toast.err { background: var(--red); }
 
+
+/* MOBILE OPTIMIERUNGEN */
+@media (max-width: 480px) {
+  .pin-btn { padding: 18px; font-size: 22px; }
+  .btn-save { padding: 18px; font-size: 15px; position: sticky; bottom: 16px; box-shadow: 0 4px 16px rgba(0,0,0,.15); }
+  .foto-thumb { width: 80px; height: 80px; }
+  .foto-btn { padding: 12px 6px; font-size: 13px; }
+  .time-btn { padding: 14px; font-size: 14px; }
+  .time-disp { font-size: 24px; padding: 12px 16px; }
+  .bom-btn { width: 36px; height: 36px; font-size: 14px; }
+  .section { padding: 16px; }
+  .field-input { font-size: 16px; } /* verhindert zoom auf iOS */
+  .s-card { padding: 16px; }
+  .p-item { padding: 14px; }
+  .page-hdr { padding: 18px 16px 14px; }
+  .list-wrap { padding: 12px 14px; }
+  .d-wrap { padding: 12px 14px 80px; }
+}
+
+/* iOS Safari fixes */
+input[type="number"] { -webkit-appearance: none; }
+button { -webkit-appearance: none; }
+* { -webkit-overflow-scrolling: touch; }
+
+
+.welcome-hints { display: flex; flex-direction: column; gap: 12px; }
+.hint-item { display: flex; align-items: flex-start; gap: 12px; font-size: 13px; color: var(--gray1); line-height: 1.5; }
+.hint-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+
+/* BOM TABELLE */
+.bom-table { width: 100%; }
+.bom-header-row { display: flex; align-items: center; gap: 6px; padding: 0 0 8px; border-bottom: 2px solid var(--border); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gray2); }
+.bom-row { display: flex; align-items: center; gap: 6px; padding: 10px 0; border-bottom: 1px solid var(--gray4); }
+.bom-row:last-child { border: none; }
+.bom-info { flex: 1; min-width: 0; }
+.bom-name { font-size: 13px; font-weight: 500; line-height: 1.3; }
+.bom-nr { font-size: 10px; color: var(--gray2); margin-top: 1px; }
+.bom-soll { width: 80px; text-align: center; font-size: 13px; color: var(--gray2); flex-shrink: 0; }
+.bom-used { width: 80px; display: flex; justify-content: center; flex-shrink: 0; }
+.bom-menge-input:focus { border-color: var(--black) !important; background: var(--white) !important; }
+.bom-status-btns { width: 90px; display: flex; gap: 4px; justify-content: center; flex-shrink: 0; }
+
 /* DIVIDER */
 hr { border: none; border-top: 1px solid var(--gray4); margin: 12px 0; }
 </style>
@@ -199,7 +242,7 @@ hr { border: none; border-top: 1px solid var(--gray4); margin: 12px 0; }
   <button class="back-btn" id="backBtn" onclick="goBack()">← Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
   <div class="header-right">
-    <span class="header-user" id="headerUser"></span>
+    <span style="font-size:10px;color:var(--gray3);letter-spacing:.06em">V1.0</span><span class="header-user" id="headerUser"></span>
   </div>
 </div>
 <div class="prog-bar" id="progBar" style="display:none"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
@@ -244,10 +287,45 @@ hr { border: none; border-top: 1px solid var(--gray4); margin: 12px 0; }
     <div class="name-card">
       <div class="card-eyebrow">farbflut Design</div>
       <div class="card-title">Prozess­dokumentation</div>
-      <div class="card-sub">Erfasse Arbeitsschritte, Zeiten und Fotos für jeden Produktionsprozess.</div>
+      
       <div class="field-label">Dein Name</div>
-      <input class="field-input" id="nameInput" type="text" placeholder="Vor- und Nachname" oninput="checkName()">
+      <input class="field-input" id="nameInput" type="text" placeholder="Dein Name" oninput="checkName()">
       <button class="btn btn-black" id="nameBtn" onclick="startApp()" disabled style="margin-top:14px">Weiter →</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- WELCOME -->
+<div class="screen" id="screenWelcome">
+  <div class="name-wrap">
+    <div class="name-card" style="max-width:400px">
+      <div style="font-size:13px;color:var(--gray2);margin-bottom:4px">Hallo,</div>
+      <div style="font-size:24px;font-weight:700;margin-bottom:24px" id="welcomeName"></div>
+      <div style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gray2);margin-bottom:14px">Bitte beachte beim Dokumentieren</div>
+      <div class="welcome-hints">
+        <div class="hint-item">
+          <div class="hint-icon">📐</div>
+          <div>Präzise Maße & Mengen — wie lang, wie viel, wie oft</div>
+        </div>
+        <div class="hint-item">
+          <div class="hint-icon">🔩</div>
+          <div>Kraft & Festigkeit — wie fest verschraubt, wie stark verklebt, mit welchem Drehmoment</div>
+        </div>
+        <div class="hint-item">
+          <div class="hint-icon">👁</div>
+          <div>Sichtbarkeit — wo dürfen Klebestellen sichtbar sein, wo nicht</div>
+        </div>
+        <div class="hint-item">
+          <div class="hint-icon">✅</div>
+          <div>Qualität — was ist in Ordnung, was ist ein Fehler, worauf muss man achten</div>
+        </div>
+        <div class="hint-item">
+          <div class="hint-icon">🆕</div>
+          <div>So dokumentieren, dass ein neuer Mitarbeiter ohne Rückfragen den Prozess versteht</div>
+        </div>
+      </div>
+      <button class="btn btn-black" onclick="showStationen()" style="margin-top:24px">Los geht's →</button>
     </div>
   </div>
 </div>
@@ -315,8 +393,12 @@ function updatePinDots() {
 }
 
 // ── NAME ────────────────────────────────────────────────
+function showWelcome() {
+  document.getElementById('welcomeName').textContent = userName;
+  showScreen('screenWelcome');
+}
 function checkName() { document.getElementById('nameBtn').disabled = document.getElementById('nameInput').value.trim().length < 2; }
-function startApp() { userName = document.getElementById('nameInput').value.trim(); document.getElementById('headerUser').textContent = userName; showStationen(); }
+function startApp() { userName = document.getElementById('nameInput').value.trim(); document.getElementById('headerUser').textContent = userName; showWelcome(); }
 function saveLocal() { localStorage.setItem('ffd-local', JSON.stringify(local)); }
 
 // ── STATIONEN ───────────────────────────────────────────
@@ -377,15 +459,34 @@ function renderDetail(p) {
     <div style="margin-top:8px"><span class="s-badge ${st==='done'?'done':st==='inprogress'?'ip':'open'}">${st==='done'?'✓ Abgeschlossen':st==='inprogress'?'In Bearbeitung':'Offen'}</span>${d.mitarbeiter?`<span style="font-size:11px;color:var(--gray2)"> · ${d.mitarbeiter}${d.datum?', '+d.datum:''}</span>`:''}</div>`;
 
   const schHTML=sc.map((s,i)=>renderSchritt(s,i)).join('');
-  const bomHTML=p.bom.length?p.bom.map(b=>{
+  const bomData = d.bomMengen || {};
+  const bomHTML=p.bom.length?`<div class="bom-table">
+    <div class="bom-header-row">
+      <div style="flex:1">Artikel</div>
+      <div style="width:80px;text-align:center">Soll</div>
+      <div style="width:80px;text-align:center">Verwendet</div>
+      <div style="width:90px;text-align:center">Status</div>
+    </div>
+    ${p.bom.map(b=>{
     const bs=bom[b.nr]||'';
-    return `<div class="bom-item"><div style="flex:1"><div class="bom-name">${b.name}</div><div class="bom-nr">${b.nr} · ${b.menge}×</div></div>
-    <div class="bom-btns">
-      <button class="bom-btn ok ${bs==='ok'?'on':''}" onclick="setBom('${b.nr}','ok')">✓</button>
-      <button class="bom-btn fehl ${bs==='fehlt'?'on':''}" onclick="setBom('${b.nr}','fehlt')">!</button>
-      <button class="bom-btn viel ${bs==='viel'?'on':''}" onclick="setBom('${b.nr}','viel')">↑</button>
-    </div></div>`;
-  }).join(''):'<div style="font-size:12px;color:var(--gray2)">Keine Positionen hinterlegt</div>';
+    const usedMenge = bomData[b.nr] !== undefined ? bomData[b.nr] : b.menge;
+    return `<div class="bom-row">
+      <div class="bom-info">
+        <div class="bom-name">${b.name}</div>
+        <div class="bom-nr">${b.nr}</div>
+      </div>
+      <div class="bom-soll">${b.menge}×</div>
+      <div class="bom-used">
+        <input class="bom-menge-input" type="number" step="0.01" min="0" value="${usedMenge}" 
+          oninput="setBomMenge('${b.nr}',this.value)" 
+          style="width:70px;padding:6px 8px;text-align:center;font-size:13px;border:1px solid var(--border);border-radius:var(--r);background:var(--bg);font-family:var(--font);outline:none">
+      </div>
+      <div class="bom-status-btns">
+        <button class="bom-btn ok ${bs==='ok'?'on':''}" onclick="setBom('${b.nr}','ok')" title="Vorhanden">✓</button>
+        <button class="bom-btn fehl ${bs==='fehlt'?'on':''}" onclick="setBom('${b.nr}','fehlt')" title="Fehlt">!</button>
+      </div>
+    </div>`;
+  }).join('')}</div>`:'<div style="font-size:12px;color:var(--gray2)">Keine Positionen hinterlegt</div>';
 
   document.getElementById('dContent').innerHTML=`
     <div class="section">
@@ -413,7 +514,7 @@ function renderDetail(p) {
 
     <div class="section">
       <div class="sec-label">📦 Stückliste prüfen</div>
-      <div style="font-size:11px;color:var(--gray2);margin-bottom:10px">✓ vorhanden · ! fehlt · ↑ zu viel</div>
+      <div style="font-size:11px;color:var(--gray2);margin-bottom:12px">Soll-Menge anpassen falls nötig · ✓ vorhanden · ! fehlt</div>
       ${bomHTML}
     </div>
 
@@ -495,6 +596,12 @@ function addSchritt(){ ensure(); if(!local[currentProzess.id].schritte) local[cu
 function delSch(i){ ensure(); local[currentProzess.id].schritte?.splice(i,1); saveLocal(); renderDetail(currentProzess); }
 function addWk(e){ if(e.key!=='Enter') return; const v=e.target.value.trim(); if(!v) return; ensure(); if(!local[currentProzess.id].werkzeuge) local[currentProzess.id].werkzeuge=[]; local[currentProzess.id].werkzeuge.push(v); saveLocal(); e.target.value=''; const t=document.createElement('div'); t.className='tag'; const i=local[currentProzess.id].werkzeuge.length-1; t.innerHTML=`${v}<span class="tag-x" onclick="delWk(${i})">×</span>`; document.getElementById('tagList').appendChild(t); }
 function delWk(i){ ensure(); local[currentProzess.id].werkzeuge?.splice(i,1); saveLocal(); renderDetail(currentProzess); }
+function setBomMenge(nr, val) {
+  ensure();
+  if(!local[currentProzess.id].bomMengen) local[currentProzess.id].bomMengen={};
+  local[currentProzess.id].bomMengen[nr] = val;
+  saveLocal();
+}
 function setBom(nr,st){ ensure(); if(!local[currentProzess.id].bomStatus) local[currentProzess.id].bomStatus={}; const c=local[currentProzess.id].bomStatus[nr]; local[currentProzess.id].bomStatus[nr]=c===st?'':st; saveLocal(); renderDetail(currentProzess); }
 
 // ── TIMER ───────────────────────────────────────────────
@@ -518,6 +625,7 @@ async function saveProzess() {
     werkzeuge:d.werkzeuge||[],
     hinweise:d.hinweise||'',
     status:'done',
+    bomMengen:d.bomMengen||{},
     schritte:(d.schritte||[]).map(s=>({
       beschreibung:s.beschreibung||'',
       bildUrl:s.bilder?.find(b=>b.driveUrl)?.driveUrl||''
