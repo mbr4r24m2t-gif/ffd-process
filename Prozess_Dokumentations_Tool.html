@@ -32,9 +32,9 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 .pin-hint{font-size:12px;color:var(--g2);margin-bottom:16px;text-align:center}
 .pin-dots{display:flex;justify-content:center;gap:14px;margin-bottom:24px}
 .pd{width:13px;height:13px;border-radius:50%;border:2px solid var(--g4);transition:all .15s}
-.pd.f{background:var(--k);border-color:var(--k)}.pd.e{background:var(--rd);border-color:var(--rd)}
+.pd.f{background:#6D745E;border-color:#6D745E}.pd.e{background:var(--rd);border-color:var(--rd)}
 .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.pk{background:var(--w);border:1.5px solid var(--br);border-radius:var(--r);padding:18px 16px;font-size:22px;font-weight:600;cursor:pointer;font-family:var(--f);min-height:60px;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.pk{background:var(--w);border:1.5px solid var(--br);border-radius:var(--r);padding:18px 16px;font-size:22px;font-weight:600;cursor:pointer;font-family:var(--f);min-height:60px;touch-action:manipulation;user-select:none;-webkit-user-select:none;color:#6D745E}
 .pk:active{background:var(--g5)}.pk.del{font-size:15px;color:var(--g2)}.pk.emp{background:transparent;border-color:transparent;cursor:default}
 .hints{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
 .hint{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--g1);line-height:1.5}
@@ -48,12 +48,12 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 .pill{margin-left:auto;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--g5);color:var(--g2);white-space:nowrap;flex-shrink:0}
 .pill.ok{background:var(--gnb);color:var(--gn)}
 .pi{background:var(--w);border:1px solid var(--br);border-radius:var(--r);padding:12px 14px;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;gap:10px;touch-action:manipulation}
-.pi:active{border-color:var(--k)}.dot{width:7px;height:7px;border-radius:50%;background:var(--g3);flex-shrink:0}
+.pi:active{border-color:var(--k)}.dot{width:9px;height:9px;border-radius:50%;background:var(--g3);flex-shrink:0}
 .dot.done{background:var(--gn)}.dot.ip{background:var(--k)}
 .pi-n{font-size:13px;font-weight:600;flex:1;line-height:1.3}.pi-m{font-size:11px;color:var(--g2);margin-top:1px}
 .dw{padding:0 0 90px}
 .sec{background:var(--w);border-bottom:1px solid var(--br);padding:20px 16px;margin-bottom:0}
-.sec-l{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g2);margin-bottom:16px}
+.sec-l{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--k);margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--k)}
 .badge{display:inline-flex;align-items:center;gap:5px;border-radius:4px;padding:2px 8px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-top:8px}
 .badge.open{background:var(--g5);color:var(--g2)}.badge.done{background:var(--gnb);color:var(--gn)}.badge.ip{background:#f5f0e0;color:#7a6000}
 .trow{display:flex;gap:8px;align-items:center;margin-bottom:12px}
@@ -90,7 +90,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 .a4h{display:flex;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #111}
 .a4logo{font-size:17px;font-weight:800}.a4logo span{font-weight:300;color:#888}
 .a4mt{font-size:11px;color:#666;text-align:right;line-height:1.6}
-.a4t{font-size:19px;font-weight:700;margin-bottom:3px}.a4sub{font-size:12px;color:#888;margin-bottom:14px}
+.a4t{font-size:22px;font-weight:700;margin-bottom:4px}.a4sub{font-size:13px;color:#888;margin-bottom:14px}
 .a4sl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#999;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #eee}
 .a4sc{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
 .a4sn{width:22px;height:22px;border-radius:50%;background:#111;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
@@ -117,7 +117,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.11</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.11.1</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -134,7 +134,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 
 <div class="scr" id="sPin">
   <div class="cw"><div class="card" style="text-align:center">
-    <div class="pin-logo">farbflut Design</div>
+    <div class="pin-logo">Dokumentation Fertigungsprozesse</div>
     <div class="pin-hint">PIN eingeben</div>
     <div class="pin-dots">
       <div class="pd" id="p0"></div><div class="pd" id="p1"></div>
@@ -188,10 +188,10 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 
 <div class="scr" id="sWelc">
   <div class="cw"><div class="card" style="max-width:420px">
-    <div style="font-size:24px;font-weight:700;letter-spacing:-.03em;margin-bottom:20px">Hallo, <span id="wn" style="color:var(--k)"></span> 👋</div>
-    <div style="background:var(--k);border-radius:8px;padding:16px 18px;margin-bottom:18px">
-      <div style="font-weight:700;font-size:14px;color:#fff;margin-bottom:4px">Ziel: Neue Mitarbeiter müssen anhand deiner Beschreibung alles alleine verstehen.</div>
-      <div style="font-size:12px;color:rgba(255,255,255,.65)">Nimm dir die Zeit. Genauigkeit ist wichtiger als Schnelligkeit.</div>
+    <div style="font-size:24px;font-weight:700;letter-spacing:-.03em;margin-bottom:20px">Hallo, <span id="wn"></span> 👋</div>
+    <div style="background:var(--ac);border-radius:8px;padding:16px 18px;margin-bottom:18px">
+      <div style="font-weight:700;font-size:14px;color:#fff;margin-bottom:6px">Dein Ziel: Jeden Fertigungsprozess so beschreiben, dass ein neuer Mitarbeiter ihn versteht und weiß was zu tun ist.</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.75);line-height:1.6">Vieles ist für uns selbstverständlich — welcher Bohrer, mit welchen Einstellungen wir Plexiglas schneiden, wieviel Leim auf einen Ring. Ein neuer Mitarbeiter kennt das nicht. Nimm dir Zeit. Genauigkeit ist wichtiger als Schnelligkeit.</div>
     </div>
     <div class="hints">
       <div class="hint"><span>📐</span><div><strong>Alles messbar beschreiben</strong> — nicht "etwas Farbe", sondern "ca. 2cm auf die Rolle, einmal abtupfen". Nicht "fest anziehen", sondern "bis es nicht mehr dreht".</div></div>
@@ -764,10 +764,10 @@ function renderVor() {
   var lg = document.createElement('div'); lg.className = 'a4logo';
   var logoImg = document.createElement('img');
   logoImg.src = 'data:image/avif;base64,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';
-  logoImg.style.cssText = 'height:32px;width:auto;display:block';
+  logoImg.style.cssText = 'height:22px;width:auto;display:block';
   logoImg.alt = 'farbflut Design';
   lg.appendChild(logoImg);
-  var sub = document.createElement('div'); sub.style.cssText = 'font-size:11px;color:#888;margin-top:4px';
+  var sub = document.createElement('div'); sub.style.cssText = 'font-size:13px;font-weight:600;color:#555;margin-top:5px;letter-spacing:.01em';
   sub.textContent = 'Prozessdokumentation';
   left.appendChild(lg); left.appendChild(sub);
   var right = document.createElement('div'); right.className = 'a4mt';
@@ -777,7 +777,7 @@ function renderVor() {
 
   var tt = document.createElement('div'); tt.className = 'a4t'; tt.textContent = p.name;
   var sb = document.createElement('div'); sb.className = 'a4sub';
-  sb.textContent = p.id + ' · ' + cStat.replace(/Station \d+[a-z]? — /, '');
+  sb.textContent = cStat.replace(/Station \d+[a-z]? — /, '');
   a4.appendChild(tt); a4.appendChild(sb);
 
   // Schritte
