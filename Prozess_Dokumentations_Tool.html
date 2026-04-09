@@ -117,7 +117,7 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.11.24-debug</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.11.24</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -1125,19 +1125,16 @@ async function bestaetigen() {
     // Build a lookup map: data: URL → driveUrl
     var _urlMap = {};
     var _schs = loc[cProz.id] && loc[cProz.id].schs ? loc[cProz.id].schs : [];
-    var _mapSize = 0;
     _schs.forEach(function(s) {
       (s.bilder || []).forEach(function(b) {
-        if (b.url && b.driveUrl) { _urlMap[b.url] = b.driveUrl; _mapSize++; }
+        if (b.url && b.driveUrl) { _urlMap[b.url] = b.driveUrl; }
       });
     });
-    console.log('PDF urlMap size:', _mapSize, 'driveUrls:', Object.values(_urlMap).slice(0,2));
     var a4el = document.getElementById('a4');
     var a4clone = a4el.cloneNode(true);
     a4clone.querySelectorAll('[data-nopdf]').forEach(function(el) { el.parentNode.removeChild(el); });
-    // Replace data: URLs with Drive URLs using the map
-    a4clone.querySelectorAll('img').forEach(function(img) {
-      console.log('PDF img src type:', img.src ? img.src.substring(0,30) : 'empty', 'hasMatch:', !!_urlMap[img.src]);
+    // Only patch img.a4si (process photos), not logo or other images
+    a4clone.querySelectorAll('img.a4si').forEach(function(img) {
       if (img.src && img.src.startsWith('data:')) {
         var driveUrl = _urlMap[img.src];
         if (driveUrl) { img.src = driveUrl; }
