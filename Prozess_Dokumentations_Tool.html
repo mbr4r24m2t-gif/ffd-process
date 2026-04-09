@@ -117,7 +117,7 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.11.14</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.11.15</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -194,7 +194,7 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 
     <!-- Block 2: Hinweis zur Nutzung -->
     <div style="border-top:1px solid var(--br);padding-top:20px;margin-top:12px;margin-bottom:8px">
-      <div style="font-weight:700;font-size:14px;margin-bottom:8px">Hinweis zur Nutzung:</div>
+      <div style="font-weight:700;font-size:17px;margin-bottom:10px">Hinweis zur Nutzung:</div>
       <div style="font-size:15px;color:var(--g1);line-height:1.7;margin-bottom:12px">Das Tool ist eine Webapp und hat keinen eigenen Speicher. Alle erfassten Daten, Beschreibungen, Fotos usw. werden erst im letzten Schritt in unserem Google Drive gespeichert. Das Gerät darf sich während der Dokumentation nicht ausschalten oder in den Standby gehen, da sonst alle Eingaben verloren gehen. Stelle bitte sicher, dass die automatische Bildschirmsperre deaktiviert ist.</div>
       <label style="display:flex;align-items:center;gap:12px;cursor:pointer;background:#f0f1ed;border:2px solid #6D745E;border-radius:8px;padding:14px 16px;margin-top:8px">
         <input type="checkbox" id="chk1" onchange="chkWelc()" style="width:26px;height:26px;flex-shrink:0;accent-color:#6D745E;cursor:pointer">
@@ -204,7 +204,7 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 
     <!-- Block 3: Was ist eine gute Prozessbeschreibung -->
     <div style="border-top:1px solid var(--br);padding-top:20px;margin-top:12px;margin-bottom:8px">
-      <div style="font-weight:700;font-size:14px;margin-bottom:8px">Was ist eine gute Prozessbeschreibung?</div>
+      <div style="font-weight:700;font-size:17px;margin-bottom:10px">Was ist eine gute Prozessbeschreibung?</div>
       <div style="font-size:15px;color:var(--g1);line-height:1.7;margin-bottom:12px">Für uns ist vieles selbstverständlich — welcher Bohrer, welche Laser-Einstellungen für Acrylglas, wieviel Leim auf einen Ring. Das sind Dinge über die wir gar nicht mehr nachdenken, weil sie alle selbstverständlich sind. In der Prozessbeschreibung müssen wir es aber klar definieren.<br><br><strong>Nimm dir Zeit. Genauigkeit ist wichtiger als Schnelligkeit.</strong></div>
       <div class="hints" style="margin-bottom:12px">
         <div class="hint"><span>📐</span><div><strong>Alles messbar beschreiben</strong> — nicht "etwas Farbe", sondern "Rolle 2 cm eintauchen". Nicht "Kabel abisolieren", sondern "Kabel 6mm abisolieren".</div></div>
@@ -221,7 +221,7 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 
     <!-- Block 4: Wie detailliert -->
     <div style="border-top:1px solid var(--br);padding-top:20px;margin-top:12px;margin-bottom:8px">
-      <div style="font-weight:700;font-size:14px;margin-bottom:8px">Wie detailliert machen wir das?</div>
+      <div style="font-weight:700;font-size:17px;margin-bottom:10px">Wie detailliert machen wir das?</div>
       <div style="font-size:15px;color:var(--g1);line-height:1.7;margin-bottom:12px">Die Prozesse die wir jetzt definieren, werden die Basis für die neue Fertigungssoftware. Wir werden im ersten Schritt nicht direkt schaffen, alles zu 100% richtig und perfekt zu definieren — das ist OK. Das System wird leben und ständig angepasst werden. Wir müssen jetzt zum Start nicht die 100% erreichen, aber 90%.<br><br>Ihr müsst nicht von jedem Schritt drei Bilder anhängen. Wo es aber Sinn macht — z.B. wieviel Leim auf einem Ring — dann gerne 1x Positivbeispiel, 1x Negativbeispiel.</div>
       <label style="display:flex;align-items:center;gap:12px;cursor:pointer;background:#f0f1ed;border:2px solid #6D745E;border-radius:8px;padding:14px 16px;margin-top:8px">
         <input type="checkbox" id="chk3" onchange="chkWelc()" style="width:26px;height:26px;flex-shrink:0;accent-color:#6D745E;cursor:pointer">
@@ -229,12 +229,44 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
       </label>
     </div>
 
-    <!-- Block 5: Am wichtigsten -->
-    <div style="border-top:1px solid var(--br);padding-top:20px;margin-top:12px;margin-bottom:20px">
-      <div style="font-weight:700;font-size:14px;margin-bottom:8px">Am wichtigsten:</div>
-      <div style="font-size:15px;color:var(--g1);line-height:1.7;margin-bottom:12px">Zeit! Wir müssen uns dafür Zeit nehmen. Wenn ihr euch bei etwas nicht sicher seid: fragt. Wenn ihr euch danach auch noch nicht sicher seid: fragt nochmal. Das schlimmste was uns hier passieren kann, ist wenn wir "schnell, schnell" machen — dann müssen wir es nochmal machen 😊</div>
+
+    <!-- Block 4: Wie machen wir Fotos -->
+    <div style="border-top:1px solid var(--br);padding-top:20px;margin-top:12px;margin-bottom:8px">
+      <div style="font-weight:700;font-size:17px;margin-bottom:10px">Wie machen wir Fotos?</div>
+      <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+        <div style="flex:1;min-width:140px">
+          <div style="font-weight:700;font-size:14px;margin-bottom:8px">✅ Positivbeispiel</div>
+          <img src="https://cdn.shopify.com/s/files/1/0950/8057/9418/files/Positivbeispiel_Bild_800x800.jpg?v=1775742151" style="width:100%;border-radius:8px;margin-bottom:8px">
+          <div style="font-size:14px;color:var(--g1);line-height:1.7">
+            • Motiv in der Bildmitte<br>
+            • Ordentlich ausgerichtet, etwas Weißraum<br>
+            • Alle Teile erkennbar<br>
+            • Keine Teile/Motive im Hintergrund
+          </div>
+        </div>
+        <div style="flex:1;min-width:140px">
+          <div style="font-weight:700;font-size:14px;margin-bottom:8px">❌ Negativbeispiel</div>
+          <img src="https://cdn.shopify.com/s/files/1/0950/8057/9418/files/Negativbeispiel_Bild_800x800.jpg?v=1775742153" style="width:100%;border-radius:8px;margin-bottom:8px">
+          <div style="font-size:14px;color:var(--g1);line-height:1.7">
+            • Motiv zu weit weg<br>
+            • Motiv steht auf dem Kopf<br>
+            • Verschmutzte Oberflächen<br>
+            • Zusätzliche Teile im Bild
+          </div>
+        </div>
+      </div>
       <label style="display:flex;align-items:center;gap:12px;cursor:pointer;background:#f0f1ed;border:2px solid #6D745E;border-radius:8px;padding:14px 16px;margin-top:8px">
         <input type="checkbox" id="chk4" onchange="chkWelc()" style="width:26px;height:26px;flex-shrink:0;accent-color:#6D745E;cursor:pointer">
+        <span style="font-size:15px;font-weight:600;color:#6D745E">Check ✓</span>
+      </label>
+    </div>
+
+    <!-- Block 5: Am wichtigsten -->
+    <div style="border-top:1px solid var(--br);padding-top:20px;margin-top:12px;margin-bottom:20px">
+      <div style="font-weight:700;font-size:17px;margin-bottom:10px">Am wichtigsten:</div>
+      <div style="font-size:15px;color:var(--g1);line-height:1.7;margin-bottom:12px">Zeit! Wir müssen uns dafür Zeit nehmen. Wenn ihr euch bei etwas nicht sicher seid: fragt. Wenn ihr euch danach auch noch nicht sicher seid: fragt nochmal. Das schlimmste was uns hier passieren kann, ist wenn wir "schnell, schnell" machen — dann müssen wir es nochmal machen 😊</div>
+      <label style="display:flex;align-items:center;gap:12px;cursor:pointer;background:#f0f1ed;border:2px solid #6D745E;border-radius:8px;padding:14px 16px;margin-top:8px">
+        <input type="checkbox" id="chk5"" onchange="chkWelc()" style="width:26px;height:26px;flex-shrink:0;accent-color:#6D745E;cursor:pointer">
         <span style="font-size:15px;font-weight:600;color:#6D745E">Check ✓</span>
       </label>
     </div>
@@ -274,7 +306,17 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 var PZ = [];
 var WH = 'https://script.google.com/macros/s/AKfycbxLJuoa8_usU5knsLGq0kBax9Vj46YqEV7G_qjEwceCPR6lYNc8G7ifDUsouX4xiild/exec';
 var PN = '0116';
-var IC = {'1':'🪵','2':'✂️','3':'⚙️','4':'💡','5a':'🔩','5b':'🔌','5c':'⚡','5d':'🪟'};
+var IC = {};
+var IC_NAMES = {
+  '1 / Bearbeitung Oberflächen': '🪵',
+  '2 / Laserbearbeitung': '✂️',
+  '3 / Montage Lampenschirme': '💡',
+  '4 / Verpacken Baugruppen': '📦',
+  '5 - Montage Baugruppen': '🔩',
+  '5 / Elektro Baugruppen': '⚡',
+  '8 / LAZO Baugruppen': '🏮',
+  '9 / ZEUS Baugruppen': '🪟'
+};
 
 var usr='', cStat=null, cProz=null, nav=[];
 var tIv=null, tSt=null, tSec=0;
@@ -368,7 +410,8 @@ function chkWelc() {
   var all = document.getElementById('chk1').checked &&
             document.getElementById('chk2').checked &&
             document.getElementById('chk3').checked &&
-            document.getElementById('chk4').checked;
+            document.getElementById('chk4').checked &&
+            document.getElementById('chk5').checked;
   document.getElementById('welcBtn').disabled = !all;
 }
 
@@ -391,9 +434,8 @@ function showStat() {
   stats.forEach(function(s) {
     var ps = PZ.filter(function(p) { return p.station === s; });
     var d = ps.filter(function(p) { return loc[p.id] && loc[p.id].s === 'done'; }).length;
-    var m = s.match(/Station (\d+[a-z]?)/);
-    var icon = m ? (IC[m[1]] || '🔧') : '🔧';
-    var name = s.replace(/Station \d+[a-z]? — /, '');
+    var icon = IC_NAMES[s] || '🔧';
+    var name = s;
     var c = document.createElement('div');
     c.className = 'sc';
     c.onclick = (function(st) { return function() { showProz(st); }; })(s);
@@ -418,7 +460,7 @@ function showProz(station) {
   
   var ps = PZ.filter(function(p) { return p.station === station; });
   var d = ps.filter(function(p) { return loc[p.id] && loc[p.id].s === 'done'; }).length;
-  document.getElementById('pEy').textContent = station.replace(/Station \d+[a-z]? — /, '');
+  document.getElementById('pEy').textContent = station;
   document.getElementById('pSub').textContent = d + ' von ' + ps.length + ' dokumentiert';
   
   var l = document.getElementById('pList'); l.innerHTML = '';
@@ -470,7 +512,7 @@ function renderDet() {
   var hdr = document.getElementById('dHdr');
   hdr.innerHTML = '';
   var ey = document.createElement('div'); ey.className = 'ph-ey';
-  ey.textContent = cStat.replace(/Station \d+[a-z]? — /, '');
+  ey.textContent = cStat;
   var tt = document.createElement('div'); tt.className = 'ph-t'; tt.textContent = p.name;
   var bd = document.createElement('div'); bd.style.marginTop = '8px';
   var bg = document.createElement('span');
