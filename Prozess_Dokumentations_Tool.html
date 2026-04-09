@@ -1001,38 +1001,7 @@ async function bestaetigen() {
     var full = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + cProz.name + '</title>'
       + '<style>' + pdfCSS + '</style></head><body>'
       + '<div class="a4">' + a4html + '</div>'
-      + '
-<div class="scr" id="sDone">
-  <div class="cw"><div class="card" style="max-width:420px;text-align:center">
-    <div style="font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px" id="doneTitle"></div>
-    <div style="font-size:16px;color:var(--g1);margin-bottom:24px" id="doneLob"></div>
-    <div style="background:var(--bg);border-radius:8px;padding:16px;margin-bottom:24px;text-align:left">
-      <div id="doneF" style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)">
-        <span id="doneFIco" style="font-size:18px"></span>
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:600">Fotos</div>
-          <div id="doneFTxt" style="font-size:12px;color:var(--g2)"></div>
-        </div>
-      </div>
-      <div id="doneP" style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)">
-        <span id="donePIco" style="font-size:18px"></span>
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:600">Prozess dokumentiert</div>
-          <div id="donePTxt" style="font-size:12px;color:var(--g2)"></div>
-        </div>
-      </div>
-      <div id="donePDF" style="display:flex;align-items:center;gap:10px;padding:8px 0">
-        <span id="donePDFIco" style="font-size:18px"></span>
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:600">PDF erstellt</div>
-          <div id="donePDFTxt" style="font-size:12px;color:var(--g2)"></div>
-        </div>
-      </div>
-    </div>
-    <button class="btn btn-k" onclick="doneWeiter()">Weiter &#8594;</button>
-  </div></div>
-</div>
-</body></html>';
+      + '</body></html>';
     var bytes = new TextEncoder().encode(full);
     var binary = '';
     var CHUNK = 8192;
