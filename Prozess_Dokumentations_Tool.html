@@ -117,7 +117,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.11.2</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.11.3</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -170,13 +170,12 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 
 <div class="scr" id="sName">
   <div class="cw"><div class="card">
-    <div class="ey">farbflut Design</div>
-    <div class="ct">Prozessdokumentation</div>
-    <div class="fl" style="margin-top:16px">Wer dokumentiert den Prozess?</div>
-    <input class="inp" id="nIn" type="text" placeholder="Vor- und Nachname" autocomplete="name"
+    <div class="ct">Wer dokumentiert den Prozess?</div>
+    <input class="inp" id="nIn" type="text" placeholder="Vorname" autocomplete="given-name"
       oninput="document.getElementById('nBtn').disabled=this.value.trim().length<2"
-      onkeydown="if(event.key==='Enter'&&this.value.trim().length>=2)goW()">
-    <button class="btn btn-k" id="nBtn" onclick="goW()" disabled>Weiter &#8594;</button>
+      onkeydown="if(event.key==='Enter'&&this.value.trim().length>=2)goW()"
+      style="margin-top:16px">
+    <button class="btn" id="nBtn" onclick="goW()" disabled style="background:#6D745E;color:#fff;margin-top:10px">Weiter &#8594;</button>
   </div></div>
 </div>
 
