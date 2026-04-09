@@ -117,7 +117,7 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.11.10</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.11.11</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -1001,7 +1001,38 @@ async function bestaetigen() {
     var full = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + cProz.name + '</title>'
       + '<style>' + pdfCSS + '</style></head><body>'
       + '<div class="a4">' + a4html + '</div>'
-      + '</body></html>';
+      + '
+<div class="scr" id="sDone">
+  <div class="cw"><div class="card" style="max-width:420px;text-align:center">
+    <div style="font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px" id="doneTitle"></div>
+    <div style="font-size:16px;color:var(--g1);margin-bottom:24px" id="doneLob"></div>
+    <div style="background:var(--bg);border-radius:8px;padding:16px;margin-bottom:24px;text-align:left">
+      <div id="doneF" style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)">
+        <span id="doneFIco" style="font-size:18px"></span>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">Fotos</div>
+          <div id="doneFTxt" style="font-size:12px;color:var(--g2)"></div>
+        </div>
+      </div>
+      <div id="doneP" style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)">
+        <span id="donePIco" style="font-size:18px"></span>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">Prozess dokumentiert</div>
+          <div id="donePTxt" style="font-size:12px;color:var(--g2)"></div>
+        </div>
+      </div>
+      <div id="donePDF" style="display:flex;align-items:center;gap:10px;padding:8px 0">
+        <span id="donePDFIco" style="font-size:18px"></span>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">PDF erstellt</div>
+          <div id="donePDFTxt" style="font-size:12px;color:var(--g2)"></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-k" onclick="doneWeiter()">Weiter &#8594;</button>
+  </div></div>
+</div>
+</body></html>';
     var bytes = new TextEncoder().encode(full);
     var binary = '';
     var CHUNK = 8192;
@@ -1045,8 +1076,7 @@ async function bestaetigen() {
       loc[cProz.id].mitarbeiter = usr;
       loc[cProz.id].datum = new Date().toLocaleDateString('de-DE');
       savL();
-      showT(fotoFehler > 0 ? '✓ Gespeichert (Fotos prüfen)' : pdfFehler ? '✓ Gespeichert (PDF: ' + pdfFehler.slice(0,60) + ')' : '✓ Gespeichert');
-      setTimeout(function() { nav = ['stat', 'proz']; showProz(cStat); }, 1400);
+      showDone(fotoFehler, true, null, pdfFehler);
     } else { showT('Fehler: ' + r.error, true); }
   } catch(err) { hideO(); showT('Verbindungsfehler', true); }
 }
@@ -1075,7 +1105,107 @@ function showT(msg, err) {
   clearTimeout(t._t); t._t = setTimeout(function() { t.classList.remove('on'); }, err ? 4000 : 2500);
 }
 
+
+var LOB = [
+  'das hast du geil gemacht 🙌',
+  'durchgezogen wie eine Maschine',
+  'sauber durchgezogen – genau so!',
+  'läuft bei dir 💪',
+  'abgeliefert wie ein Profi!',
+  'Task erledigt. Stark!',
+  'das Ding hast du dir geschnappt',
+  'das war ja fast schon zu einfach für dich 😉',
+  'ich hab nix anderes erwartet 😎',
+  'kurz gemacht, stark gemacht',
+  'läuft wie geschmiert!',
+  'da klatscht selbst der Kaffee Beifall ☕',
+  'richtig gute Arbeit',
+  'genau so brauchen wir das',
+  'zuverlässig wie immer 👌',
+  'top umgesetzt',
+  'darauf kann man sich verlassen',
+  'geht doch 😉',
+  'war wohl doch nicht so schwer, oder?',
+  'ich wusste, da steckt mehr drin!',
+  'na also – läuft!',
+  'wieder ein Haken dran ✔️',
+  '+10 Punkte für dich!',
+  'nächstes Level erreicht 🚀',
+  'Combo läuft weiter!',
+  'Serie nicht abreißen lassen!',
+  'Highscore incoming!'
+];
+
+function showDone(fotoFehler, sheetOk, sheetErr, pdfFehler) {
+  go('sDone');
+  document.getElementById('doneTitle').textContent = usr;
+  document.getElementById('doneLob').textContent = LOB[Math.floor(Math.random() * LOB.length)];
+
+  // Fotos
+  if (fotoFehler === 0) {
+    document.getElementById('doneFIco').textContent = '✅';
+    document.getElementById('doneFTxt').textContent = 'Alle Fotos gespeichert';
+  } else {
+    document.getElementById('doneFIco').textContent = '⚠️';
+    document.getElementById('doneFTxt').textContent = fotoFehler + ' Foto(s) nicht hochgeladen';
+  }
+
+  // Prozess
+  if (sheetOk) {
+    document.getElementById('donePIco').textContent = '✅';
+    document.getElementById('donePTxt').textContent = 'Erfolgreich gespeichert';
+  } else {
+    document.getElementById('donePIco').textContent = '❌';
+    document.getElementById('donePTxt').textContent = sheetErr ? sheetErr.slice(0, 60) : 'Fehler beim Speichern';
+  }
+
+  // PDF
+  if (!pdfFehler) {
+    document.getElementById('donePDFIco').textContent = '✅';
+    document.getElementById('donePDFTxt').textContent = 'PDF erstellt & gespeichert';
+  } else {
+    document.getElementById('donePDFIco').textContent = '⚠️';
+    document.getElementById('donePDFTxt').textContent = 'PDF nicht erstellt';
+  }
+}
+
+function doneWeiter() {
+  nav = ['stat', 'proz'];
+  showProz(cStat);
+}
+
 window.addEventListener('load', initApp);
 </script>
+
+<div class="scr" id="sDone">
+  <div class="cw"><div class="card" style="max-width:420px;text-align:center">
+    <div style="font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px" id="doneTitle"></div>
+    <div style="font-size:16px;color:var(--g1);margin-bottom:24px" id="doneLob"></div>
+    <div style="background:var(--bg);border-radius:8px;padding:16px;margin-bottom:24px;text-align:left">
+      <div id="doneF" style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)">
+        <span id="doneFIco" style="font-size:18px"></span>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">Fotos</div>
+          <div id="doneFTxt" style="font-size:12px;color:var(--g2)"></div>
+        </div>
+      </div>
+      <div id="doneP" style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)">
+        <span id="donePIco" style="font-size:18px"></span>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">Prozess dokumentiert</div>
+          <div id="donePTxt" style="font-size:12px;color:var(--g2)"></div>
+        </div>
+      </div>
+      <div id="donePDF" style="display:flex;align-items:center;gap:10px;padding:8px 0">
+        <span id="donePDFIco" style="font-size:18px"></span>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">PDF erstellt</div>
+          <div id="donePDFTxt" style="font-size:12px;color:var(--g2)"></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-k" onclick="doneWeiter()">Weiter &#8594;</button>
+  </div></div>
+</div>
 </body>
 </html>
