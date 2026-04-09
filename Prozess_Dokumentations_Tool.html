@@ -8,7 +8,7 @@
 <style>
 :root{--bg:#f5f4f0;--w:#fff;--k:#111;--g1:#444;--g2:#888;--g3:#bbb;--g4:#e0ddd8;--g5:#f0eee9;--gn:#2d6a45;--gnb:#edf5f0;--rd:#b83232;--br:#e0ddd8;--r:6px;--rl:10px;--f:'Inter',system-ui,sans-serif}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:var(--f);background:var(--bg);color:var(--k);min-height:100vh;font-size:14px}
+body{font-family:var(--f);background:var(--bg);color:var(--k);min-height:100vh;font-size:14px;overscroll-behavior-y:contain}
 .hdr{background:var(--w);border-bottom:1px solid var(--br);padding:0 16px;height:50px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
 .logo{font-size:15px;font-weight:700;letter-spacing:-.02em}.logo-dot{color:var(--g3);margin:0 3px;font-weight:400}
 .back{display:none;align-items:center;gap:4px;background:none;border:none;color:var(--g2);font-family:var(--f);font-size:13px;cursor:pointer;padding:4px 0;touch-action:manipulation}
@@ -117,7 +117,7 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.11.15</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.11.16</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -173,10 +173,15 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
     <div class="ct" style="margin-bottom:20px">Lass uns starten</div>
     <div style="background:#6D745E;border-radius:8px;padding:16px 18px;margin-bottom:20px;text-align:left">
       <div style="font-weight:700;font-size:14px;color:#fff;margin-bottom:10px">Wer dokumentiert den Prozess?</div>
-      <input class="inp" id="nIn" type="text" placeholder="Vorname" autocomplete="given-name"
-        oninput="document.getElementById('nBtn').disabled=this.value.trim().length<2"
-        onkeydown="if(event.key==='Enter'&&this.value.trim().length>=2)goW()"
-        style="background:#fff;border-color:#fff">
+      <select class="inp" id="nIn" onchange="document.getElementById('nBtn').disabled=this.value==='';" style="background:#fff;border-color:#fff;color:#111">
+        <option value="">— Bitte auswählen —</option>
+        <option value="Bernhard">Bernhard</option>
+        <option value="Sebastian">Sebastian</option>
+        <option value="Henry">Henry</option>
+        <option value="Kathrin">Kathrin</option>
+        <option value="Ihor">Ihor</option>
+        <option value="Nataliia">Nataliia</option>
+      </select>
     </div>
     <button class="btn btn-k" id="nBtn" onclick="goW()" disabled>Weiter &#8594;</button>
   </div></div>
@@ -271,7 +276,7 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
       </label>
     </div>
 
-    <button class="btn btn-k" id="welcBtn" onclick="showStat()" disabled>Los geht's &#8594;</button>
+    <button class="btn btn-k" id="welcBtn" onclick="markWelcSeen();showStat()" disabled>Los geht's &#8594;</button>
   </div></div>
 </div>
 
@@ -399,12 +404,23 @@ function go(id) {
 
 function goW() {
   usr = document.getElementById('nIn').value.trim();
-  if (usr.length < 2) return;
+  if (!usr) return;
   document.getElementById('hu').textContent = usr;
   document.getElementById('wn').textContent = usr;
-  go('sWelc');
+  // Check if welcome was already confirmed today
+  var today = new Date().toDateString();
+  var lastSeen = localStorage.getItem('ffd_welc_seen');
+  if (lastSeen === today) {
+    showStat();
+  } else {
+    go('sWelc');
+  }
 }
 
+
+function markWelcSeen() {
+  localStorage.setItem('ffd_welc_seen', new Date().toDateString());
+}
 
 function chkWelc() {
   var all = document.getElementById('chk1').checked &&
