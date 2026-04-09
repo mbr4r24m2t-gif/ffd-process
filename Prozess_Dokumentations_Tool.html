@@ -117,7 +117,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.6</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.7</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -965,14 +965,41 @@ async function bestaetigen() {
   }
   if (fotoFehler > 0) showT('⚠️ ' + fotoFehler + ' Foto(s) nicht hochgeladen', true);
 
-  // PDF — chunked btoa für große Dokumente (verhindert Stack Overflow)
+  // PDF — vollständiges HTML mit eingebetteten Styles
+  var pdfFehler = null;
   try {
     showO('Dokument wird gespeichert…');
     var safeName = cProz.name.replace(/[^a-zA-Z0-9äöüÄÖÜß]/g, '_').slice(0, 40);
     var fn = cProz.id + '_' + safeName + '_' + new Date().toLocaleDateString('de-DE').replace(/\./g, '-') + '.html';
-    var full = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + cProz.name + '</title></head><body>' + document.getElementById('a4').innerHTML + '</body></html>';
+    var pdfCSS = [
+      'body{font-family:Helvetica,Arial,sans-serif;background:#fff;color:#111;margin:0;padding:24px;font-size:13px;line-height:1.5}',
+      '.a4{max-width:720px;margin:0 auto;background:#fff}',
+      '.a4h{display:flex;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #111}',
+      '.a4logo{font-size:17px;font-weight:800}.a4logo span{font-weight:300;color:#888}',
+      '.a4mt{font-size:11px;color:#666;text-align:right;line-height:1.6}',
+      '.a4t{font-size:22px;font-weight:700;margin-bottom:3px}',
+      '.a4sub{font-size:12px;color:#888;margin-bottom:18px}',
+      '.a4sl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#999;margin-bottom:10px;padding-bottom:4px;border-bottom:1px solid #eee}',
+      '.a4sc{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start;padding-bottom:14px;border-bottom:1px solid #f5f5f5}',
+      '.a4sn{width:24px;height:24px;border-radius:50%;background:#111;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}',
+      '.a4sb{flex:1}.a4st{font-size:13px;line-height:1.5;color:#111}',
+      '.a4sw{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}',
+      '.a4swi{font-size:11px;background:#f5f5f5;border-radius:10px;padding:2px 8px;color:#555}',
+      '.a4si{width:100px;height:76px;object-fit:cover;border-radius:6px;border:1px solid #eee;flex-shrink:0}',
+      '.a4br{display:flex;font-size:12px;padding:6px 0;border-bottom:1px solid #f5f5f5;gap:8px;align-items:center}',
+      '.a4br:last-child{border:none}.a4bn{flex:1;color:#111;font-weight:500}',
+      '.a4bnr{font-size:10px;color:#bbb;font-weight:400}',
+      '.a4bm{width:55px;text-align:right;font-weight:600;color:#555}',
+      '.a4bst{width:30px;text-align:center;font-weight:700;font-size:14px}',
+      '.a4bst.ok{color:#2d6a45}.a4bst.fl{color:#b83232}',
+      '.a4cf{margin-top:20px;padding:14px;background:#f9f8f5;border-radius:6px}',
+      '.a4cb{display:inline-block;width:16px;height:16px;background:#111;border-radius:3px;color:#fff;font-size:12px;text-align:center;line-height:16px;margin-right:8px;vertical-align:middle}'
+    ].join('\n');
+    var full = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + cProz.name + '</title>'
+      + '<style>' + pdfCSS + '</style></head><body>'
+      + '<div class="a4">' + document.getElementById('a4').innerHTML + '</div>'
+      + '</body></html>';
     var bytes = new TextEncoder().encode(full);
-    // Chunked String.fromCharCode — verhindert "Maximum call stack exceeded" bei großen Dokumenten
     var binary = '';
     var CHUNK = 8192;
     for (var i = 0; i < bytes.length; i += CHUNK) {
@@ -980,8 +1007,14 @@ async function bestaetigen() {
     }
     var b64 = btoa(binary);
     var pdfRes = await postJ({action:'save_pdf',htmlContent:b64,fileName:fn,prozessId:cProz.id,prozessName:cProz.name});
-    if (!pdfRes || !pdfRes.success) console.error('PDF Fehler:', pdfRes && pdfRes.error);
-  } catch(e) { console.error('PDF fehlgeschlagen:', e); }
+    if (!pdfRes || !pdfRes.success) {
+      pdfFehler = pdfRes ? pdfRes.error : 'Keine Antwort';
+      console.error('PDF Fehler:', pdfFehler);
+    }
+  } catch(e) {
+    pdfFehler = e.toString();
+    console.error('PDF fehlgeschlagen:', e);
+  }
 
   // Sheet — aktuellen loc-Stand lesen (mit allen driveUrls)
   showO('Wird in Google Sheet gespeichert…');
@@ -1009,7 +1042,7 @@ async function bestaetigen() {
       loc[cProz.id].mitarbeiter = usr;
       loc[cProz.id].datum = new Date().toLocaleDateString('de-DE');
       savL();
-      showT(fotoFehler > 0 ? '✓ Gespeichert (Fotos prüfen)' : '✓ Gespeichert');
+      showT(fotoFehler > 0 ? '✓ Gespeichert (Fotos prüfen)' : pdfFehler ? '✓ Gespeichert (PDF: ' + pdfFehler.slice(0,60) + ')' : '✓ Gespeichert');
       setTimeout(function() { nav = ['stat', 'proz']; showProz(cStat); }, 1400);
     } else { showT('Fehler: ' + r.error, true); }
   } catch(err) { hideO(); showT('Verbindungsfehler', true); }
