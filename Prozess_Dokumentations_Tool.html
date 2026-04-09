@@ -37,7 +37,7 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 .pk{background:var(--w);border:1.5px solid var(--br);border-radius:var(--r);padding:18px 16px;font-size:22px;font-weight:600;cursor:pointer;font-family:var(--f);min-height:60px;touch-action:manipulation;user-select:none;-webkit-user-select:none;color:#6D745E}
 .pk:active{background:var(--g5)}.pk.del{font-size:15px;color:var(--g2)}.pk.emp{background:transparent;border-color:transparent;cursor:default}
 .hints{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
-.hint{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--g1);line-height:1.5}
+.hint{display:flex;align-items:flex-start;gap:10px;font-size:15px;color:var(--g1);line-height:1.6}
 .ph{background:var(--w);border-bottom:1px solid var(--br);padding:14px 16px 12px}
 .ph-ey{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g2);margin-bottom:2px}
 .ph-t{font-size:18px;font-weight:700;letter-spacing:-.02em;line-height:1.2}.ph-s{font-size:11px;color:var(--g2);margin-top:3px}
@@ -117,7 +117,7 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.11.13</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.11.14</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -189,23 +189,23 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
     <!-- Block 1: Unser Ziel -->
     <div style="background:#6D745E;border-radius:8px;padding:16px 18px;margin-bottom:8px">
       <div style="font-weight:700;font-size:14px;color:#fff;margin-bottom:8px">Unser Ziel:</div>
-      <div style="font-size:13px;color:rgba(255,255,255,.85);line-height:1.7">Mit diesem Tool dokumentieren wir jeden unserer Fertigungsprozesse und beschreiben sie. Verwendete Materialien, Dauer des Prozesses, benutzte Werkzeuge/Maschinen, Fotos der Teile — das können wir hiermit alles erfassen und dokumentieren.</div>
+      <div style="font-size:15px;color:rgba(255,255,255,.85);line-height:1.7">Mit diesem Tool dokumentieren wir jeden unserer Fertigungsprozesse und beschreiben sie. Verwendete Materialien, Dauer des Prozesses, benutzte Werkzeuge/Maschinen, Fotos der Teile — das können wir hiermit alles erfassen und dokumentieren.</div>
     </div>
 
     <!-- Block 2: Hinweis zur Nutzung -->
     <div style="border-top:1px solid var(--br);padding-top:20px;margin-top:12px;margin-bottom:8px">
       <div style="font-weight:700;font-size:14px;margin-bottom:8px">Hinweis zur Nutzung:</div>
-      <div style="font-size:13px;color:var(--g1);line-height:1.7;margin-bottom:12px">Das Tool ist eine Webapp und hat keinen eigenen Speicher. Alle erfassten Daten, Beschreibungen, Fotos usw. werden erst im letzten Schritt in unserem Google Drive gespeichert. Das Gerät darf sich während der Dokumentation nicht ausschalten oder in den Standby gehen, da sonst alle Eingaben verloren gehen. Stelle bitte sicher, dass die automatische Bildschirmsperre deaktiviert ist.</div>
-      <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:var(--g1)">
-        <input type="checkbox" id="chk1" onchange="chkWelc()" style="width:18px;height:18px;margin-top:2px;flex-shrink:0;accent-color:#6D745E">
-        <span>Verstanden — ich stelle sicher dass mein Gerät nicht in den Standby geht.</span>
+      <div style="font-size:15px;color:var(--g1);line-height:1.7;margin-bottom:12px">Das Tool ist eine Webapp und hat keinen eigenen Speicher. Alle erfassten Daten, Beschreibungen, Fotos usw. werden erst im letzten Schritt in unserem Google Drive gespeichert. Das Gerät darf sich während der Dokumentation nicht ausschalten oder in den Standby gehen, da sonst alle Eingaben verloren gehen. Stelle bitte sicher, dass die automatische Bildschirmsperre deaktiviert ist.</div>
+      <label style="display:flex;align-items:center;gap:12px;cursor:pointer;background:#f0f1ed;border:2px solid #6D745E;border-radius:8px;padding:14px 16px;margin-top:8px">
+        <input type="checkbox" id="chk1" onchange="chkWelc()" style="width:26px;height:26px;flex-shrink:0;accent-color:#6D745E;cursor:pointer">
+        <span style="font-size:15px;font-weight:600;color:#6D745E">Check ✓</span>
       </label>
     </div>
 
     <!-- Block 3: Was ist eine gute Prozessbeschreibung -->
     <div style="border-top:1px solid var(--br);padding-top:20px;margin-top:12px;margin-bottom:8px">
       <div style="font-weight:700;font-size:14px;margin-bottom:8px">Was ist eine gute Prozessbeschreibung?</div>
-      <div style="font-size:13px;color:var(--g1);line-height:1.7;margin-bottom:12px">Für uns ist vieles selbstverständlich — welcher Bohrer, welche Laser-Einstellungen für Acrylglas, wieviel Leim auf einen Ring. Ein neuer Mitarbeiter kennt das nicht.<br><br><strong>Nimm dir Zeit. Genauigkeit ist wichtiger als Schnelligkeit.</strong></div>
+      <div style="font-size:15px;color:var(--g1);line-height:1.7;margin-bottom:12px">Für uns ist vieles selbstverständlich — welcher Bohrer, welche Laser-Einstellungen für Acrylglas, wieviel Leim auf einen Ring. Das sind Dinge über die wir gar nicht mehr nachdenken, weil sie alle selbstverständlich sind. In der Prozessbeschreibung müssen wir es aber klar definieren.<br><br><strong>Nimm dir Zeit. Genauigkeit ist wichtiger als Schnelligkeit.</strong></div>
       <div class="hints" style="margin-bottom:12px">
         <div class="hint"><span>📐</span><div><strong>Alles messbar beschreiben</strong> — nicht "etwas Farbe", sondern "Rolle 2 cm eintauchen". Nicht "Kabel abisolieren", sondern "Kabel 6mm abisolieren".</div></div>
         <div class="hint"><span>🎨</span><div><strong>Mengen &amp; Verhältnisse</strong> — wie viel Material, wie oft sprühen, wie lang, wie oft usw.</div></div>
@@ -213,29 +213,29 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
         <div class="hint"><span>👁</span><div><strong>Qualität &amp; Sichtbarkeit</strong> — wo dürfen Klebestellen sichtbar sein, was ist ein Fehler.</div></div>
         <div class="hint"><span>📷</span><div><strong>Fotos</strong> — erklären ist gut, zeigen ist besser. Zustand vor/nach dem Schritt, Details, typische Fehler.</div></div>
       </div>
-      <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:var(--g1)">
-        <input type="checkbox" id="chk2" onchange="chkWelc()" style="width:18px;height:18px;margin-top:2px;flex-shrink:0;accent-color:#6D745E">
-        <span>Verstanden — ich beschreibe so genau und messbar wie möglich.</span>
+      <label style="display:flex;align-items:center;gap:12px;cursor:pointer;background:#f0f1ed;border:2px solid #6D745E;border-radius:8px;padding:14px 16px;margin-top:8px">
+        <input type="checkbox" id="chk2" onchange="chkWelc()" style="width:26px;height:26px;flex-shrink:0;accent-color:#6D745E;cursor:pointer">
+        <span style="font-size:15px;font-weight:600;color:#6D745E">Check ✓</span>
       </label>
     </div>
 
     <!-- Block 4: Wie detailliert -->
     <div style="border-top:1px solid var(--br);padding-top:20px;margin-top:12px;margin-bottom:8px">
       <div style="font-weight:700;font-size:14px;margin-bottom:8px">Wie detailliert machen wir das?</div>
-      <div style="font-size:13px;color:var(--g1);line-height:1.7;margin-bottom:12px">Die Prozesse die wir jetzt definieren, werden die Basis für die neue Fertigungssoftware. Wir werden im ersten Schritt nicht direkt schaffen, alles zu 100% richtig und perfekt zu definieren — das ist OK. Das System wird leben und ständig angepasst werden. Wir müssen jetzt zum Start nicht die 100% erreichen, aber 90%.<br><br>Ihr müsst nicht von jedem Schritt drei Bilder anhängen. Wo es aber Sinn macht — z.B. wieviel Leim auf einem Ring — dann gerne 1x Positivbeispiel, 1x Negativbeispiel.</div>
-      <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:var(--g1)">
-        <input type="checkbox" id="chk3" onchange="chkWelc()" style="width:18px;height:18px;margin-top:2px;flex-shrink:0;accent-color:#6D745E">
-        <span>Verstanden — Qualität vor Perfektion, 90% ist ein guter Start.</span>
+      <div style="font-size:15px;color:var(--g1);line-height:1.7;margin-bottom:12px">Die Prozesse die wir jetzt definieren, werden die Basis für die neue Fertigungssoftware. Wir werden im ersten Schritt nicht direkt schaffen, alles zu 100% richtig und perfekt zu definieren — das ist OK. Das System wird leben und ständig angepasst werden. Wir müssen jetzt zum Start nicht die 100% erreichen, aber 90%.<br><br>Ihr müsst nicht von jedem Schritt drei Bilder anhängen. Wo es aber Sinn macht — z.B. wieviel Leim auf einem Ring — dann gerne 1x Positivbeispiel, 1x Negativbeispiel.</div>
+      <label style="display:flex;align-items:center;gap:12px;cursor:pointer;background:#f0f1ed;border:2px solid #6D745E;border-radius:8px;padding:14px 16px;margin-top:8px">
+        <input type="checkbox" id="chk3" onchange="chkWelc()" style="width:26px;height:26px;flex-shrink:0;accent-color:#6D745E;cursor:pointer">
+        <span style="font-size:15px;font-weight:600;color:#6D745E">Check ✓</span>
       </label>
     </div>
 
     <!-- Block 5: Am wichtigsten -->
     <div style="border-top:1px solid var(--br);padding-top:20px;margin-top:12px;margin-bottom:20px">
       <div style="font-weight:700;font-size:14px;margin-bottom:8px">Am wichtigsten:</div>
-      <div style="font-size:13px;color:var(--g1);line-height:1.7;margin-bottom:12px">Zeit! Wir müssen uns dafür Zeit nehmen. Wenn ihr euch bei etwas nicht sicher seid: fragt. Wenn ihr euch danach auch noch nicht sicher seid: fragt nochmal. Das schlimmste was uns hier passieren kann, ist wenn wir "schnell, schnell" machen — dann müssen wir es nochmal machen 😊</div>
-      <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:var(--g1)">
-        <input type="checkbox" id="chk4" onchange="chkWelc()" style="width:18px;height:18px;margin-top:2px;flex-shrink:0;accent-color:#6D745E">
-        <span>Verstanden — ich nehme mir die Zeit die es braucht.</span>
+      <div style="font-size:15px;color:var(--g1);line-height:1.7;margin-bottom:12px">Zeit! Wir müssen uns dafür Zeit nehmen. Wenn ihr euch bei etwas nicht sicher seid: fragt. Wenn ihr euch danach auch noch nicht sicher seid: fragt nochmal. Das schlimmste was uns hier passieren kann, ist wenn wir "schnell, schnell" machen — dann müssen wir es nochmal machen 😊</div>
+      <label style="display:flex;align-items:center;gap:12px;cursor:pointer;background:#f0f1ed;border:2px solid #6D745E;border-radius:8px;padding:14px 16px;margin-top:8px">
+        <input type="checkbox" id="chk4" onchange="chkWelc()" style="width:26px;height:26px;flex-shrink:0;accent-color:#6D745E;cursor:pointer">
+        <span style="font-size:15px;font-weight:600;color:#6D745E">Check ✓</span>
       </label>
     </div>
 
