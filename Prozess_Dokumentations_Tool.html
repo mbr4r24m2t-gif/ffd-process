@@ -117,7 +117,7 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.11.19</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.11.20</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -1126,6 +1126,10 @@ async function bestaetigen() {
     var a4el = document.getElementById('a4');
     var a4clone = a4el.cloneNode(true);
     a4clone.querySelectorAll('[data-nopdf]').forEach(function(el) { el.parentNode.removeChild(el); });
+    // Remove data: URL images from PDF (keep only Drive URLs)
+    a4clone.querySelectorAll('img').forEach(function(img) {
+      if (img.src && img.src.startsWith('data:')) { img.parentNode.removeChild(img); }
+    });
     var a4html = a4clone.innerHTML;
 
     var full = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + cProz.name + '</title>'
