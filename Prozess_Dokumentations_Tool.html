@@ -117,7 +117,7 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.11.16</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.11.17</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -1289,5 +1289,30 @@ window.addEventListener('load', initApp);
     <button class="btn btn-k" onclick="doneWeiter()">Weiter &#8594;</button>
   </div></div>
 </div>
+<script>
+// Prevent pull-to-refresh on iOS Safari
+var lastY = 0;
+document.addEventListener('touchstart', function(e) {
+  lastY = e.touches[0].clientY;
+}, {passive: false});
+document.addEventListener('touchmove', function(e) {
+  var y = e.touches[0].clientY;
+  var scrollTop = document.scrollingElement ? document.scrollingElement.scrollTop : document.documentElement.scrollTop;
+  if (scrollTop <= 0 && y > lastY) {
+    e.preventDefault();
+  }
+  lastY = y;
+}, {passive: false});
+</script>
+<script>
+var _lastY = 0;
+document.addEventListener('touchstart', function(e) { _lastY = e.touches[0].clientY; }, {passive:false});
+document.addEventListener('touchmove', function(e) {
+  var y = e.touches[0].clientY;
+  var st = document.scrollingElement ? document.scrollingElement.scrollTop : document.documentElement.scrollTop;
+  if (st <= 0 && y > _lastY) { e.preventDefault(); }
+  _lastY = y;
+}, {passive:false});
+</script>
 </body>
 </html>
