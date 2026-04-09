@@ -117,7 +117,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.11.1</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.11.2</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -158,17 +158,11 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 </div>
 
 <div class="scr" id="sStby">
-  <div class="cw"><div class="card" style="text-align:center">
-    <div style="font-size:36px;margin-bottom:16px">📱</div>
-    <div class="ct" style="margin-bottom:8px">Standby deaktivieren</div>
-    <div style="background:#fffbe6;border:1px solid #f0e08a;border-radius:8px;padding:14px 16px;margin-bottom:20px;text-align:left">
-      <div style="font-weight:700;font-size:13px;margin-bottom:6px;color:#7a6000">⚠️ Wichtiger Hinweis</div>
-      <div style="font-size:13px;color:#555;line-height:1.6">Damit das Handy beim Dokumentieren <strong>nicht in Standby geht</strong>, bitte vor dem Starten:</div>
-      <div style="margin-top:10px;font-size:13px;color:#333;display:flex;flex-direction:column;gap:6px">
-        <div>1. <strong>Einstellungen</strong> öffnen</div>
-        <div>2. <strong>Bildschirm &amp; Helligkeit</strong> → <strong>Automatische Sperre</strong></div>
-        <div>3. Auf <strong>„Nie"</strong> oder maximal <strong>5 Minuten</strong> stellen</div>
-      </div>
+  <div class="cw"><div class="card" style="max-width:420px">
+    <div class="ct" style="margin-bottom:16px">Hinweis zur Nutzung</div>
+    <div style="background:#f0f1ed;border-left:3px solid #6D745E;border-radius:6px;padding:16px;margin-bottom:20px">
+      <div style="font-weight:700;font-size:14px;margin-bottom:8px;color:#6D745E">⚠️ Kein automatisches Zwischenspeichern</div>
+      <div style="font-size:13px;color:#444;line-height:1.7">Alle erfassten Daten — Beschreibungen, Fotos und Stückliste — werden erst im <strong>letzten Schritt</strong> in der Cloud gespeichert.<br><br><strong>Das Gerät darf sich während der Arbeit nicht selbst ausschalten oder in den Standby gehen</strong>, sonst gehen alle Eingaben verloren.<br><br>Bitte stelle die automatische Bildschirmsperre vor dem Start auf <strong>„Nie"</strong> oder mindestens <strong>10 Minuten</strong>.</div>
     </div>
     <button class="btn btn-k" onclick="go('sName')">Verstanden, weiter &#8594;</button>
   </div></div>
