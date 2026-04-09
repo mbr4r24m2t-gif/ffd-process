@@ -42,9 +42,9 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 .ph-ey{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g2);margin-bottom:2px}
 .ph-t{font-size:18px;font-weight:700;letter-spacing:-.02em;line-height:1.2}.ph-s{font-size:11px;color:var(--g2);margin-top:3px}
 .lw{padding:12px 14px}
-.sc{background:var(--w);border:1px solid var(--br);border-radius:var(--rl);padding:14px 15px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);touch-action:manipulation}
-.sc:active{border-color:var(--k)}.sc-ic{width:36px;height:36px;border-radius:var(--r);background:var(--g5);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.sc-n{font-size:14px;font-weight:700}.sc-m{font-size:11px;color:var(--g2);margin-top:2px}
+.sc{background:var(--w);border:1px solid var(--br);border-radius:var(--rl);padding:18px 16px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:14px;box-shadow:0 1px 4px rgba(0,0,0,.07);touch-action:manipulation}
+.sc:active{border-color:var(--k)}.sc-ic{width:44px;height:44px;border-radius:var(--r);background:var(--g5);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.sc-n{font-size:16px;font-weight:700}.sc-m{font-size:13px;color:var(--g2);margin-top:3px}
 .pill{margin-left:auto;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--g5);color:var(--g2);white-space:nowrap;flex-shrink:0}
 .pill.ok{background:var(--gnb);color:var(--gn)}
 .pi{background:var(--w);border:1px solid var(--br);border-radius:var(--r);padding:12px 14px;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;gap:10px;touch-action:manipulation}
@@ -117,7 +117,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.11.4</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.11.5</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -193,12 +193,12 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
       <div class="hint"><span>👁</span><div><strong>Qualität &amp; Sichtbarkeit</strong> — wo dürfen Klebestellen sichtbar sein, was ist ein Fehler.</div></div>
       <div class="hint"><span>📷</span><div><strong>Fotos</strong> — Zustand vor/nach dem Schritt, Details, typische Fehler.</div></div>
     </div>
-    <button class="btn btn-k" onclick="showStat()">Los geht's &#8594;</button>
+    <button class="btn" onclick="showStat()" style="background:#6D745E;color:#fff;margin-top:10px">Los geht's &#8594;</button>
   </div></div>
 </div>
 
 <div class="scr" id="sStat">
-  <div class="ph"><div class="ph-ey">Übersicht</div><div class="ph-t">Produktionsstationen</div><div class="ph-s" id="statS"></div></div>
+  <div class="ph"><div class="ph-ey">Übersicht</div><div class="ph-t">Fertigungsbereiche</div><div class="ph-s" id="statS"></div></div>
   <div class="lw" id="statG"></div>
 </div>
 
