@@ -117,7 +117,7 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.11.17</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.11.18</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -1037,6 +1037,20 @@ async function uploadDirekt(b64, fn) {
   }
 }
 
+
+function logFehler(typ, msg) {
+  try {
+    postJ({
+      action: 'log_fehler',
+      prozessId: cProz ? cProz.id : '',
+      prozessName: cProz ? cProz.name : '',
+      mitarbeiter: usr || '',
+      fehlerTyp: typ,
+      fehlerMsg: String(msg).slice(0, 500)
+    });
+  } catch(e) { /* silent — logging darf nicht den Flow blockieren */ }
+}
+
 async function bestaetigen() {
   showO('Bilder werden hochgeladen…');
   ens();
@@ -1066,10 +1080,12 @@ async function bestaetigen() {
         } else {
           fotoFehler++;
           console.error('Upload fehlgeschlagen S' + (si+1) + ' F' + (fi+1) + ':', res);
+          logFehler('Foto-Upload', 'Schritt ' + (si+1) + ' Bild ' + (fi+1) + ': ' + (res ? res.error : 'Keine Antwort'));
         }
       } catch(err) {
         fotoFehler++;
         console.error('Bild ' + (si+1) + '.' + (fi+1) + ' fehlgeschlagen:', err);
+        logFehler('Foto-Upload', 'Schritt ' + (si+1) + ' Bild ' + (fi+1) + ': ' + err.toString());
       }
     }
   }
@@ -1126,6 +1142,7 @@ async function bestaetigen() {
     if (!pdfRes || !pdfRes.success) {
       pdfFehler = pdfRes ? pdfRes.error : 'Keine Antwort';
       console.error('PDF Fehler:', pdfFehler);
+      logFehler('PDF', pdfFehler);
     }
   } catch(e) {
     pdfFehler = e.toString();
@@ -1159,8 +1176,8 @@ async function bestaetigen() {
       loc[cProz.id].datum = new Date().toLocaleDateString('de-DE');
       savL();
       showDone(fotoFehler, true, null, pdfFehler);
-    } else { showT('Fehler: ' + r.error, true); }
-  } catch(err) { hideO(); showT('Verbindungsfehler', true); }
+    } else { logFehler('Sheet-Speichern', r.error); showT('Fehler: ' + r.error, true); }
+  } catch(err) { hideO(); logFehler('Sheet-Speichern', err.toString()); showT('Verbindungsfehler', true); }
 }
 
 function updProg() {
