@@ -117,7 +117,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.8</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.10</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -762,8 +762,12 @@ function renderVor() {
   var hdr = document.createElement('div'); hdr.className = 'a4h';
   var left = document.createElement('div');
   var lg = document.createElement('div'); lg.className = 'a4logo';
-  lg.innerHTML = 'farbflut <span>Design</span>';
-  var sub = document.createElement('div'); sub.style.cssText = 'font-size:11px;color:#888;margin-top:2px';
+  var logoImg = document.createElement('img');
+  logoImg.src = 'https://farbflut-design.de/cdn/shop/files/logo-farfblut_320x.jpg?v=1747915268';
+  logoImg.style.cssText = 'height:32px;width:auto;display:block';
+  logoImg.alt = 'farbflut Design';
+  lg.appendChild(logoImg);
+  var sub = document.createElement('div'); sub.style.cssText = 'font-size:11px;color:#888;margin-top:4px';
   sub.textContent = 'Prozessdokumentation';
   left.appendChild(lg); left.appendChild(sub);
   var right = document.createElement('div'); right.className = 'a4mt';
@@ -975,7 +979,7 @@ async function bestaetigen() {
       'body{font-family:Helvetica,Arial,sans-serif;background:#fff;color:#111;margin:0;padding:24px;font-size:13px;line-height:1.5}',
       '.a4{max-width:720px;margin:0 auto;background:#fff}',
       '.a4h{display:flex;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #111}',
-      '.a4logo{font-size:17px;font-weight:800}.a4logo span{font-weight:300;color:#888}',
+      '.a4logo{font-size:17px;font-weight:800}.a4logo img{height:32px;width:auto;display:block}',
       '.a4mt{font-size:11px;color:#666;text-align:right;line-height:1.6}',
       '.a4t{font-size:22px;font-weight:700;margin-bottom:3px}',
       '.a4sub{font-size:12px;color:#888;margin-bottom:18px}',
@@ -995,12 +999,11 @@ async function bestaetigen() {
       '.a4cf{margin-top:20px;padding:14px;background:#f9f8f5;border-radius:6px}',
       '.a4cb{display:inline-block;width:16px;height:16px;background:#111;border-radius:3px;color:#fff;font-size:12px;text-align:center;line-height:16px;margin-right:8px;vertical-align:middle}'
     ].join('\n');
-    // Bestätigungsblock vor PDF-Export ausblenden
+    // Bestätigungsblock komplett aus dem PDF-HTML entfernen (via Clone)
     var a4el = document.getElementById('a4');
-    var nopdfEls = a4el.querySelectorAll('[data-nopdf]');
-    nopdfEls.forEach(function(el) { el.style.display = 'none'; });
-    var a4html = a4el.innerHTML;
-    nopdfEls.forEach(function(el) { el.style.display = ''; });
+    var a4clone = a4el.cloneNode(true);
+    a4clone.querySelectorAll('[data-nopdf]').forEach(function(el) { el.parentNode.removeChild(el); });
+    var a4html = a4clone.innerHTML;
 
     var full = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + cProz.name + '</title>'
       + '<style>' + pdfCSS + '</style></head><body>'
