@@ -117,7 +117,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.7</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.8</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -844,8 +844,8 @@ function renderVor() {
     a4.appendChild(hw);
   }
 
-  // Bestätigung
-  var cf = document.createElement('div'); cf.className = 'a4cf';
+  // Bestätigung — nur in Vorschau, nicht im PDF
+  var cf = document.createElement('div'); cf.className = 'a4cf'; cf.setAttribute('data-nopdf', '1');
   cf.onclick = togCf;
   var cb = document.createElement('div'); cb.className = 'a4cb'; cb.id = 'a4cb';
   var ctxt = document.createElement('div'); ctxt.style.cssText = 'font-size:13px;color:#333;line-height:1.6';
@@ -995,9 +995,16 @@ async function bestaetigen() {
       '.a4cf{margin-top:20px;padding:14px;background:#f9f8f5;border-radius:6px}',
       '.a4cb{display:inline-block;width:16px;height:16px;background:#111;border-radius:3px;color:#fff;font-size:12px;text-align:center;line-height:16px;margin-right:8px;vertical-align:middle}'
     ].join('\n');
+    // Bestätigungsblock vor PDF-Export ausblenden
+    var a4el = document.getElementById('a4');
+    var nopdfEls = a4el.querySelectorAll('[data-nopdf]');
+    nopdfEls.forEach(function(el) { el.style.display = 'none'; });
+    var a4html = a4el.innerHTML;
+    nopdfEls.forEach(function(el) { el.style.display = ''; });
+
     var full = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + cProz.name + '</title>'
       + '<style>' + pdfCSS + '</style></head><body>'
-      + '<div class="a4">' + document.getElementById('a4').innerHTML + '</div>'
+      + '<div class="a4">' + a4html + '</div>'
       + '</body></html>';
     var bytes = new TextEncoder().encode(full);
     var binary = '';
