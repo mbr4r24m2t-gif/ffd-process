@@ -117,7 +117,7 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.11.11</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.11.12</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -170,12 +170,15 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 
 <div class="scr" id="sName">
   <div class="cw"><div class="card" style="text-align:center">
-    <div class="ct">Wer dokumentiert den Prozess?</div>
-    <input class="inp" id="nIn" type="text" placeholder="Vorname" autocomplete="given-name"
-      oninput="document.getElementById('nBtn').disabled=this.value.trim().length<2"
-      onkeydown="if(event.key==='Enter'&&this.value.trim().length>=2)goW()"
-      style="margin-top:16px;text-align:left">
-    <button class="btn btn-k" id="nBtn" onclick="goW()" disabled style="margin-top:10px">Weiter &#8594;</button>
+    <div class="ct" style="margin-bottom:20px">Lass uns starten</div>
+    <div style="background:#6D745E;border-radius:8px;padding:16px 18px;margin-bottom:20px;text-align:left">
+      <div style="font-weight:700;font-size:14px;color:#fff;margin-bottom:10px">Wer dokumentiert den Prozess?</div>
+      <input class="inp" id="nIn" type="text" placeholder="Vorname" autocomplete="given-name"
+        oninput="document.getElementById('nBtn').disabled=this.value.trim().length<2"
+        onkeydown="if(event.key==='Enter'&&this.value.trim().length>=2)goW()"
+        style="background:#fff;border-color:#fff">
+    </div>
+    <button class="btn btn-k" id="nBtn" onclick="goW()" disabled>Weiter &#8594;</button>
   </div></div>
 </div>
 
@@ -284,7 +287,7 @@ function pk(k) {
   if (pin.length === 4) {
     setTimeout(function() {
       if (pin === String(PN)) {
-        go('sStby');
+        go('sName');
       } else {
         for (var i = 0; i < 4; i++) document.getElementById('p' + i).className = 'pd e';
         setTimeout(function() { pin = ''; updP(); }, 700);
