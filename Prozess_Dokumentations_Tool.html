@@ -6,7 +6,7 @@
 <title>farbflut Prozessdok</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f5f4f0;--w:#fff;--k:#111;--g1:#444;--g2:#888;--g3:#bbb;--g4:#e0ddd8;--g5:#f0eee9;--gn:#2d6a45;--gnb:#edf5f0;--rd:#b83232;--br:#e0ddd8;--r:6px;--rl:10px;--f:'Inter',system-ui,sans-serif}
+:root{--bg:#f5f4f0;--w:#fff;--k:#111;--g1:#444;--g2:#888;--g3:#bbb;--g4:#e0ddd8;--g5:#f0eee9;--gn:#2d6a45;--gnb:#edf5f0;--rd:#b83232;--br:#e0ddd8;--r:6px;--rl:10px;--f:'Inter',system-ui,sans-serif;--ac:#6D745E;--acl:#f0f1ed}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:var(--f);background:var(--bg);color:var(--k);min-height:100vh;font-size:14px}
 .hdr{background:var(--w);border-bottom:1px solid var(--br);padding:0 16px;height:50px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
@@ -24,17 +24,17 @@ body{font-family:var(--f);background:var(--bg);color:var(--k);min-height:100vh;f
 .fl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g2);margin-bottom:5px}
 .inp{width:100%;padding:10px 12px;background:var(--w);border:1px solid var(--br);border-radius:var(--r);color:var(--k);font-size:15px;font-family:var(--f);outline:none;transition:border-color .15s}
 .inp:focus{border-color:var(--k)}
-textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
+textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 .btn{width:100%;padding:13px;border:none;border-radius:var(--r);font-size:13px;font-weight:600;font-family:var(--f);cursor:pointer;letter-spacing:.02em;margin-top:10px;touch-action:manipulation}
-.btn-k{background:var(--k);color:var(--w)}.btn-k:disabled{opacity:.3;cursor:not-allowed}
+.btn-k{background:var(--ac);color:var(--w)}.btn-k:disabled{opacity:.3;cursor:not-allowed}
 .btn-d{background:var(--w);border:1.5px dashed var(--g2);color:var(--g1)}
 .pin-logo{font-size:20px;font-weight:700;margin-bottom:24px;text-align:center}
 .pin-hint{font-size:12px;color:var(--g2);margin-bottom:16px;text-align:center}
 .pin-dots{display:flex;justify-content:center;gap:14px;margin-bottom:24px}
 .pd{width:13px;height:13px;border-radius:50%;border:2px solid var(--g4);transition:all .15s}
-.pd.f{background:var(--k);border-color:var(--k)}.pd.e{background:var(--rd);border-color:var(--rd)}
+.pd.f{background:var(--ac);border-color:var(--ac)}.pd.e{background:var(--rd);border-color:var(--rd)}
 .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.pk{background:var(--w);border:1.5px solid var(--br);border-radius:var(--r);padding:18px 16px;font-size:22px;font-weight:600;cursor:pointer;font-family:var(--f);min-height:60px;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.pk{background:var(--w);border:1.5px solid var(--br);border-radius:var(--r);padding:18px 16px;font-size:22px;font-weight:600;cursor:pointer;font-family:var(--f);min-height:60px;touch-action:manipulation;user-select:none;-webkit-user-select:none;color:var(--ac)}
 .pk:active{background:var(--g5)}.pk.del{font-size:15px;color:var(--g2)}.pk.emp{background:transparent;border-color:transparent;cursor:default}
 .hints{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
 .hint{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--g1);line-height:1.5}
@@ -42,18 +42,18 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 .ph-ey{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g2);margin-bottom:2px}
 .ph-t{font-size:18px;font-weight:700;letter-spacing:-.02em;line-height:1.2}.ph-s{font-size:11px;color:var(--g2);margin-top:3px}
 .lw{padding:12px 14px}
-.sc{background:var(--w);border:1px solid var(--br);border-radius:var(--rl);padding:14px 15px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);touch-action:manipulation}
-.sc:active{border-color:var(--k)}.sc-ic{width:36px;height:36px;border-radius:var(--r);background:var(--g5);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.sc-n{font-size:14px;font-weight:700}.sc-m{font-size:11px;color:var(--g2);margin-top:2px}
+.sc{background:var(--w);border:1px solid var(--br);border-radius:var(--rl);padding:18px 16px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:14px;box-shadow:0 1px 4px rgba(0,0,0,.07);touch-action:manipulation}
+.sc:active{border-color:var(--k)}.sc-ic{width:44px;height:44px;border-radius:var(--r);background:var(--g5);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.sc-n{font-size:16px;font-weight:700}.sc-m{font-size:13px;color:var(--g2);margin-top:3px}
 .pill{margin-left:auto;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--g5);color:var(--g2);white-space:nowrap;flex-shrink:0}
 .pill.ok{background:var(--gnb);color:var(--gn)}
-.pi{background:var(--w);border:1px solid var(--br);border-radius:var(--r);padding:12px 14px;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;gap:10px;touch-action:manipulation}
-.pi:active{border-color:var(--k)}.dot{width:7px;height:7px;border-radius:50%;background:var(--g3);flex-shrink:0}
+.pi{background:var(--w);border:1px solid var(--br);border-radius:var(--r);padding:16px 14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:12px;touch-action:manipulation}
+.pi:active{border-color:var(--k)}.dot{width:9px;height:9px;border-radius:50%;background:var(--g3);flex-shrink:0}
 .dot.done{background:var(--gn)}.dot.ip{background:var(--k)}
-.pi-n{font-size:13px;font-weight:600;flex:1;line-height:1.3}.pi-m{font-size:11px;color:var(--g2);margin-top:1px}
+.pi-n{font-size:15px;font-weight:600;flex:1;line-height:1.3}.pi-m{font-size:12px;color:var(--g2);margin-top:3px}
 .dw{padding:0 0 90px}
 .sec{background:var(--w);border-bottom:1px solid var(--br);padding:20px 16px;margin-bottom:0}
-.sec-l{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g2);margin-bottom:16px}
+.sec-l{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--k);margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--k)}
 .badge{display:inline-flex;align-items:center;gap:5px;border-radius:4px;padding:2px 8px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-top:8px}
 .badge.open{background:var(--g5);color:var(--g2)}.badge.done{background:var(--gnb);color:var(--gn)}.badge.ip{background:#f5f0e0;color:#7a6000}
 .trow{display:flex;gap:8px;align-items:center;margin-bottom:12px}
@@ -71,7 +71,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 .fimg{width:72px;height:72px;object-fit:cover;border-radius:var(--r);border:1px solid var(--br);display:block}
 .fdel{position:absolute;top:-5px;right:-5px;width:18px;height:18px;background:var(--k);color:#fff;border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;line-height:1;touch-action:manipulation}
 .fbtns{display:flex;gap:7px;margin-top:8px}
-.fbtn{flex:1;padding:10px 6px;border:1px solid var(--br);border-radius:var(--r);background:var(--w);color:var(--g1);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--f);display:flex;align-items:center;justify-content:center;gap:4px;touch-action:manipulation}
+.fbtn{flex:1;padding:16px 6px;border:1px solid var(--br);border-radius:var(--r);background:var(--w);color:var(--g1);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--f);display:flex;align-items:center;justify-content:center;gap:6px;touch-action:manipulation}
 .fbtn:active{background:var(--g5);border-color:var(--k)}.fin{display:none}
 .bh{display:flex;align-items:center;gap:6px;padding-bottom:7px;border-bottom:1.5px solid var(--br);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g2)}
 .br{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid var(--g5);transition:background .2s;border-radius:4px}
@@ -85,12 +85,12 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 .bb{width:34px;height:34px;border:1.5px solid var(--g2);border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;background:var(--w);color:var(--g1);font-family:var(--f);touch-action:manipulation}
 .bb.ok.on{background:var(--gn);border-color:var(--gn);color:#fff}.bb.fl.on{background:var(--rd);border-color:var(--rd);color:#fff}
 .btn-d{background:var(--w);border:1px dashed var(--g3);color:var(--g2);font-size:12px}
-.sbtn{width:100%;padding:15px;background:var(--k);border:none;border-radius:var(--r);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--f);letter-spacing:.03em;position:sticky;bottom:14px;box-shadow:0 4px 20px rgba(0,0,0,.18);touch-action:manipulation}
+.sbtn{width:100%;padding:15px;background:var(--ac);border:none;border-radius:var(--r);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--f);letter-spacing:.03em;position:sticky;bottom:14px;box-shadow:0 4px 20px rgba(0,0,0,.18);touch-action:manipulation}
 .a4{background:var(--w);border:1px solid var(--br);border-radius:var(--rl);padding:24px 20px;box-shadow:0 3px 12px rgba(0,0,0,.09);max-width:600px;margin:0 auto}
 .a4h{display:flex;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #111}
 .a4logo{font-size:17px;font-weight:800}.a4logo span{font-weight:300;color:#888}
 .a4mt{font-size:11px;color:#666;text-align:right;line-height:1.6}
-.a4t{font-size:19px;font-weight:700;margin-bottom:3px}.a4sub{font-size:12px;color:#888;margin-bottom:14px}
+.a4t{font-size:22px;font-weight:700;margin-bottom:4px}.a4sub{font-size:13px;color:#888;margin-bottom:14px}
 .a4sl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#999;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #eee}
 .a4sc{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
 .a4sn{width:22px;height:22px;border-radius:50%;background:#111;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
@@ -114,10 +114,10 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 </head>
 <body>
 
-<div class="hdr">
-  <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
-  <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.11</span><span class="hdr-u" id="hu"></span></div>
+<div class="hdr" style="justify-content:center;position:relative">
+  <button class="back" id="bk" onclick="goBack()" style="position:absolute;left:16px">&#8592; Zurück</button>
+  <img src="data:image/avif;base64,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" style="height:24px;width:auto" alt="farbflut">
+  <span class="ver" style="position:absolute;right:16px;top:50%;transform:translateY(-50%)">V3.12</span>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -125,7 +125,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 
 <div class="scr on" id="sLoad">
   <div class="cw"><div style="text-align:center">
-    <div style="font-size:17px;font-weight:700;margin-bottom:8px">farbflut Design</div>
+    <div style="font-size:17px;font-weight:700;margin-bottom:8px">Dokumentation Fertigungsprozesse</div>
     <div style="font-size:13px;color:var(--g2);margin-bottom:24px">Prozessdaten werden geladen…</div>
     <div class="spin" style="margin:0 auto"></div>
     <div style="font-size:11px;color:var(--g3);margin-top:20px" id="loadErr"></div>
@@ -134,7 +134,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 
 <div class="scr" id="sPin">
   <div class="cw"><div class="card" style="text-align:center">
-    <div class="pin-logo">farbflut Design</div>
+    <div class="pin-logo" style="font-size:16px;font-weight:600;color:var(--g1)">Dokumentation Fertigungsprozesse</div>
     <div class="pin-hint">PIN eingeben</div>
     <div class="pin-dots">
       <div class="pd" id="p0"></div><div class="pd" id="p1"></div>
@@ -158,17 +158,11 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 </div>
 
 <div class="scr" id="sStby">
-  <div class="cw"><div class="card" style="text-align:center">
-    <div style="font-size:36px;margin-bottom:16px">📱</div>
-    <div class="ct" style="margin-bottom:8px">Standby deaktivieren</div>
-    <div style="background:#fffbe6;border:1px solid #f0e08a;border-radius:8px;padding:14px 16px;margin-bottom:20px;text-align:left">
-      <div style="font-weight:700;font-size:13px;margin-bottom:6px;color:#7a6000">⚠️ Wichtiger Hinweis</div>
-      <div style="font-size:13px;color:#555;line-height:1.6">Damit das Handy beim Dokumentieren <strong>nicht in Standby geht</strong>, bitte vor dem Starten:</div>
-      <div style="margin-top:10px;font-size:13px;color:#333;display:flex;flex-direction:column;gap:6px">
-        <div>1. <strong>Einstellungen</strong> öffnen</div>
-        <div>2. <strong>Bildschirm &amp; Helligkeit</strong> → <strong>Automatische Sperre</strong></div>
-        <div>3. Auf <strong>„Nie"</strong> oder maximal <strong>5 Minuten</strong> stellen</div>
-      </div>
+  <div class="cw"><div class="card" style="max-width:420px">
+    <div style="font-size:22px;font-weight:700;margin-bottom:16px">Hinweis zur Nutzung</div>
+    <div style="background:var(--acl);border-left:3px solid var(--ac);border-radius:6px;padding:16px;margin-bottom:20px;text-align:left">
+      <div style="font-weight:700;font-size:14px;margin-bottom:8px;color:var(--ac)">⚠️ Kein automatisches Zwischenspeichern</div>
+      <div style="font-size:13px;color:var(--g1);line-height:1.7">Alle erfassten Daten — Beschreibungen, Fotos und Stückliste — werden erst im letzten Schritt in der Cloud gespeichert.<br><br><strong>Das Gerät darf sich während der Arbeit nicht selbst ausschalten oder in den Standby gehen</strong>, sonst gehen alle Eingaben verloren.<br><br>Bitte stelle vor dem Start die automatische Bildschirmsperre auf deinem Gerät auf <strong>„Nie"</strong> oder mindestens <strong>10 Minuten</strong>.</div>
     </div>
     <button class="btn btn-k" onclick="go('sName')">Verstanden, weiter &#8594;</button>
   </div></div>
@@ -176,10 +170,8 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 
 <div class="scr" id="sName">
   <div class="cw"><div class="card">
-    <div class="ey">farbflut Design</div>
-    <div class="ct">Prozessdokumentation</div>
-    <div class="fl" style="margin-top:16px">Wer dokumentiert den Prozess?</div>
-    <input class="inp" id="nIn" type="text" placeholder="Vor- und Nachname" autocomplete="name"
+    <div style="font-size:20px;font-weight:700;margin-bottom:20px">Wer dokumentiert den Prozess?</div>
+    <input class="inp" id="nIn" type="text" placeholder="Vorname" autocomplete="given-name"
       oninput="document.getElementById('nBtn').disabled=this.value.trim().length<2"
       onkeydown="if(event.key==='Enter'&&this.value.trim().length>=2)goW()">
     <button class="btn btn-k" id="nBtn" onclick="goW()" disabled>Weiter &#8594;</button>
@@ -188,10 +180,10 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 
 <div class="scr" id="sWelc">
   <div class="cw"><div class="card" style="max-width:420px">
-    <div style="font-size:24px;font-weight:700;letter-spacing:-.03em;margin-bottom:20px">Hallo, <span id="wn" style="color:var(--k)"></span> 👋</div>
-    <div style="background:var(--k);border-radius:8px;padding:16px 18px;margin-bottom:18px">
-      <div style="font-weight:700;font-size:14px;color:#fff;margin-bottom:4px">Ziel: Neue Mitarbeiter müssen anhand deiner Beschreibung alles alleine verstehen.</div>
-      <div style="font-size:12px;color:rgba(255,255,255,.65)">Nimm dir die Zeit. Genauigkeit ist wichtiger als Schnelligkeit.</div>
+    <div style="font-size:24px;font-weight:700;letter-spacing:-.03em;margin-bottom:20px">Hallo, <span id="wn"></span> 👋</div>
+    <div style="background:var(--ac);border-radius:8px;padding:16px 18px;margin-bottom:18px">
+      <div style="font-weight:700;font-size:14px;color:#fff;margin-bottom:6px">Dein Ziel: Jeden Fertigungsprozess so beschreiben, dass ein neuer Mitarbeiter ihn versteht und weiß was zu tun ist.</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.75);line-height:1.6">Vieles ist für uns selbstverständlich — welcher Bohrer, mit welchen Einstellungen wir Plexiglas schneiden, wieviel Leim auf einen Ring. Ein neuer Mitarbeiter kennt das nicht. Nimm dir Zeit. Genauigkeit ist wichtiger als Schnelligkeit.</div>
     </div>
     <div class="hints">
       <div class="hint"><span>📐</span><div><strong>Alles messbar beschreiben</strong> — nicht "etwas Farbe", sondern "ca. 2cm auf die Rolle, einmal abtupfen". Nicht "fest anziehen", sondern "bis es nicht mehr dreht".</div></div>
@@ -205,7 +197,7 @@ textarea.inp{min-height:64px;resize:vertical;line-height:1.5;font-size:14px}
 </div>
 
 <div class="scr" id="sStat">
-  <div class="ph"><div class="ph-ey">Übersicht</div><div class="ph-t">Produktionsstationen</div><div class="ph-s" id="statS"></div></div>
+  <div class="ph"><div class="ph-ey">Übersicht</div><div class="ph-t">Fertigungsbereiche</div><div class="ph-s" id="statS"></div></div>
   <div class="lw" id="statG"></div>
 </div>
 
@@ -764,11 +756,11 @@ function renderVor() {
   var lg = document.createElement('div'); lg.className = 'a4logo';
   var logoImg = document.createElement('img');
   logoImg.src = 'data:image/avif;base64,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';
-  logoImg.style.cssText = 'height:32px;width:auto;display:block';
+  logoImg.style.cssText = 'height:22px;width:auto;display:block';
   logoImg.alt = 'farbflut Design';
   lg.appendChild(logoImg);
-  var sub = document.createElement('div'); sub.style.cssText = 'font-size:11px;color:#888;margin-top:4px';
-  sub.textContent = 'Prozessdokumentation';
+  var sub = document.createElement('div'); sub.style.cssText = 'font-size:13px;font-weight:600;color:#555;margin-top:5px;letter-spacing:.01em';
+  sub.textContent = 'Prozessdokumentation · ' + p.id;
   left.appendChild(lg); left.appendChild(sub);
   var right = document.createElement('div'); right.className = 'a4mt';
   right.innerHTML = usr + '<br>' + heute + (d.zeit ? '<br>' + d.zeit + ' Min' : '');
@@ -777,7 +769,7 @@ function renderVor() {
 
   var tt = document.createElement('div'); tt.className = 'a4t'; tt.textContent = p.name;
   var sb = document.createElement('div'); sb.className = 'a4sub';
-  sb.textContent = p.id + ' · ' + cStat.replace(/Station \d+[a-z]? — /, '');
+  sb.textContent = cStat.replace(/Station \d+[a-z]? — /, '');
   a4.appendChild(tt); a4.appendChild(sb);
 
   // Schritte
