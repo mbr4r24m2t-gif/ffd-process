@@ -117,7 +117,7 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.11.24</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.11.25</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -1071,6 +1071,7 @@ async function bestaetigen() {
         showO('Bild ' + (si+1) + '.' + (fi+1) + ' wird komprimiert…');
         // Max 800px, Qualität 0.65 → typisch 80–150KB, passt sicher in einen POST
         var comp = await compressB64(bild.url, 800, 0.65);
+        loc[cProz.id].schs[si].bilder[fi].compressedUrl = comp; savL();
         var safeName = cProz.name.replace(/[^a-zA-Z0-9äöüÄÖÜß]/g, '_').replace(/_+/g, '_').slice(0, 40);
         var fn = cProz.id + '_S' + (si+1) + '_' + safeName + '_' + (fi+1) + '.jpg';
         showO('Bild ' + (si+1) + '.' + (fi+1) + ' wird hochgeladen…');
@@ -1133,12 +1134,19 @@ async function bestaetigen() {
     var a4el = document.getElementById('a4');
     var a4clone = a4el.cloneNode(true);
     a4clone.querySelectorAll('[data-nopdf]').forEach(function(el) { el.parentNode.removeChild(el); });
-    // Only patch img.a4si (process photos), not logo or other images
+    // Build compressed URL map for PDF embedding (data: URLs work in Drive PDF)
+    var _compMap = {};
+    _schs.forEach(function(s) {
+      (s.bilder || []).forEach(function(b) {
+        if (b.url && b.compressedUrl) { _compMap[b.url] = b.compressedUrl; }
+      });
+    });
+    // Patch img.a4si with compressed base64 URLs for reliable PDF rendering
     a4clone.querySelectorAll('img.a4si').forEach(function(img) {
-      if (img.src && img.src.startsWith('data:')) {
-        var driveUrl = _urlMap[img.src];
-        if (driveUrl) { img.src = driveUrl; }
-        else { img.parentNode && img.parentNode.removeChild(img); }
+      var compUrl = _compMap[img.src] || (img.src && !img.src.startsWith('data:') ? img.src : null);
+      if (compUrl) { img.src = compUrl; }
+      else if (!img.src || img.src.startsWith('data:')) {
+        img.parentNode && img.parentNode.removeChild(img);
       }
     });
     var a4html = a4clone.innerHTML;
