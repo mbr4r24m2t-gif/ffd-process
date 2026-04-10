@@ -117,7 +117,7 @@ textarea.inp{min-height:100px;resize:vertical;line-height:1.5;font-size:14px}
 <div class="hdr">
   <button class="back" id="bk" onclick="goBack()">&#8592; Zurück</button>
   <div class="logo">farbflut<span class="logo-dot">·</span>Prozessdok</div>
-  <div class="hdr-r"><span class="ver">V3.11.25</span><span class="hdr-u" id="hu"></span></div>
+  <div class="hdr-r"><span class="ver">V3.11.26</span><span class="hdr-u" id="hu"></span></div>
 </div>
 <div class="prog" id="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
 <div class="ovl" id="ovl"><div class="spin"></div><div class="ovt" id="ovt"></div></div>
@@ -467,6 +467,24 @@ function showStat() {
     c.appendChild(ic); c.appendChild(info); c.appendChild(pill);
     g.appendChild(c);
   });
+
+  // "Prozess fehlt?" Kasten
+  var mbox = document.createElement('div');
+  mbox.style.cssText = 'background:#6D745E;border-radius:10px;padding:16px 18px;margin-top:8px;display:flex;align-items:center;justify-content:space-between;gap:12px';
+  var mtxt = document.createElement('div');
+  mtxt.style.cssText = 'color:#fff;font-size:14px;font-weight:600';
+  mtxt.textContent = 'Prozess fehlt?';
+  var msub = document.createElement('div');
+  msub.style.cssText = 'color:rgba(255,255,255,.75);font-size:12px;margin-top:2px';
+  msub.textContent = 'Hier melden wenn ein Prozess nicht im Tool ist';
+  var mleft = document.createElement('div');
+  mleft.appendChild(mtxt); mleft.appendChild(msub);
+  var mbtn = document.createElement('button');
+  mbtn.style.cssText = 'background:#fff;color:#6D745E;border:none;border-radius:6px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:var(--f)';
+  mbtn.textContent = 'Melden';
+  mbtn.onclick = function() { nav.push('missing'); document.getElementById('bk').classList.add('show'); go('sMissing'); };
+  mbox.appendChild(mleft); mbox.appendChild(mbtn);
+  g.appendChild(mbox);
 }
 
 function showProz(station) {
@@ -1228,6 +1246,7 @@ function goBack() {
   else if (prev === 'det') { nav = ['stat', 'proz', 'det']; go('sDet'); renderDet(); }
   else if (prev === 'proz') { showProz(cStat); }
   else if (prev === 'stat') { showStat(); }
+  else if (prev === 'missing') { showStat(); }
 }
 
 function showO(t) { document.getElementById('ovt').textContent = t; document.getElementById('ovl').classList.add('on'); }
@@ -1307,6 +1326,72 @@ function doneWeiter() {
   showProz(cStat);
 }
 
+
+var missingBild = null;
+
+function trigMissing(g) {
+  document.getElementById(g ? 'missingFg' : 'missingFc').click();
+}
+
+function hMissingFoto(input) {
+  var file = input.files[0];
+  if (!file) return;
+  input.value = '';
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    missingBild = e.target.result;
+    var fr = document.getElementById('missingFr');
+    fr.innerHTML = '';
+    var wrap = document.createElement('div'); wrap.className = 'fwrap';
+    var img = document.createElement('img'); img.className = 'fimg'; img.src = missingBild;
+    var del = document.createElement('button'); del.className = 'fdel'; del.textContent = '×';
+    del.onclick = function() { missingBild = null; fr.innerHTML = ''; };
+    wrap.appendChild(img); wrap.appendChild(del);
+    fr.appendChild(wrap);
+  };
+  reader.readAsDataURL(file);
+}
+
+async function saveMissing() {
+  var desc = document.getElementById('missingDesc').value.trim();
+  if (!desc) { showT('Bitte eine Beschreibung eingeben', true); return; }
+  var btn = document.getElementById('missingBtn');
+  btn.disabled = true; btn.textContent = 'Wird gesendet…';
+  showO('Wird gespeichert…');
+  try {
+    var payload = {
+      action: 'save_missing',
+      mitarbeiter: usr,
+      beschreibung: desc,
+      base64: '',
+      fileName: ''
+    };
+    if (missingBild) {
+      showO('Bild wird komprimiert…');
+      var comp = await compressB64(missingBild, 800, 0.7);
+      payload.base64 = comp.includes(',') ? comp.split(',')[1] : comp;
+      payload.fileName = 'fehlend_' + Date.now() + '.jpg';
+    }
+    var r = await postJ(payload);
+    hideO();
+    if (r.success) {
+      showT('✓ Gesendet — danke!');
+      document.getElementById('missingDesc').value = '';
+      document.getElementById('missingFr').innerHTML = '';
+      missingBild = null;
+      btn.disabled = false; btn.textContent = 'Absenden →';
+      setTimeout(function() { goBack(); }, 1500);
+    } else {
+      showT('Fehler: ' + r.error, true);
+      btn.disabled = false; btn.textContent = 'Absenden →';
+    }
+  } catch(err) {
+    hideO();
+    showT('Verbindungsfehler', true);
+    btn.disabled = false; btn.textContent = 'Absenden →';
+  }
+}
+
 window.addEventListener('load', initApp);
 </script>
 
@@ -1365,5 +1450,31 @@ document.addEventListener('touchmove', function(e) {
   _lastY = y;
 }, {passive:false});
 </script>
+
+<div class="scr" id="sMissing">
+  <div class="ph">
+    <div class="ph-ey">Hinweis</div>
+    <div class="ph-t">Prozess fehlt?</div>
+    <div class="ph-s">Kurz beschreiben was fehlt</div>
+  </div>
+  <div style="padding:16px 16px 100px">
+    <div class="sec">
+      <div class="sec-l">Beschreibung</div>
+      <textarea class="inp" id="missingDesc" placeholder="Was fehlt? Z.B. Prozess für das Löten der Kabelschuhe…" style="min-height:120px"></textarea>
+    </div>
+    <div class="sec" style="margin-top:0">
+      <div class="sec-l">Foto (optional)</div>
+      <div class="fr" id="missingFr"></div>
+      <div class="fbtns" style="margin-top:8px">
+        <button class="fbtn" onclick="trigMissing(0)">📷 Foto</button>
+        <input type="file" id="missingFc" accept="image/*" capture="environment" class="fin" onchange="hMissingFoto(this)">
+        <button class="fbtn" onclick="trigMissing(1)">🖼 Galerie</button>
+        <input type="file" id="missingFg" accept="image/*" class="fin" onchange="hMissingFoto(this)">
+      </div>
+    </div>
+    <button class="sbtn" style="position:static;margin-top:16px" id="missingBtn" onclick="saveMissing()">Absenden &#8594;</button>
+    <button class="btn btn-d" style="margin-top:8px" onclick="goBack()">&#8592; Zurück</button>
+  </div>
+</div>
 </body>
 </html>
