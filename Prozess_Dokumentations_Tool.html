@@ -1116,7 +1116,8 @@ async function bestaetigen() {
   try {
     showO('Dokument wird gespeichert…');
     var safeName = cProz.name.replace(/[^a-zA-Z0-9äöüÄÖÜß]/g, '_').slice(0, 40);
-    var fn = cProz.id + '_' + safeName + '_' + new Date().toLocaleDateString('de-DE').replace(/\./g, '-') + '.html';
+    var safeStation = cStat.replace(/[^a-zA-Z0-9äöüÄÖÜß]/g, '_').replace(/_+/g, '_').slice(0, 40);
+    var fn = cProz.id + '_' + safeStation + '_' + safeName + '_' + new Date().toLocaleDateString('de-DE').replace(/\./g, '-') + '.html';
     var pdfCSS = [
       'body{font-family:Helvetica,Arial,sans-serif;background:#fff;color:#111;margin:0;padding:24px;font-size:13px;line-height:1.5}',
       '.a4{max-width:720px;margin:0 auto;background:#fff}',
